@@ -22,7 +22,7 @@ package {
 	import flash.geom.Rectangle;
 	import flash.text.*;
 	
-	import org.systemsbiology.visualization.bionetwork.data.DataView;
+	import org.systemsbiology.visualization.data.DataView;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.layout.GoogleDataTableDrivenLayout;
 	
