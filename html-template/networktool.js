@@ -1,5 +1,5 @@
     
-    DEBUG=0;
+    DEBUG=1;
     
     function log(message){
     	
@@ -27,13 +27,11 @@
 				return;
 			}
 			data = response.getDataTable();
-			query2 = new google.visualization.Query('http://sdee.hdbase.org/networkviz/Attribute/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/'+center+'/&tqx=reqId:1;');
+			query2 = new google.visualization.Query('http://sdee.hdbase.org/networkviz/Attribute/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/&tqx=reqId:1;');
 			query2.setTimeout(300);
 			query2.send(processAttributeData);
-			
 			//networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
 			//log("vis: " + networkvis.toString());
-
 	  	}
       
     function processUpdate(response){
@@ -73,45 +71,123 @@
 
       }
       
-	//LAYOUT TEST FUNCTIONS
-	  	
-	 function processDataAndLayout(response){
-		  // alert("processResponse");
-			if (response.isError()) {
-				alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-				return;
+      
+     function fetch_urls(){
+     	log("fetch urls");
+      	reqId=1;
+      	cnt=0;
+      	number_urls=0;
+      	urls={data: 'http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/?tqx=reqId:1;&format=google', layout: 'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/&tqx=reqId:1;'}
+      	//layout: 'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/7157/?tqx=reqId:1;'
+		center='23645';
+		for (var i in urls) {
+			log("key " + i);
+			log(eval('urls.' + i));
+			//url = eval('urls.' + i)+'&tqx=reqId:'+reqId+';';
+			url = eval('urls.' + i);
+			log("url " + url);
+			query=new google.visualization.Query(url);
+			query.setTimeout(400);
+			log("query " + query);
+			if (i==='data'){
+				func = 'processData';
 			}
-			
-			data = response.getDataTable();
-			//query2 = new google.visualization.Query('http://sdee.hdbase.org/networkviz/Attribute/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/'+center+'/&tqx=reqId:1;');
-			query2 = new google.visualization.Query('http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/'+center+'/&tqx=reqId:1;');
-			query2.setTimeout(300);
-			query2.send(processLayoutData);
-			
-			//networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-			//log("vis: " + networkvis.toString());
-	 }
-	 
-	 function processLayoutData(response){
-	 	
-	 	log("process layout data");
-        log("response");
-        log(response);
-      	if (response.isError()) {
-			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-			return;
-		}
+			else if (i==='attributes'){
+				func='processAttributes';
+			}
+			else if (i==='layout'){
+				func='processLayout';
+			}
+			query.send(eval(func));
+			reqId+=1;
+			number_urls+=1;
+		} 
 		
-       log("layout response");
-       layout_data=response.getDataTable();
-       //attribute_data=Object.toJSON(response.getDataTable());
-       //attribute_data =  buildDataParam(response.getDataTable());
-       log("serialized attribute data" + layout_data);
-       networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-       networkvis.draw(data, {layout: layout_data, center:center, data_format:"google"});
-	 	
+	   log("url size" + (number_urls).toString());
+	   //wait
+       	log("center" + center);
+       		
+      }
+
+
+	function draw_vis(){
+		networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
+       	networkvis.draw(data, {layout: layout_data, center:center, data_format:"google"});
+	}
+	  	
+	 function processLayout(response){
+	 	log("processLayout");
+	 	if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+		}
+		layout_data = response.getDataTable();
+		cnt+=1;
+				if (cnt===number_urls){
+			draw_vis();
+		}
+	 } 	
 	 
+	 function processData(response){
+	 	data='';
+	 	log("processData");
+	 	if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+		}
+		data = response.getDataTable();
+		while(true){
+			if (!(data==='')){
+				cnt+=1;
+				break;
+			}
+		}
+		if (cnt===number_urls){
+			draw_vis();
+		}
+		log("data is" + data);
 	 }
+	 
+	 function processAttributes(response){
+	 	log("processAttributes");
+	 	if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());	
+		}
+	 	attribute_data = response.getDataTable();
+	 	cnt+=1;
+	 }
+	  	
+// function processDataAndLayout(response){
+// 	  // alert("processResponse");
+// 		if (response.isError()) {
+// 			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+// 			return;
+// 		}
+// 		data = response.getDataTable();
+// 		//query2 = new google.visualization.Query('http://sdee.hdbase.org/networkviz/Attribute/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/'+center+'/&tqx=reqId:1;');
+// 		query2 = new google.visualization.Query('http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/'+23645+'/&tqx=reqId:1;');
+// 		query2.setTimeout(300);
+// 		query2.send(processLayoutData);	
+// 		//networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
+// 		//log("vis: " + networkvis.toString());
+// }
+// 
+// function processLayoutData(response){
+// 	
+// 	log("process layout data");
+//    log("response");
+//    log(response);
+//  	if (response.isError()) {
+// 		alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+// 		return;
+// 	}
+// 	
+//   log("layout response");
+//   layout_data=response.getDataTable();
+//   //attribute_data=Object.toJSON(response.getDataTable());
+//   //attribute_data =  buildDataParam(response.getDataTable());
+//   log("serialized attribute data" + layout_data);
+//   networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
+//   networkvis.draw(data, {layout: layout_data, center:center, data_format:"google"});
+// }
 	 
 	   function buildDataParam(dataTable){
  		log("buildDataParam");

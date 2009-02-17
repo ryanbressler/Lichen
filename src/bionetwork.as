@@ -24,6 +24,8 @@ package {
 	
 	import org.systemsbiology.visualization.bionetwork.data.DataView;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
+	import org.systemsbiology.visualization.bionetwork.layout.GoogleDataTableDrivenLayout;
+	
 	public class bionetwork extends Sprite
 	{
 		
@@ -122,8 +124,6 @@ package {
 //            this.resizeStage(containerId, dataTable, options);
 //            drawAfterResize(dataTable,{},{});         
 		}
-		
-
 			
 		//basic graph drawing
 	public function draw(dataJSON:String, optionsJSON:String) :void {					
@@ -132,7 +132,10 @@ package {
 		var layout:Object;
 		var attributes:Object;
 		var layoutResponse:String;
-		this.datat=JSON.decode(dataJSON);		
+		this.datat=JSON.decode(dataJSON);	
+		trace("DATAJSON: " + dataJSON);	
+		
+		
 		this.options = JSON.decode(optionsJSON);	
 		this.centerNode=this.options['center'];
 		this.dataFormat=this.options['data_format'];	
@@ -146,6 +149,8 @@ package {
 			//layout=JSON.decode(layoutResponse);
 			//layout = layoutResponse;
 			trace("layout string:" + JSON.encode(this.options['layout']));
+			
+			//layout
 			layout = new DataView(JSON.encode(this.options['layout']), "True");	
 			for (var row:int=0; row<layout.getNumberOfRows(); row++){
 				layoutValues = [];
@@ -185,34 +190,30 @@ package {
 
 		// draw!
 	private function drawAfterResize(dataTable:DataView, attributeTable:Object, layoutTable:Object) :void {            			
-			trace("draw after resize");
-			
+			trace("draw after resize");	
 			var interactor_name1:String;
 			var interactor_value1:String;
 			var interactor_name2:String;
 			var interactor_value2:String;
 			var interactor1:NodeSprite;
 			var interactor2:NodeSprite;
-
-			
+	
 			for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
+				
 				interactor_name1=dataTable.getFormattedValue(i,1);
-				interactor_name2=dataTable.getFormattedValue(i,2);
 				interactor_value1=dataTable.getValue(i,1);
-				interactor_name2=dataTable.getValue(i,2);
+				
+				interactor_name2=dataTable.getFormattedValue(i,2);
+				interactor_value2=dataTable.getValue(i,2);
+				
 				interactor1=this.network.addNodeIfNotExist(interactor_name1);
 				interactor2=this.network.addNodeIfNotExist(interactor_name2);
-				
 				this.network.updateNodeParams(interactor1.data.name,{a:1,b:2});
-				trace(interactor1);
-				trace(interactor2);
+				trace(interactor_name1 + ' & ' + interactor_name2);
 				this.network.addEdgeIfNotExist(interactor1, interactor2);
-				
-				
 			}
-			
-				var lay:CircleLayout =  new CircleLayout(null, null, false);
-//				var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout(this.layoutmap);
+//				var lay:CircleLayout =  new CircleLayout(null, null, false);
+				var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout(this.layoutmap);
 				this.network.operators.add(lay);
         		this.network.x = 0;
         		this.network.y = 0;
@@ -325,7 +326,6 @@ package {
 			info.color = co;
 			new Sequence(t1,new Pause(2),t2).play();
 		}
-		
 		
 		// called when movie is left-clicked on (aka "activated")
 		private function activateHandler(event:Event):void {
