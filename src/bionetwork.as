@@ -11,7 +11,6 @@ package {
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.events.SelectionEvent;
-	import flare.vis.operator.layout.CircleLayout;
 	
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
@@ -22,9 +21,9 @@ package {
 	import flash.geom.Rectangle;
 	import flash.text.*;
 	
-	import org.systemsbiology.visualization.data.DataView;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.layout.GoogleDataTableDrivenLayout;
+	import org.systemsbiology.visualization.data.DataView;
 	
 	public class bionetwork extends Sprite
 	{
@@ -135,11 +134,9 @@ package {
 		this.datat=JSON.decode(dataJSON);	
 		trace("DATAJSON: " + dataJSON);	
 		
-		
 		this.options = JSON.decode(optionsJSON);	
 		this.centerNode=this.options['center'];
 		this.dataFormat=this.options['data_format'];	
-		
 		var layoutValues:Array = new Array();
 		trace('layoutResponse ' + this.options['layout']);
 		if (this.options['layout']){		
@@ -148,21 +145,23 @@ package {
 			trace(layoutResponse);
 			//layout=JSON.decode(layoutResponse);
 			//layout = layoutResponse;
-			trace("layout string:" + JSON.encode(this.options['layout']));
-			
+			//trace("layout string:" + JSON.decode(this.options['layout']));
 			//layout
-			layout = new DataView(JSON.encode(this.options['layout']), "True");	
-			for (var row:int=0; row<layout.getNumberOfRows(); row++){
-				layoutValues = [];
-				for (var col:int=0; col<layout.getNumberOfColumns(); col++){
-					layoutValues.push(layout.getValue(row,col));
-				}
-				trace(layoutValues[0]);
-				layoutmap[layoutValues[0].toString()]=layoutValues;
-			}
+			
+			//layout = new DataView(JSON.encode(this.options['layout']),"False");
+			//trace("layout obj" + layout);
+			//trace(layout.getNumberOfRows());
+			//for (var row:int=0; row<layout.getNumberOfRows(); row++){
+				//layoutValues = [];
+				//for (var col:int=0; col<layout.getNumberOfColumns(); col++){
+					//layoutValues.push(layout.getValue(row,col));
+				//}
+				//trace(layoutValues[0]);
+				//layoutmap[layoutValues[0].toString()]=layoutValues;
+			//}
 		}
 		else{
-			layout={};
+			layout=null;
 		}
 		
 		if (this.dataFormat=='static'){
@@ -174,22 +173,26 @@ package {
 			dataTable = new DataView(JSON.encode(this.datat), "True");
 		}
 		
-		
 		if (this.options['attributes']){
 			this.attributes = new DataView(JSON.encode(this.options['attributes']), "True");	
 		}
 		else{
-			this.attributes={};
+			this.attributes=null;
 		}
         this.resizeStage(containerId, dataTable, options);
         // drawAfterResize() is called when the movie has resized 
         //temp
         attributes={};
-        drawAfterResize(dataTable,attributes,layout);         
+        drawAfterResize(dataTable,this.attributes,layout);         
+	}
+
+	private function updateLayoutParams():void{
+		
 	}
 
 		// draw!
-	private function drawAfterResize(dataTable:DataView, attributeTable:Object, layoutTable:Object) :void {            			
+		//make dataTalble, etc global?
+	private function drawAfterResize(dataTable:DataView, attributeTable:*=null, layoutTable:*=null) :void {            			
 			trace("draw after resize");	
 			var interactor_name1:String;
 			var interactor_value1:String;
@@ -207,28 +210,46 @@ package {
 				interactor_value2=dataTable.getValue(i,2);
 				
 				interactor1=this.network.addNodeIfNotExist(interactor_name1);
-				interactor2=this.network.addNodeIfNotExist(interactor_name2);
-				this.network.updateNodeParams(interactor1.data.name,{a:1,b:2});
-				trace(interactor_name1 + ' & ' + interactor_name2);
+				interactor2=this.network.addNodeIfNotExist(interactor_name2);			
 				this.network.addEdgeIfNotExist(interactor1, interactor2);
+				
 			}
-//				var lay:CircleLayout =  new CircleLayout(null, null, false);
-				var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout(this.layoutmap);
-				this.network.operators.add(lay);
-        		this.network.x = 0;
-        		this.network.y = 0;
-				this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     	
-    			this.network.data.edges.setProperties({
+			
+			trace("layout");
+			//layout attributes-everything except x,y 
+			if (layoutTable!=null){
+				for (var i:Number = 0; i<layoutTable.getNumberOfRows(); i++) {
+					//first column name
+					var interactor_name:String = layoutTable.getFormattedValue(i,0);
+					//rest of columns layout attributes (first two are x,y)
+					for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
+						var columnName:String = layoutTable.getColumnLabel(j);
+						var attributeValue:int = layoutTable.getValue(i,j);
+						trace(columnName + attributeValue);
+						this.network.updateNodeParams(interactor_name,{columnName:attributeValue});
+					}	
+				}
+			}		
+			
+//			var lay:CircleLayout =  new CircleLayout(null, null, false);
+			var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout(this.layoutmap);
+			this.network.operators.add(lay);
+        	this.network.x = 0;
+        	this.network.y = 0;
+			
+			//set defaults
+			this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     	
+    		this.network.data.edges.setProperties({
 				lineWidth: 0.5,
 				lineAlpha: 1,
 				lineColor: 0xff0000bb,
 				mouseEnabled: true,
 				visible:true
 				});
+				
+		
 				addChild(this.network);
 				this.network.update();
-
-			
 }
 		
 		
@@ -274,7 +295,6 @@ package {
 			}
 			
 		}
-		
 		
 		//methods for ClickDragControl
 		
