@@ -72,20 +72,13 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 
     // Parameter options is a name/value map of options.
 
-    draw: function(data, options) {
-    	log("draw");
-    	log("check data");
-    	log(data.getNumberOfColumns());
-    	log(data.getValue(1,1));
-    	
+    draw: function(data, options) {    	
     	//log(dump(options));
-    	
     	this.flashLoading = true;
     	var readyFnc = function()
     	{
     		this.flashLoading = false;
     	};
-    	
     	//global function could be bad?
     	this.bioheatmapFlashReady = readyFnc.bind(this);
     	//hidden input or div to get around ie 6 foolishness with scope/noscope objects
@@ -94,7 +87,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 		//this.containerElement.innerHTML ="<object id=\"bioheatmap\" codebase=\"http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab\"> <param name=\"movie\" value=\"bioheatmap.swf\" /> <param name=\"quality\" value=\"high\" /> <param name=\"bgcolor\" value=\"#FFFFFF\" /> <param name=\"allowScriptAccess\" value=\"sameDomain\" /> <embed src=\"bioheatmap.swf\" quality=\"high\" bgcolor=\"#FFFFFF\" name=\"bioheatmap\" align=\"middle\" play=\"true\" loop=\"false\" quality=\"high\" allowScriptAccess=\"sameDomain\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\"> </embed> </object>"
 		
 		//wait for swf to be ready...is this necesairy?
-		log("dataparam");
+		//log("dataparam");
 		var dataparam = this.buildDataParam(data);
 		//log(dataparam);
 		//onsole.log("building options param");
@@ -103,7 +96,6 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 		
     myPe = new PeriodicalExecuter(this.swfPoll.bind(this,data,options), .01);
 	//myPe = new PeriodicalExecuter(this.swfPoll.bind(this,dataparam,optionsparam),.01);
-
 		//alert(Object.toJSON(data));
     },
     
@@ -112,10 +104,10 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
         if (!this.flashLoading) {
            //swf.update_data("hello");
            //this.swfPoll.bind(this,data,options);
-           log("viz_id"+ this.SWFid);
-           log(data);
-           log(options);
-           log(swf);
+           //log("viz_id"+ this.SWFid);
+           //log(data);
+           //log(options);
+           //log(swf);
            var dataparam = this.buildDataParam(data);
            var optionsparam = this.buildDataParam(options['attributes']);
            //this.swf.draw(data,options);
@@ -123,7 +115,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
           
            //this.swfPoll.bind(this,dataparam, {attributes: optionsparam, center: '3630', data_format: "static"});
            // myPe = new PeriodicalExecuter(this.swfPoll.bind(this,data,options), .01);
-		   log("js update_data");
+		   //log("js update_data");
 		}
     },
     
@@ -133,18 +125,16 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 	},
     
     buildDataParam : function(dataTable){
- 		log("buildDataParam");
- 		log(dataTable);
-		log(!this.isEmpty(dataTable));
+ 		//log("buildDataParam");
+ 		//log(dataTable);
+		//log(!this.isEmpty(dataTable));
 		if (!this.isEmpty(dataTable)){
 		//if (true){
     	var dataParam = {cols:[], rows:[]};
-    	log("Num columns");
-
-    	log(dataTable.getNumberOfColumns());
+    	//log("Num columns");
+    	//log(dataTable.getNumberOfColumns());
     	for (var coli=0;coli<dataTable.getNumberOfColumns();coli++){
-			dataParam.cols[coli]={id: dataTable.getColumnId(coli), label: dataTable.getColumnLabel(coli), type: 'string'};
-
+			dataParam.cols[coli]={id: dataTable.getColumnId(coli), label: dataTable.getColumnLabel(coli), type: 'string'}
 			for (var rowi=0;rowi<dataTable.getNumberOfRows();rowi++){
 				dataParam.rows[rowi]={};
 				dataParam.rows[rowi].c=[];
@@ -168,8 +158,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
   		if (!this.flashLoading){
   		pe.stop();
   		var swf = this.getSWF(this.SWFid);
-  		log("drawing "+this.SWFid);
-  		
+  		//log("drawing "+this.SWFid);
 		swf.draw(Object.toJSON(data),Object.toJSON(options));
 
     	}
