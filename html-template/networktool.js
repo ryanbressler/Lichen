@@ -71,13 +71,13 @@
 
       }
       
-      
      function fetch_urls(){
      	log("fetch urls");
       	reqId=1;
       	cnt=0;
       	number_urls=0;
-      	urls={data: 'http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/?tqx=reqId:1;&format=google', layout: 'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/&tqx=reqId:1;'}
+      	urls={data: 'http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/?tqx=reqId:0;&format=google', layout: 'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/&tqx=reqId:1;'};
+      	//layout: 'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/&tqx=reqId:1;&format=google
       	//layout: 'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/7157/?tqx=reqId:1;'
 		center='23645';
 		for (var i in urls) {
@@ -111,6 +111,7 @@
 
 
 	function draw_vis(){
+		log("draw_visualization");
 		networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
        	networkvis.draw(data, {layout: layout_data, center:center, data_format:"google"});
 	}
@@ -120,9 +121,10 @@
 	 	if (response.isError()) {
 			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
 		}
+		log(response);
 		layout_data = response.getDataTable();
 		cnt+=1;
-				if (cnt===number_urls){
+		if (cnt===number_urls){
 			draw_vis();
 		}
 	 } 	

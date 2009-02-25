@@ -29,9 +29,7 @@ package {
 	{
 		
 		private var data:Data = new Data();
-		private var network:Network = new Network(data);
-		
-		
+		private var network:Network = new Network(data);		
 		//config variables
 		private var centerNode:int;
 		private var dataFormat:String;
@@ -40,7 +38,6 @@ package {
 		private var datat:Object;
 		private var containerId:String;
 		private var dataTable:DataView;
-		
 //		private var annotationTable:DataView;
 		private var attributes:Object;
 		private var visWidth:int = stage.stageWidth;
@@ -145,20 +142,23 @@ package {
 			trace(layoutResponse);
 			//layout=JSON.decode(layoutResponse);
 			//layout = layoutResponse;
-			//trace("layout string:" + JSON.decode(this.options['layout']));
+			trace("layout string:" + JSON.encode(this.options['layout']));
 			//layout
+			//trace(this.options['layout']);
+			//trace(JSON.decode(this.options['layout']));
 			
-			//layout = new DataView(JSON.encode(this.options['layout']),"False");
-			//trace("layout obj" + layout);
-			//trace(layout.getNumberOfRows());
-			//for (var row:int=0; row<layout.getNumberOfRows(); row++){
-				//layoutValues = [];
-				//for (var col:int=0; col<layout.getNumberOfColumns(); col++){
-					//layoutValues.push(layout.getValue(row,col));
-				//}
-				//trace(layoutValues[0]);
-				//layoutmap[layoutValues[0].toString()]=layoutValues;
-			//}
+			layout = new DataView(JSON.encode(this.options['layout']), "True");
+			//layout = new DataView(JSON.encode(this.options['layout']),"True");
+			trace("layout obj" + layout);
+			trace(layout.getNumberOfRows());
+			for (var row:int=0; row<layout.getNumberOfRows(); row++){
+				layoutValues = [];
+				for (var col:int=0; col<layout.getNumberOfColumns(); col++){
+					layoutValues.push(layout.getValue(row,col));
+				}
+				trace(layoutValues[0]);
+				layoutmap[layoutValues[0].toString()]=layoutValues;
+			}
 		}
 		else{
 			layout=null;
@@ -181,8 +181,8 @@ package {
 		}
         this.resizeStage(containerId, dataTable, options);
         // drawAfterResize() is called when the movie has resized 
-        //temp
         attributes={};
+        trace("layout"+layout);
         drawAfterResize(dataTable,this.attributes,layout);         
 	}
 
@@ -222,17 +222,19 @@ package {
 					//first column name
 					var interactor_name:String = layoutTable.getFormattedValue(i,0);
 					//rest of columns layout attributes (first two are x,y)
+					var params:Object = {};
 					for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
 						var columnName:String = layoutTable.getColumnLabel(j);
 						var attributeValue:int = layoutTable.getValue(i,j);
 						trace(columnName + attributeValue);
-						this.network.updateNodeParams(interactor_name,{columnName:attributeValue});
+						params[columnName]=attributeValue;
+						this.network.updateNodeParams(interactor_name,params);
 					}	
 				}
 			}		
 			
 //			var lay:CircleLayout =  new CircleLayout(null, null, false);
-			var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout(this.layoutmap);
+			var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
 			this.network.operators.add(lay);
         	this.network.x = 0;
         	this.network.y = 0;
@@ -247,7 +249,6 @@ package {
 				visible:true
 				});
 				
-		
 				addChild(this.network);
 				this.network.update();
 }

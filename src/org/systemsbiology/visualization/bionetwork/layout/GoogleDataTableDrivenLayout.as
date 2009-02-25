@@ -1,4 +1,4 @@
-package org.systemsbiology.visualization.layout {
+package org.systemsbiology.visualization.bionetwork.layout {
 import flare.animate.Transitioner;
 import flare.vis.data.Data;
 import flare.vis.data.DataSprite;
@@ -18,7 +18,7 @@ public class GoogleDataTableDrivenLayout extends Layout
 	 * @param sortbyEdges Flag indicating if barycentric sorting using
 	 *  the graph structure should be performed
 	 */
-	public function GoogleDataTableDrivenLayout(layoutmap:Object) {
+	public function GoogleDataTableDrivenLayout() {
 		this.layoutmap=layoutmap;
 	}
 	
@@ -36,10 +36,10 @@ public class GoogleDataTableDrivenLayout extends Layout
 		for (i=0; i<items.length; i++) {
 			var n:NodeSprite = items[i];
 			trace(n.data.name);
-			if (this.layoutmap[n.data.name]){			
-				_t.$(n).x = this.layoutmap[n.data.name][1];
-				_t.$(n).y = this.layoutmap[n.data.name][2];	
-			}
+				_t.$(n).x = n.props.x;
+
+				_t.$(n).y = n.props.y;
+
     	}
 
 		updateEdgePoints(_t);
