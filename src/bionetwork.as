@@ -11,7 +11,6 @@ package {
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.events.SelectionEvent;
-	
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -28,18 +27,18 @@ package {
 	public class bionetwork extends Sprite
 	{
 		
+
 		private var data:Data = new Data();
 		private var network:Network = new Network(data);		
 		//config variables
+		private var options:Object; 
 		private var centerNode:int;
 		private var dataFormat:String;
-		private var layout:Object;
-		private var options:Object; 
+		private var layout:DataView;
 		private var datat:Object;
 		private var containerId:String;
-		private var dataTable:DataView;
-//		private var annotationTable:DataView;
-		private var attributes:Object;
+		private var dataTable:DataView
+		private var attributes:DataView;
 		private var visWidth:int = stage.stageWidth;
 		private var visHeight:int = stage.stageHeight;
 		private var vis:Visualization;
@@ -55,9 +54,6 @@ package {
 		private var lastRoot:NodeSprite = null;
 		private var info1:TextSprite;
 		private var info2:TextSprite;
-		private var map:Object;
-		private var layoutmap:Object = {};
-		private var edgemap:Object={};
 		
 		//font
         // We must embed a font so that we can rotate text and do other special effects
@@ -123,54 +119,27 @@ package {
 			
 		//basic graph drawing
 	public function draw(dataJSON:String, optionsJSON:String) :void {					
-		var dataTable:DataView;
-		var attributeTable:DataView;
-		var layout:Object;
-		var attributes:Object;
-		var layoutResponse:String;
 		this.datat=JSON.decode(dataJSON);	
 		trace("DATAJSON: " + dataJSON);	
-		
 		this.options = JSON.decode(optionsJSON);	
 		this.centerNode=this.options['center'];
 		this.dataFormat=this.options['data_format'];	
 		var layoutValues:Array = new Array();
-		trace('layoutResponse ' + this.options['layout']);
-		if (this.options['layout']){		
-			trace("layout detected");
-			layoutResponse = this.options['layout'];
-			trace(layoutResponse);
-			//layout=JSON.decode(layoutResponse);
-			//layout = layoutResponse;
-			trace("layout string:" + JSON.encode(this.options['layout']));
-			//layout
-			//trace(this.options['layout']);
-			//trace(JSON.decode(this.options['layout']));
-			
-			layout = new DataView(JSON.encode(this.options['layout']), "True");
-			//layout = new DataView(JSON.encode(this.options['layout']),"True");
-			trace("layout obj" + layout);
-			trace(layout.getNumberOfRows());
-			for (var row:int=0; row<layout.getNumberOfRows(); row++){
-				layoutValues = [];
-				for (var col:int=0; col<layout.getNumberOfColumns(); col++){
-					layoutValues.push(layout.getValue(row,col));
-				}
-				trace(layoutValues[0]);
-				layoutmap[layoutValues[0].toString()]=layoutValues;
-			}
+		
+		if (this.options['layout']){				
+			this.layout = new DataView(JSON.encode(this.options['layout']), "True");
 		}
 		else{
-			layout=null;
+			this.layout=null;
 		}
 		
 		if (this.dataFormat=='static'){
 			trace("static");
-			dataTable = new DataView(JSON.encode(this.datat), "False");
+			this.dataTable = new DataView(JSON.encode(this.datat), "False");
 		}
 		else{
 			trace("google");
-			dataTable = new DataView(JSON.encode(this.datat), "True");
+			this.dataTable = new DataView(JSON.encode(this.datat), "True");
 		}
 		
 		if (this.options['attributes']){
@@ -179,19 +148,17 @@ package {
 		else{
 			this.attributes=null;
 		}
+		
         this.resizeStage(containerId, dataTable, options);
-        // drawAfterResize() is called when the movie has resized 
-        attributes={};
-        trace("layout"+layout);
-        drawAfterResize(dataTable,this.attributes,layout);         
+        drawAfterResize(this.dataTable,this.attributes, this.layout);         
 	}
 
+	//redraw without re-importing data
 	private function updateLayoutParams():void{
 		
 	}
 
 		// draw!
-		//make dataTalble, etc global?
 	private function drawAfterResize(dataTable:DataView, attributeTable:*=null, layoutTable:*=null) :void {            			
 			trace("draw after resize");	
 			var interactor_name1:String;
@@ -202,27 +169,22 @@ package {
 			var interactor2:NodeSprite;
 	
 			for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
-				
 				interactor_name1=dataTable.getFormattedValue(i,1);
 				interactor_value1=dataTable.getValue(i,1);
-				
 				interactor_name2=dataTable.getFormattedValue(i,2);
-				interactor_value2=dataTable.getValue(i,2);
-				
+				interactor_value2=dataTable.getValue(i,2);			
 				interactor1=this.network.addNodeIfNotExist(interactor_name1);
 				interactor2=this.network.addNodeIfNotExist(interactor_name2);			
-				this.network.addEdgeIfNotExist(interactor1, interactor2);
-				
+				this.network.addEdgeIfNotExist(interactor1, interactor2)
 			}
-			
+			var params:Object = {};
 			trace("layout");
-			//layout attributes-everything except x,y 
+			//layout from layoutTable
 			if (layoutTable!=null){
 				for (var i:Number = 0; i<layoutTable.getNumberOfRows(); i++) {
 					//first column name
 					var interactor_name:String = layoutTable.getFormattedValue(i,0);
 					//rest of columns layout attributes (first two are x,y)
-					var params:Object = {};
 					for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
 						var columnName:String = layoutTable.getColumnLabel(j);
 						var attributeValue:int = layoutTable.getValue(i,j);
@@ -232,6 +194,19 @@ package {
 					}	
 				}
 			}		
+			
+			//attributes
+			if (attributeTable!=null){
+				for (var i:Number = 0; i<attributeTable.getNumberOfRows(); i++) {
+					var interactor_name:String = attributeTable.getFormattedValue(i,0);
+					for (var j:Number = 1; j < attributeTable.getNumberOfColumns(); j++){
+						var columnName:String = layoutTable.getColumnLabel(j);
+						var attributeValue:int = layoutTable.getValue(i,j);
+						params[columnName]=attributeValue;
+						this.network.updateNodeParams(interactor_name,params);
+					}
+				}
+			}
 			
 //			var lay:CircleLayout =  new CircleLayout(null, null, false);
 			var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
