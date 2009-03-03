@@ -72,8 +72,9 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 
     // Parameter options is a name/value map of options.
 
-    draw: function(data, options) {    	
-    	//log(dump(options));
+
+    draw: function(data, options) {
+
     	this.flashLoading = true;
     	var readyFnc = function()
     	{
@@ -89,12 +90,12 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 		//wait for swf to be ready...is this necesairy?
 		//log("dataparam");
 		var dataparam = this.buildDataParam(data);
-		//log(dataparam);
-		//onsole.log("building options param");
-		//log(dump(options));
+		////log(dataparam);
+		//onsole.//log("building options param");
+		////log(dump(options));
 		//var optionsparam = this.buildDataParam(options);
 		
-    myPe = new PeriodicalExecuter(this.swfPoll.bind(this,data,options), .01);
+    myPe = new PeriodicalExecuter(this.swfPoll.bind(this,dataparam,options), .01);
 	//myPe = new PeriodicalExecuter(this.swfPoll.bind(this,dataparam,optionsparam),.01);
 		//alert(Object.toJSON(data));
     },
@@ -111,7 +112,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
            var dataparam = this.buildDataParam(data);
            var optionsparam = this.buildDataParam(options['attributes']);
            //this.swf.draw(data,options);
-		  swf.redraw(Object.toJSON(data),Object.toJSON({attributes: optionsparam, center: options['center'], data_format: "google"}));
+		  swf.redraw(Object.toJSON(dataparam),Object.toJSON({attributes: optionsparam, center: options['center'], data_format: "google"}));
           
            //this.swfPoll.bind(this,dataparam, {attributes: optionsparam, center: '3630', data_format: "static"});
            // myPe = new PeriodicalExecuter(this.swfPoll.bind(this,data,options), .01);
@@ -124,33 +125,32 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 		return true;
 	},
     
-    buildDataParam : function(dataTable){
- 		//log("buildDataParam");
- 		//log(dataTable);
-		//log(!this.isEmpty(dataTable));
-		if (!this.isEmpty(dataTable)){
-		//if (true){
+   buildDataParam : function(dataTable){
+ 
     	var dataParam = {cols:[], rows:[]};
-    	//log("Num columns");
-    	//log(dataTable.getNumberOfColumns());
-    	for (var coli=0;coli<dataTable.getNumberOfColumns();coli++){
-			dataParam.cols[coli]={id: dataTable.getColumnId(coli), label: dataTable.getColumnLabel(coli), type: 'string'}
-			for (var rowi=0;rowi<dataTable.getNumberOfRows();rowi++){
-				dataParam.rows[rowi]={};
-				dataParam.rows[rowi].c=[];
-				for (var coli=0;coli<dataTable.getNumberOfColumns();coli++){
-					//will need to add any aditional paramters used here
-					dataParam.rows[rowi].c[coli]={v:dataTable.getValue(rowi,coli)};
-					if(dataTable.getFormattedValue(rowi,coli)){
-						dataParam.rows[rowi].c[coli].f=dataTable.getFormattedValue(rowi,coli);
-					}
-				}
+    	
+    	for (var coli=0;coli<dataTable.getNumberOfColumns();coli++) 
+		{
+			dataParam.cols[coli]={id: dataTable.getColumnId(coli), label: dataTable.getColumnLabel(coli), type: 'string'};
+			
+		}
+		
+		for (var rowi=0;rowi<dataTable.getNumberOfRows();rowi++) 
+		{
+			dataParam.rows[rowi]={};
+			dataParam.rows[rowi].c=[];
+			for (var coli=0;coli<dataTable.getNumberOfColumns();coli++) 
+			{
+			//will need to add any aditional paramters used here
+			dataParam.rows[rowi].c[coli]={v:dataTable.getValue(rowi,coli)};
+			if(dataTable.getFormattedValue(rowi,coli))
+				dataParam.rows[rowi].c[coli].f=dataTable.getFormattedValue(rowi,coli);
+				
+			
 			}
 		}
-    }
-    	//log(dump(dataParam));
-    	return dataParam;
     	
+    	return dataParam;
     },
       
     swfPoll : function(data,options,pe) {
@@ -158,7 +158,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
   		if (!this.flashLoading){
   		pe.stop();
   		var swf = this.getSWF(this.SWFid);
-  		//log("drawing "+this.SWFid);
+
 		swf.draw(Object.toJSON(data),Object.toJSON(options));
 
     	}
@@ -173,10 +173,10 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
     // set's the current selected rows, cols or cells
 
     setSelection: function(selection) {
-    	//log("set selection called");
-        //log("selection is"+ selection.toString());
+    	////log("set selection called");
+        ////log("selection is"+ selection.toString());
         this._selected = selection;
-        //log(this.SWFid);
+        ////////log(this.SWFid);
         var swf =this.getSWF(this.SWFid);
         swf.selectionSetViaJS(Object.toJSON(selection));
 
