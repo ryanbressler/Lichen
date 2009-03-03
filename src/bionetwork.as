@@ -11,6 +11,7 @@ package {
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.events.SelectionEvent;
+	
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -21,9 +22,10 @@ package {
 	import flash.text.*;
 	
 	import org.systemsbiology.visualization.bionetwork.data.Network;
-	import org.systemsbiology.visualization.bionetwork.layout.GoogleDataTableDrivenLayout;
+	import org.systemsbiology.visualization.bionetwork.layout.*;
 	import org.systemsbiology.visualization.data.DataView;
-	
+
+
 	public class bionetwork extends Sprite
 	{
 		
@@ -33,9 +35,7 @@ package {
 		//config variables
 		private var options:Object; 
 		private var centerNode:int;
-		private var dataFormat:String;
 		private var layout:DataView;
-		private var datat:Object;
 		private var containerId:String;
 		private var dataTable:DataView
 		private var attributes:DataView;
@@ -118,12 +118,10 @@ package {
 		}
 			
 		//basic graph drawing
-	public function draw(dataJSON:String, optionsJSON:String) :void {					
-		this.datat=JSON.decode(dataJSON);	
+	public function draw(dataJSON:String, optionsJSON:String) :void {						
 		trace("DATAJSON: " + dataJSON);	
 		this.options = JSON.decode(optionsJSON);	
-		this.centerNode=this.options['center'];
-		this.dataFormat=this.options['data_format'];	
+		this.centerNode=this.options['center'];	
 		var layoutValues:Array = new Array();
 		
 		if (this.options['layout']){				
@@ -133,14 +131,9 @@ package {
 			this.layout=null;
 		}
 		
-		if (this.dataFormat=='static'){
-			trace("static");
-			this.dataTable = new DataView(JSON.encode(this.datat), "False");
-		}
-		else{
-			trace("google");
-			this.dataTable = new DataView(JSON.encode(this.datat), "True");
-		}
+
+		this.dataTable = new DataView(dataJSON, "");
+
 		
 		if (this.options['attributes']){
 			this.attributes = new DataView(JSON.encode(this.options['attributes']), "True");	
@@ -167,6 +160,7 @@ package {
 			var interactor_value2:String;
 			var interactor1:NodeSprite;
 			var interactor2:NodeSprite;
+
 	
 			for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
 				interactor_name1=dataTable.getFormattedValue(i,1);
@@ -208,24 +202,48 @@ package {
 				}
 			}
 			
+//<<<<<<< bionetwork.as
+			this.network.continuousUpdates = true;
+			var lay:ProjectedSVDLayout =  new ProjectedSVDLayout();
+//			this.network.operators.add(lay);
+
 //			var lay:CircleLayout =  new CircleLayout(null, null, false);
-			var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
+//			var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout(this.layoutmap);
 			this.network.operators.add(lay);
-        	this.network.x = 0;
-        	this.network.y = 0;
-			
-			//set defaults
+    	//	this.network.x = 0;
+    	//	this.network.y = 0;
 			this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     	
-    		this.network.data.edges.setProperties({
-				lineWidth: 0.5,
-				lineAlpha: 1,
-				lineColor: 0xff0000bb,
-				mouseEnabled: true,
-				visible:true
-				});
-				
-				addChild(this.network);
-				this.network.update();
+			this.network.data.edges.setProperties({
+			lineWidth: 0.5,
+			lineAlpha: 1,
+			lineColor: 0xff0000bb,
+			mouseEnabled: true,
+			visible:true
+			});
+			addChild(this.network);
+			this.network.update();
+
+			
+//=======
+////			var lay:CircleLayout =  new CircleLayout(null, null, false);
+//			var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
+//			this.network.operators.add(lay);
+//        	this.network.x = 0;
+//        	this.network.y = 0;
+//			
+//			//set defaults
+//			this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     	
+//    		this.network.data.edges.setProperties({
+//				lineWidth: 0.5,
+//				lineAlpha: 1,
+//				lineColor: 0xff0000bb,
+//				mouseEnabled: true,
+//				visible:true
+//				});
+//				
+//				addChild(this.network);
+//				this.network.update();
+//>>>>>>> 1.6
 }
 		
 		
