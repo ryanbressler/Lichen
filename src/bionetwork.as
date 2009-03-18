@@ -1,6 +1,6 @@
 package {
 	import com.adobe.serialization.json.JSON;
-	
+		import flare.vis.data.DataSprite;
 	import flare.animate.Pause;
 	import flare.animate.Sequence;
 	import flare.animate.Transitioner;
@@ -20,16 +20,28 @@ package {
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
+	import flash.text.TextFormat;
+	import flare.vis.operator.label.Labeler;
 	
 	import org.systemsbiology.visualization.bionetwork.data.Network;
+//<<<<<<< bionetwork.as
+	import flare.vis.operator.layout.CircleLayout;
+	import org.systemsbiology.visualization.bionetwork.layout.GoogleDataTableDrivenLayout;
+	import flare.vis.operator.layout.ForceDirectedLayout;
+//=======
 	import org.systemsbiology.visualization.bionetwork.layout.*;
+//>>>>>>> 1.7
 	import org.systemsbiology.visualization.data.DataView;
+//<<<<<<< bionetwork.as
+	import org.systemsbiology.visualization.bionetwork.display.MultiEdgeRenderer;
+	import org.systemsbiology.visualization.bionetwork.display.CircularHeatmapRenderer;
+	
+//=======
 
-
+//
+//>>>>>>> 1.7
 	public class bionetwork extends Sprite
-	{
-		
-
+	{	
 		private var data:Data = new Data();
 		private var network:Network = new Network(data);		
 		//config variables
@@ -69,7 +81,6 @@ package {
 
 	//for basic network	
 	public function bionetwork() {
-
 		this.containerId = root.loaderInfo.parameters.flashvarsId;
 		//ensure that coordinate system remians centered at upper left even after resize
 		stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -81,14 +92,7 @@ package {
 		var callJas:String = "isbSWFvisualizations."+this.containerId+".bioheatmapFlashReady";
 		ExternalInterface.call(callJas);
 		trace("Vis Initalized");		
-
 	}
-		
-		public function update_data(testString:String):void {
-			trace("update_data");
-			ExternalInterface.call("update_data");
-			showText(info1,"update",0xff0000);
-		}
 		
 	//for sprouting
 	public function redraw(dataJSON:String, optionsJSON:String) :void {			
@@ -124,17 +128,22 @@ package {
 		this.centerNode=this.options['center'];	
 		var layoutValues:Array = new Array();
 		
-		if (this.options['layout']){				
-			this.layout = new DataView(JSON.encode(this.options['layout']), "True");
+		if (this.options['layout_data']){			
+			trace("test layout");	
+			trace(this.options['layout_data']);
+//					this.dataTable = new DataView(dataJSON, "");
+			//need to change and mak
+			trace(options['layout_data']);
+			this.layout = new DataView(JSON.encode(this.options['layout_data']),"");
 		}
 		else{
 			this.layout=null;
 		}
-		
 
 		this.dataTable = new DataView(dataJSON, "");
+		trace("Test data table");
+		trace(this.dataTable);
 
-		
 		if (this.options['attributes']){
 			this.attributes = new DataView(JSON.encode(this.options['attributes']), "True");	
 		}
@@ -143,117 +152,157 @@ package {
 		}
 		
         this.resizeStage(containerId, dataTable, options);
-        drawAfterResize(this.dataTable,this.attributes, this.layout);         
+        drawAfterResize(this.dataTable, this.attributes, this.layout);         
 	}
 
-	//redraw without re-importing data
+	//redraw without loading new data
 	private function updateLayoutParams():void{
 		
+	}
+	
+	public function update_data(testString:String):void {
+		trace("update_data");
+		ExternalInterface.call("update_data");
+		showText(info1,"update",0xff0000);
 	}
 
 		// draw!
 	private function drawAfterResize(dataTable:DataView, attributeTable:*=null, layoutTable:*=null) :void {            			
-			trace("draw after resize");	
-			var interactor_name1:String;
-			var interactor_value1:String;
-			var interactor_name2:String;
-			var interactor_value2:String;
-			var interactor1:NodeSprite;
-			var interactor2:NodeSprite;
 
-	
-			for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
-				interactor_name1=dataTable.getFormattedValue(i,1);
-				interactor_value1=dataTable.getValue(i,1);
-				interactor_name2=dataTable.getFormattedValue(i,2);
-				interactor_value2=dataTable.getValue(i,2);			
-				interactor1=this.network.addNodeIfNotExist(interactor_name1);
-				interactor2=this.network.addNodeIfNotExist(interactor_name2);			
-				this.network.addEdgeIfNotExist(interactor1, interactor2)
-			}
-			var params:Object = {};
-			trace("layout");
-			//layout from layoutTable
-			if (layoutTable!=null){
-				for (var i:Number = 0; i<layoutTable.getNumberOfRows(); i++) {
-					//first column name
-					var interactor_name:String = layoutTable.getFormattedValue(i,0);
-					//rest of columns layout attributes (first two are x,y)
-					for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
-						var columnName:String = layoutTable.getColumnLabel(j);
-						var attributeValue:int = layoutTable.getValue(i,j);
-						trace(columnName + attributeValue);
-						params[columnName]=attributeValue;
-						this.network.updateNodeParams(interactor_name,params);
-					}	
-				}
-			}		
-			
-			//attributes
-			if (attributeTable!=null){
-				for (var i:Number = 0; i<attributeTable.getNumberOfRows(); i++) {
-					var interactor_name:String = attributeTable.getFormattedValue(i,0);
-					for (var j:Number = 1; j < attributeTable.getNumberOfColumns(); j++){
-						var columnName:String = layoutTable.getColumnLabel(j);
-						var attributeValue:int = layoutTable.getValue(i,j);
-						params[columnName]=attributeValue;
+		trace("draw after resize");	
+		var interactor_name1:String;
+		var interactor_value1:String;
+		var interactor_name2:String;
+		var interactor_value2:String;
+		var interactor1:NodeSprite;
+		var interactor2:NodeSprite;
+		
+		trace("EDGE DATA");
+		for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
+			interactor_name1=dataTable.getFormattedValue(i,1);
+			trace("formatted_name1" + interactor_name1);
+			interactor_value1=dataTable.getValue(i,1);
+			trace("formatted_value1" + interactor_value1);
+			interactor_name2=dataTable.getFormattedValue(i,2);
+			interactor_value2=dataTable.getValue(i,2);			
+			interactor1=this.network.addNodeIfNotExist(interactor_value1);
+			interactor2=this.network.addNodeIfNotExist(interactor_value2);			
+			this.network.addEdgeIfNotExist(interactor1, interactor2);
+			this.network.addEdge(interactor1, interactor2);
+		}
+		
+		var params:Object = {};
+		trace("LAYOUT DATA");
+		//layout from layoutTable
+		if (layoutTable!=null){
+			for (var i:Number = 0; i<layoutTable.getNumberOfRows(); i++) {
+				//first column name
+				var interactor_name:String = layoutTable.getValue(i,0);
+				//rest of columns layout attributes (first two are x,y)
+				for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
+					var columnName:String = layoutTable.getColumnLabel(j);
+					var layoutAttributeValue:String = layoutTable.getValue(i,j);
+					trace(columnName + layoutAttributeValue);
+					//branch to set main nodesprite properties
+					if (columnName=='shape'){
+						this.network.setNodeShape(interactor_name, layoutAttributeValue);
+					}
+					else if (columnName == 'color'){
+						this.network.setNodeColor(interactor_name, layoutAttributeValue);
+					}
+					else if (columnName == 'size'){
+						this.network.setNodeSize(interactor_name, int(layoutAttributeValue));
+					}
+					else {
+						params[columnName]=int(layoutAttributeValue);
 						this.network.updateNodeParams(interactor_name,params);
 					}
+				}	
+			}
+		}		
+			
+		//attributes-user defined node params
+		if (attributeTable!=null){
+			trace("attributes");
+			for (var i:Number = 0; i<attributeTable.getNumberOfRows(); i++) {
+				var interactor_name:String = attributeTable.getFormattedValue(i,0);
+				for (var j:Number = 1; j < attributeTable.getNumberOfColumns(); j++){
+					var columnName:String = layoutTable.getColumnLabel(j);
+					var attributeValue:int = layoutTable.getValue(i,j);
+					params[columnName]=attributeValue;
+					this.network.updateNodeParams(interactor_name,params);
 				}
 			}
-			
-//<<<<<<< bionetwork.as
-			this.network.continuousUpdates = true;
-			var lay:ProjectedSVDLayout =  new ProjectedSVDLayout();
-//			this.network.operators.add(lay);
+		}
 
-//			var lay:CircleLayout =  new CircleLayout(null, null, false);
-//			var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout(this.layoutmap);
-			this.network.operators.add(lay);
-    	//	this.network.x = 0;
-    	//	this.network.y = 0;
-			this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     	
-			this.network.data.edges.setProperties({
+		
+		//set defaults
+		this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     
+
+		//neeed to set different attributes for different edges	
+    	this.network.data.edges.setProperties({
 			lineWidth: 0.5,
 			lineAlpha: 1,
 			lineColor: 0xff0000bb,
 			mouseEnabled: true,
 			visible:true
-			});
-			addChild(this.network);
-			this.network.update();
-
-			
-//=======
-////			var lay:CircleLayout =  new CircleLayout(null, null, false);
-//			var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
-//			this.network.operators.add(lay);
-//        	this.network.x = 0;
-//        	this.network.y = 0;
-//			
-//			//set defaults
-//			this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     	
-//    		this.network.data.edges.setProperties({
-//				lineWidth: 0.5,
-//				lineAlpha: 1,
-//				lineColor: 0xff0000bb,
-//				mouseEnabled: true,
-//				visible:true
-//				});
-//				
-//				addChild(this.network);
-//				this.network.update();
-//>>>>>>> 1.6
-}
+		});
 		
+		this.network.data.edges.setProperties({
+			lineWidth: 0.5,
+			lineAlpha: 1,
+			lineColor: 0xff0000bb,
+			mouseEnabled: true,
+			visible:true,
+			renderer: MultiEdgeRenderer.instance
+		});
 		
+		//this.network.data.nodes.setProperties({renderer: CircularHeatmapRenderer.instance});
+		//var lay:CircleLayout =  new CircleLayout(null, null, false);
+		//var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
+		if (this.options['layout']=="ForceDirected"){
+			this.network.data.nodes.setProperties({x:315, y:315});     	
+	    	this.network.continuousUpdates = true;
+	    	//force directed layout
+			var lay:ForceDirectedLayout = new ForceDirectedLayout(true,8);
+	    	lay.simulation.dragForce.drag= 1;
+	    	lay.simulation.nbodyForce.gravitation=-9.8;  
+	        lay.defaultParticleMass= 6;
+	        lay.defaultSpringLength= 200;
+	        lay.defaultSpringTension= 0.4;
+	        this.network.operators.add(lay);
+		
+		}
+		else{
+			var lay2:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
+			this.network.operators.add(lay2);
+		}
+		
+		var fmt:TextFormat = new TextFormat("Verdana", 7);
+//		this.network.operators.add(new Labeler(
+//				function(d:NodeSprite):String {
+//					var txt:String = d.data.name;
+//					return txt;
+//				}, this.network.data.NODES, fmt, function():Boolean {return true}));
+	var labeller:Labeler = new Labeler(function(d:DataSprite):String {
+	//trace(String(d.data.name)); 
+		return String(d.data.name);
+	});
+	labeller.yOffset=15;
+	labeller.xOffset=5;
+	this.network.operators.add(labeller);
+        this.network.x = 0;
+        this.network.y = 0;
+				
+		addChild(this.network);
+		this.network.update();
+}	
 	private function getTransitioner(taskname:String,duration:Number=1,easing:Function=null,optimize: Boolean = false):Transitioner {
                 
 		if (_trans[taskname] != null) {    //here we could also check for running but disposing never harms ...        
 	        _trans[taskname].stop();
 	        _trans[taskname].dispose();
-	    }
-		                        
+	    }               
 		    _trans[taskname] = new Transitioner(duration,easing,optimize);
 		    return _trans[taskname];
 		}
@@ -281,16 +330,15 @@ package {
 		vis.update(t1).play();
 	}
 		
-		private function setNodeColor(ns:NodeSprite,t:Transitioner,color:int):void {
-			if (ns != null) {
-				var rs:RectSprite = ns.getChildAt(0) as RectSprite;
-				t.$(rs).fillColor = color; 
-				t.$(rs).lineColor = color; 
-			}
-			
-		}
+	private function setNodeColor(ns:NodeSprite,t:Transitioner,color:int):void {
+		if (ns != null) {
+			var rs:RectSprite = ns.getChildAt(0) as RectSprite;
+			t.$(rs).fillColor = color; 
+			t.$(rs).lineColor = color; 
+		}	
+	}
 		
-		//methods for ClickDragControl
+	//methods for ClickDragControl
 		
 	private function onComplete(evt:Event):void {
 			var li:LoaderInfo = evt.target as LoaderInfo;
