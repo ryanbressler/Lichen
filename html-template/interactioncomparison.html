@@ -1436,7 +1436,7 @@ data.insertColumn(0,"string");
 function getDataOne(){
 	if(window.oneData !== undefined) { return oneData; }
 	//use local scope for data
-	var data = new google.visualization.DataTable();
+	var data = new google.visualization.DataTable();	
 data.addColumn('string', 'interactor1');
 data.addColumn('string', 'interactor2');
 data.addColumn('string', 'sources');
@@ -2493,7 +2493,7 @@ function drawExample(whichCase) {
 		//	}
 	}
     networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-    networkvis.draw(exampleCases[whichCase].dataFunction(), {});	
+    networkvis.draw(exampleCases[whichCase].dataFunction(), {layout:'ForceDirected'});	
 	}
 
 </script>
