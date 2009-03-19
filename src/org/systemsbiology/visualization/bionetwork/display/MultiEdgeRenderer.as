@@ -29,10 +29,6 @@ package org.systemsbiology.visualization.bionetwork.display
 			var g:Graphics = e.graphics;
 			g.clear();
 			var data_sources:Array = ["HPRD", "MINT", "STRING"];
-			var delta_x1:Number;
-			var delta_y1:Number;
-			var delta_x2:Number;
-			var delta_y2:Number
 			var c:Number;
 			//0xff0000, 0xffcc00, 0x00ff00, 0x0066ff
 			var colorMap:Dictionary = new Dictionary();
@@ -46,7 +42,6 @@ package org.systemsbiology.visualization.bionetwork.display
 			var offset:Number = 0.2000000000000;
 			var offsetIncr:Number = lineWidth; 
 			//angle of edge
-			var line_theta:Number = Math.atan2((y1-y2),(x1-x2));
 			for (var i:Number = 0; i<data_sources.length; i++){
 			trace("i" + i);
 				g.lineStyle(lineWidth, colorMap[data_sources[i]]);
