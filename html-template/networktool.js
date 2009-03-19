@@ -1,10 +1,14 @@
-    
     DEBUG=1;
-    
     function log(message){
     	
     	if (DEBUG){
     		console.log(message);
+    	}
+    }
+    
+        function trace(){
+    	if (DEBUG){
+    		console.trace();
     	}
     }
     
@@ -19,133 +23,101 @@
 	  	  center=node_id;
 	  	  update_query.send(processUpdate);
 	  	}
-	  	
-	   function processNetworkData(response){
-          // alert("processResponse");
-			if (response.isError()) {
-				alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-				return;
-			}
-			data = response.getDataTable();
-			query2 = new google.visualization.Query('http://sdee.hdbase.org/networkviz/Attribute/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/&tqx=reqId:1;');
-			query2.setTimeout(300);
-			query2.send(processAttributeData);
-			//networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-			//log("vis: " + networkvis.toString());
-	  	}
       
-    function processUpdate(response){
-    //need to concatenate data?
-      log("response");
-      log(response);
-      log("center: "+center);
-      	if (response.isError()) {
-			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-			return;
-		}
-       log("update response");
-       log(response);
-       var new_data = response.getDataTable();
-       log("processUpdate completed");
-       log("new data log");
-       log(new_data);
-       //need to add new attribute_data
-       networkvis.update_data(new_data, {attributes: attribute_data, center: center, data_format: "google"});
-      }
-      
-      
-      function processAttributeData(response){
-        
-        log("process attribute data");
-        log("response");
-        log(response);
-      	if (response.isError()) {
-			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-			return;
-		}
-       log("attribute response");
-       attribute_data=response.getDataTable();
-       log(data);
-       networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-       networkvis.draw(data, {attributes: attribute_data, center:center, data_format:"google"});
-
-      }
-      
-     function fetch_urls(){
+     function fetch_urls(urls){
      	log("fetch urls");
-      	reqId=1;
+      	//reqId=0;
       	cnt=0;
-      	number_urls=0;
-      	urls={data: 'http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/?tqx=reqId:0;&format=google', layout: 'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/&tqx=reqId:1;'};
-      	//layout: 'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/&tqx=reqId:1;&format=google
-      	//layout: 'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/7157/?tqx=reqId:1;'
+      	options = new Object;
+		number_urls=0;
+		for (k in urls){ number_urls++};
+		log("number urls" + number_urls);
+				
+		//set config
 		center='23645';
+	
+		reqId=0;
 		for (var i in urls) {
 			log("key " + i);
-			log(eval('urls.' + i));
-			//url = eval('urls.' + i)+'&tqx=reqId:'+reqId+';';
 			url = eval('urls.' + i);
-			log("url " + url);
-			query=new google.visualization.Query(url);
-			query.setTimeout(400);
-			log("query " + query);
-			if (i==='data'){
-				func = 'processData';
+			if (i==='dataurl'){
+				func = processData;
+				query_url = url+'?tqx=reqId:'+reqId+';&format=google';
 			}
-			else if (i==='attributes'){
-				func='processAttributes';
+			else if (i==='attributeurl'){
+				func=processAttributes;
 			}
-			else if (i==='layout'){
-				func='processLayout';
+			else if (i==='layouturl'){
+				func=processLayout;
+				query_url = url+'&tqx=reqId:'+reqId+';&format=google';
 			}
-			query.send(eval(func));
+			//everything else goes in the options object to be passed via draw_vis()
+			else{
+				options[i] = urls[i];
+			}
+			log("url " + query_url);	
+			query=new google.visualization.Query(query_url);
+			query.send(func);
+			query.setTimeout(300);
 			reqId+=1;
-			number_urls+=1;
-		} 
-		
-	   log("url size" + (number_urls).toString());
-	   //wait
-       	log("center" + center);
-       		
+		} 	
       }
-
 
 	function draw_vis(){
 		log("draw_visualization");
 		networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-       	networkvis.draw(data, {layout: layout_data, center:center, data_format:"google"});
+		//(data, options)
+       	//networkvis.draw(data, {layout:layout_data, center:center, data_format:"google"});
+    	networkvis.draw(data, options);
+       	//networkvis.draw(data, {center:center, data_format:"google"});
 	}
 	  	
 	 function processLayout(response){
+	 	//layout_data='';
 	 	log("processLayout");
 	 	if (response.isError()) {
 			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
 		}
+		log("layout response:");
 		log(response);
+		layout_data = null;
 		layout_data = response.getDataTable();
-		cnt+=1;
+		
+		while(true){
+			if (!(layout_data===null)){
+				options['layout_data']=layout_data;
+				log("break2");
+				cnt+=1;
+				break;
+			}
+		}
+
+		
+		log("count: "+ cnt);
 		if (cnt===number_urls){
 			draw_vis();
 		}
 	 } 	
 	 
 	 function processData(response){
-	 	data='';
 	 	log("processData");
 	 	if (response.isError()) {
 			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
 		}
+		data = null;
 		data = response.getDataTable();
 		while(true){
-			if (!(data==='')){
+			if (!(data===null)){
+				log("break1");
 				cnt+=1;
 				break;
-			}
-		}
+			} 
+		 }
+	
+		log("count: " + cnt);
 		if (cnt===number_urls){
 			draw_vis();
 		}
-		log("data is" + data);
 	 }
 	 
 	 function processAttributes(response){
@@ -199,11 +171,9 @@
 		//if (true){
     	var dataParam = {cols:[], rows:[]};
     	log("Num columns");
-
     	log(dataTable.getNumberOfColumns());
     	for (var coli=0;coli<dataTable.getNumberOfColumns();coli++){
 			dataParam.cols[coli]={id: dataTable.getColumnId(coli), label: dataTable.getColumnLabel(coli), type: 'string'};
-
 			for (var rowi=0;rowi<dataTable.getNumberOfRows();rowi++){
 				dataParam.rows[rowi]={};
 				dataParam.rows[rowi].c=[];
@@ -219,16 +189,13 @@
     }
     	//log(dump(dataParam));
     	return dataParam;
-    	
     }
 	 
-      
     function isEmpty(object) {
 		for (var i in object) { return false; }
 		return true;
 	}  
 	 
-	  	
 	function dump(arr,level) {
 	var dumped_text = "";
 	if(!level) level = 0;

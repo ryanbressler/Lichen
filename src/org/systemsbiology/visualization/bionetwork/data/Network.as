@@ -12,11 +12,8 @@ package org.systemsbiology.visualization.bionetwork.data
 		private var changed:Boolean = false;
 		
 		public function Network(data:Data)
-		{
-			
+		{	
 			super(data);
-			
-			
 		}
 		
 		//add node if doesn't already exist; if exist return dedge
@@ -24,6 +21,11 @@ package org.systemsbiology.visualization.bionetwork.data
 		
 		{
 			return this.data.addNode(n);
+		}
+		
+		public function addEdge(source:NodeSprite, target:NodeSprite, directed:Object = false):EdgeSprite
+		{
+			return this.data.addEdgeFor(source, target);
 		}
 		
 		//add edge if doesn't already exist; if exist returns node
@@ -35,9 +37,7 @@ package org.systemsbiology.visualization.bionetwork.data
 			else {
 				return this.findEdgeByNodes(source.name,target.name);
 			}
-			
 		}
-		
 		
 		public function checkNode(name:String):Boolean
 		{
@@ -53,11 +53,36 @@ package org.systemsbiology.visualization.bionetwork.data
 		
 		public function updateNodeParams(name:String, params:Object):void{
 			//add params 
+			trace("updateNodeParams");
 			var node:NodeSprite=this.findNodeByName(name);
 			for(var param in params){
-				this.data.nodes.setProperty("props."+param, params[param], null, function(n:NodeSprite):Boolean{return n.data.name=="11127";});				
+				trace("PARAMS " + param);
+				this.data.nodes.setProperty("props."+param, params[param], null, function(n:NodeSprite):Boolean{return n.data.name==name;});				
 			}
-		}				
+		}	
+		
+		//need to work in backword direction too or just accept edge
+		public function setEdgeColor(source:NodeSprite, target:NodeSprite, color:String){
+			
+		}
+		
+		public function setNodeColor(name:String, color:String):void{
+			trace("setNodeColor");
+			this.data.nodes.setProperty("fillColor", color, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
+		}	
+		
+		public function setNodeShape(name:String, shape:String):void{
+			trace("setNodeShape");
+			//var nodeShape:Shape = ShapePalette.getShape("TRIANGLE");
+			trace(shape);
+			
+			this.data.nodes.setProperty("shape", "Shapes."+shape, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
+		}		
+		
+		public function setNodeSize(name:String, size:Number):void{
+			trace("setNodeSize");
+			this.data.nodes.setProperty("size", size, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
+		}	
 		
 		public function checkEdge(name1:String, name2:String, directed:Object = null):Boolean 
 		{
@@ -79,7 +104,6 @@ package org.systemsbiology.visualization.bionetwork.data
 				else if (eq(source.name,name1) && (eq(source.name,name2))){
 					return true;
 				} 
-				
 			}
 			return false;
 			
@@ -92,7 +116,6 @@ package org.systemsbiology.visualization.bionetwork.data
 			nodes = select("data")
 				.eval(this.data.nodes);
 			var names:Array = nodes.map(extractNames);
-			
 			var node_index:int=names.indexOf(name);
 			if (neq(node_index, -1)){
 				return this.data.nodes[node_index];
