@@ -8,9 +8,7 @@ package org.systemsbiology.visualization.bionetwork.data
 	
 	public class Network extends Visualization
 	{
-
-		private var changed:Boolean = false;
-		
+		private var changed:Boolean = false;	
 		public function Network(data:Data)
 		{	
 			super(data);
@@ -18,7 +16,6 @@ package org.systemsbiology.visualization.bionetwork.data
 		
 		//add node if doesn't already exist; if exist return dedge
 		public function addNode(n:Object):NodeSprite
-		
 		{
 			return this.data.addNode(n);
 		}
@@ -38,6 +35,21 @@ package org.systemsbiology.visualization.bionetwork.data
 				return this.findEdgeByNodes(source.name,target.name);
 			}
 		}
+		
+		public function addEdgeSource(edge:EdgeSprite, source:String){
+			if (edge.props.ixnsources==null){
+				edge.props.ixnsources = [source];
+			}
+			else{
+				edge.props.ixnsources.push(source);
+			}
+		}
+		
+		public function getEdgeSource(edge:EdgeSprite):Array
+		{
+			return edge.props.ixsources;
+		}
+		
 		
 		public function checkNode(name:String):Boolean
 		{

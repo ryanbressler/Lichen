@@ -1,6 +1,6 @@
 package {
 	import com.adobe.serialization.json.JSON;
-		import flare.vis.data.DataSprite;
+	
 	import flare.animate.Pause;
 	import flare.animate.Sequence;
 	import flare.animate.Transitioner;
@@ -8,9 +8,12 @@ package {
 	import flare.display.TextSprite;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
+	import flare.vis.data.DataSprite;
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.events.SelectionEvent;
+	import flare.vis.operator.label.Labeler;
+	import flare.vis.operator.layout.ForceDirectedLayout;
 	
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
@@ -20,26 +23,12 @@ package {
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
-	import flash.text.TextFormat;
-	import flare.vis.operator.label.Labeler;
 	
 	import org.systemsbiology.visualization.bionetwork.data.Network;
-//<<<<<<< bionetwork.as
-	import flare.vis.operator.layout.CircleLayout;
-	import org.systemsbiology.visualization.bionetwork.layout.GoogleDataTableDrivenLayout;
-	import flare.vis.operator.layout.ForceDirectedLayout;
-//=======
-	import org.systemsbiology.visualization.bionetwork.layout.*;
-//>>>>>>> 1.7
-	import org.systemsbiology.visualization.data.DataView;
-//<<<<<<< bionetwork.as
 	import org.systemsbiology.visualization.bionetwork.display.MultiEdgeRenderer;
-	import org.systemsbiology.visualization.bionetwork.display.CircularHeatmapRenderer;
-	
-//=======
-
-//
-//>>>>>>> 1.7
+	import org.systemsbiology.visualization.bionetwork.layout.*;
+	import org.systemsbiology.visualization.control.ClickDragControl;
+	import org.systemsbiology.visualization.data.DataView;
 	public class bionetwork extends Sprite
 	{	
 		private var data:Data = new Data();
@@ -88,7 +77,7 @@ package {
 		stage.addEventListener(Event.ACTIVATE, activateHandler);
         ExternalInterface.addCallback("draw", draw);
         ExternalInterface.addCallback("redraw", redraw);		
-        ExternalInterface.addCallback("update_data", update_data);		
+        //ExternalInterface.addCallback("update_data", update_data);		
 		var callJas:String = "isbSWFvisualizations."+this.containerId+".bioheatmapFlashReady";
 		ExternalInterface.call(callJas);
 		trace("Vis Initalized");		
@@ -160,11 +149,11 @@ package {
 		
 	}
 	
-	public function update_data(testString:String):void {
-		trace("update_data");
-		ExternalInterface.call("update_data");
-		showText(info1,"update",0xff0000);
-	}
+//	public function update_data(testString:String):void {
+//		trace("update_data");
+//		ExternalInterface.call("update_data");
+//		showText(info1,"update",0xff0000);
+//	}
 
 		// draw!
 	private function drawAfterResize(dataTable:DataView, attributeTable:*=null, layoutTable:*=null) :void {            			
@@ -176,7 +165,8 @@ package {
 		var interactor_value2:String;
 		var interactor1:NodeSprite;
 		var interactor2:NodeSprite;
-		
+		var ixnsources:Array;
+		var edge:EdgeSprite;
 		trace("EDGE DATA");
 		for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
 			interactor_name1=dataTable.getFormattedValue(i,1);
@@ -184,11 +174,19 @@ package {
 			interactor_value1=dataTable.getValue(i,1);
 			trace("formatted_value1" + interactor_value1);
 			interactor_name2=dataTable.getFormattedValue(i,2);
-			interactor_value2=dataTable.getValue(i,2);			
+			interactor_value2=dataTable.getValue(i,2);
+			trace(dataTable.getValue(i,3));
+			ixnsources = dataTable.getValue(i,3).split(", ");
+			trace("IXN_SOURCES" + ixnsources[0]);	
 			interactor1=this.network.addNodeIfNotExist(interactor_value1);
 			interactor2=this.network.addNodeIfNotExist(interactor_value2);			
-			this.network.addEdgeIfNotExist(interactor1, interactor2);
-			this.network.addEdge(interactor1, interactor2);
+			edge=this.network.addEdgeIfNotExist(interactor1, interactor2);
+			//this.network.addEdge(interactor1, interactor2);
+			trace("length" + ixnsources.length);
+			for (var j:Number=0; j<ixnsources.length; j++){
+				trace("j" + j);
+				this.network.addEdgeSource(edge, ixnsources[j]);
+			}		
 		}
 		
 		var params:Object = {};
@@ -238,15 +236,28 @@ package {
 		
 		//set defaults
 		this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     
-
-		//neeed to set different attributes for different edges	
-    	this.network.data.edges.setProperties({
-			lineWidth: 0.5,
-			lineAlpha: 1,
-			lineColor: 0xff0000bb,
-			mouseEnabled: true,
-			visible:true
-		});
+		//this.network.data.nodes.setProperties({renderer: CircularHeatmapRenderer.instance});
+		//var lay:CircleLayout =  new CircleLayout(null, null, false);
+		//var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
+		if (this.options['layout']=="ForceDirected"){
+			this.network.data.nodes.setProperties({x:315, y:315});     	
+	    	this.network.continuousUpdates = true;
+	    	//force directed layout
+			var lay:ForceDirectedLayout = new ForceDirectedLayout(true,120);
+	    	lay.simulation.dragForce.drag=1;
+	    	lay.simulation.nbodyForce.gravitation=-128;  
+	        lay.defaultParticleMass= 6;
+	        lay.defaultSpringLength=100;
+	        lay.defaultSpringTension= 0.1;
+	        this.network.operators.add(lay);
+		
+		}
+		else{
+		
+			var lay2:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
+			this.network.operators.add(lay2);
+		}
+		
 		
 		this.network.data.edges.setProperties({
 			lineWidth: 0.5,
@@ -256,27 +267,30 @@ package {
 			visible:true,
 			renderer: MultiEdgeRenderer.instance
 		});
-		
-		//this.network.data.nodes.setProperties({renderer: CircularHeatmapRenderer.instance});
-		//var lay:CircleLayout =  new CircleLayout(null, null, false);
-		//var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
-		if (this.options['layout']=="ForceDirected"){
-			this.network.data.nodes.setProperties({x:315, y:315});     	
-	    	this.network.continuousUpdates = true;
-	    	//force directed layout
-	    	var lay:ForceDirectedLayout = new ForceDirectedLayout(true,1);
-	    	lay.simulation.dragForce.drag= 4;
-	    	lay.simulation.nbodyForce.gravitation=-128;  
-	        lay.defaultParticleMass= 16;
-	        lay.defaultSpringLength= 120;
-	        lay.defaultSpringTension= .1;
-	        this.network.operators.add(lay);
-		
-		}
-		else{
-			var lay2:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
-			this.network.operators.add(lay2);
-		}
+			var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);
+//			cdc.addEventListener(SelectionEvent.SELECT,onSingleClick);
+//			cdc.addEventListener(SelectionEvent.DESELECT, onSingleClickDeselect);
+//		
+//		//this.network.data.nodes.setProperties({renderer: CircularHeatmapRenderer.instance});
+//		//var lay:CircleLayout =  new CircleLayout(null, null, false);
+//		//var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
+//		if (this.options['layout']=="ForceDirected"){
+//			this.network.data.nodes.setProperties({x:315, y:315});     	
+//	    	this.network.continuousUpdates = true;
+//	    	//force directed layout
+//	    	var lay:ForceDirectedLayout = new ForceDirectedLayout(true,1);
+//	    	lay.simulation.dragForce.drag= 4;
+//	    	lay.simulation.nbodyForce.gravitation=-128;  
+//	        lay.defaultParticleMass= 16;
+//	        lay.defaultSpringLength= 120;
+//	        lay.defaultSpringTension= .1;
+//	        this.network.operators.add(lay);
+//		
+//		}
+//		else{
+//			var lay2:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
+//			this.network.operators.add(lay2);
+//		}
 		
 		var fmt:TextFormat = new TextFormat("Verdana", 7);
 //		this.network.operators.add(new Labeler(
@@ -293,7 +307,7 @@ package {
 	this.network.operators.add(labeller);
         this.network.x = 0;
         this.network.y = 0;
-				
+		this.network.controls.add(cdc);
 		addChild(this.network);
 		this.network.update();
 }	
@@ -357,37 +371,37 @@ package {
 			t.play();
 		}
 		
-		private function onSingleClick(evt:SelectionEvent):void {
+//		private function onSingleClick(evt:SelectionEvent):void {
+////			ExternalInterface.call("test");
+//			showText(info1,"single click on node " + evt.node.data.name);
 //			ExternalInterface.call("test");
-			showText(info1,"single click on node " + evt.node.data.name);
-			ExternalInterface.call("test");
-			trace("click");
-		}
+//			trace("click");
+//		}
 		private function onSingleClickDeselect(evt:SelectionEvent):void {
 //			if (info1.alpha > 0) //deselect info only if text is shown at the moment
 //			showText(info1,"single click deselect",0xff0000);
 		}
 		
-		private function onDoubleClick(evt:SelectionEvent):void {
-			showText(info2,"double click on node " + evt.node.data.name);
-			ExternalInterface.call("sprout", evt.node.data.name);
-			
-			trace("sprouted on " + evt.node.data.name);
-		}
-		private function onDoubleClickDeselect(evt:SelectionEvent):void {
-//			if (info2.alpha > 0)
-//			showText(info2,"double click deselect",0xff0000);
-		}
+//		private function onDoubleClick(evt:SelectionEvent):void {
+//			showText(info2,"double click on node " + evt.node.data.name);
+//			ExternalInterface.call("sprout", evt.node.data.name);
+//			
+//			trace("sprouted on " + evt.node.data.name);
+//		}
+//		private function onDoubleClickDeselect(evt:SelectionEvent):void {
+////			if (info2.alpha > 0)
+////			showText(info2,"double click deselect",0xff0000);
+//		}
 		
-		private function showText(info:TextSprite,text:String,co:uint=0x000000):void {
-			var t1:Transitioner = getTransitioner(info.name + "-in",1); //info.name to distinquish info1 and info2 
-			var t2:Transitioner = getTransitioner(info.name + "-out",1);
-			t1.$(info).alpha = 1;
-			t2.$(info).alpha = 0;
-			info.text = text;
-			info.color = co;
-			new Sequence(t1,new Pause(2),t2).play();
-		}
+//		private function showText(info:TextSprite,text:String,co:uint=0x000000):void {
+//			var t1:Transitioner = getTransitioner(info.name + "-in",1); //info.name to distinquish info1 and info2 
+//			var t2:Transitioner = getTransitioner(info.name + "-out",1);
+//			t1.$(info).alpha = 1;
+//			t2.$(info).alpha = 0;
+//			info.text = text;
+//			info.color = co;
+//			new Sequence(t1,new Pause(2),t2).play();
+//		}
 		
 		// called when movie is left-clicked on (aka "activated")
 		private function activateHandler(event:Event):void {
