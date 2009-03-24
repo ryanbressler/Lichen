@@ -1,0 +1,631 @@
+<html lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Comparison of Interactions</title>
+
+	
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {});
+  google.load("prototype", "1.6");
+</script>
+<script type="text/javascript" src="bionetwork.js"></script>
+<script language="JavaScript" type="text/javascript">
+
+//Functions to generate and cache the datatable objects
+function getDataAll(){
+	if(window.allData !== undefined) { return allData; }
+	//use local scope for data
+	var data = new google.visualization.DataTable();
+data.addColumn('string', 'interactor1');
+data.addColumn('string', 'interactor2');
+data.addColumn('string', 'sources');
+data.addRows(46);
+data.setValue(0, 0, '1234');
+data.setValue(0, 1, '6777');
+data.setFormattedValue(0, 0, 'CCR5');
+data.setFormattedValue(0, 1, 'STAT5B');
+data.setValue(0, 2, 'BioGRID');
+data.setValue(1, 0, '1387');
+data.setValue(1, 1, '6777');
+data.setFormattedValue(1, 0, 'CREBBP');
+data.setFormattedValue(1, 1, 'STAT5B');
+data.setValue(1, 2, 'IntAct');
+data.setValue(2, 0, '1398');
+data.setValue(2, 1, '6777');
+data.setFormattedValue(2, 0, 'CRK');
+data.setFormattedValue(2, 1, 'STAT5B');
+data.setValue(2, 2, 'HPRD');
+data.setValue(3, 0, '1399');
+data.setValue(3, 1, '6777');
+data.setFormattedValue(3, 0, 'CRKL');
+data.setFormattedValue(3, 1, 'STAT5B');
+data.setValue(3, 2, 'HPRD');
+data.setValue(4, 0, '1493');
+data.setValue(4, 1, '6777');
+data.setFormattedValue(4, 0, 'CTLA4');
+data.setFormattedValue(4, 1, 'STAT5B');
+data.setValue(4, 2, 'HPRD');
+data.setValue(5, 0, '1956');
+data.setValue(5, 1, '6777');
+data.setFormattedValue(5, 0, 'EGFR');
+data.setFormattedValue(5, 1, 'STAT5B');
+data.setValue(5, 2, 'BioGRID, MINT, HPRD');
+data.setValue(6, 0, '2033');
+data.setValue(6, 1, '6777');
+data.setFormattedValue(6, 0, 'EP300');
+data.setFormattedValue(6, 1, 'STAT5B');
+data.setValue(6, 2, 'HPRD');
+data.setValue(7, 0, '2057');
+data.setValue(7, 1, '6777');
+data.setFormattedValue(7, 0, 'EPOR');
+data.setFormattedValue(7, 1, 'STAT5B');
+data.setValue(7, 2, 'IntAct, HPRD');
+data.setValue(8, 0, '2066');
+data.setValue(8, 1, '6777');
+data.setFormattedValue(8, 0, 'ERBB4');
+data.setFormattedValue(8, 1, 'STAT5B');
+data.setValue(8, 2, 'MINT');
+data.setValue(9, 0, '2113');
+data.setValue(9, 1, '6777');
+data.setFormattedValue(9, 0, 'ETS1');
+data.setFormattedValue(9, 1, 'STAT5B');
+data.setValue(9, 2, 'HPRD');
+data.setValue(10, 0, '2114');
+data.setValue(10, 1, '6777');
+data.setFormattedValue(10, 0, 'ETS2');
+data.setFormattedValue(10, 1, 'STAT5B');
+data.setValue(10, 2, 'HPRD');
+data.setValue(11, 0, '2690');
+data.setValue(11, 1, '6777');
+data.setFormattedValue(11, 0, 'GHR');
+data.setFormattedValue(11, 1, 'STAT5B');
+data.setValue(11, 2, 'BioGRID, HPRD');
+data.setValue(12, 0, '2908');
+data.setValue(12, 1, '6777');
+data.setFormattedValue(12, 0, 'NR3C1');
+data.setFormattedValue(12, 1, 'STAT5B');
+data.setValue(12, 2, 'BioGRID, MIPS, HPRD');
+data.setValue(13, 0, '3559');
+data.setValue(13, 1, '6777');
+data.setFormattedValue(13, 0, 'IL2RA');
+data.setFormattedValue(13, 1, 'STAT5B');
+data.setValue(13, 2, 'HPRD');
+data.setValue(14, 0, '3560');
+data.setValue(14, 1, '6777');
+data.setFormattedValue(14, 0, 'IL2RB');
+data.setFormattedValue(14, 1, 'STAT5B');
+data.setValue(14, 2, 'BioGRID, HPRD');
+data.setValue(15, 0, '3575');
+data.setValue(15, 1, '6777');
+data.setFormattedValue(15, 0, 'IL7R');
+data.setFormattedValue(15, 1, 'STAT5B');
+data.setValue(15, 2, 'HPRD');
+data.setValue(16, 0, '3643');
+data.setValue(16, 1, '6777');
+data.setFormattedValue(16, 0, 'INSR');
+data.setFormattedValue(16, 1, 'STAT5B');
+data.setValue(16, 2, 'HPRD');
+data.setValue(17, 0, '3716');
+data.setValue(17, 1, '6777');
+data.setFormattedValue(17, 0, 'JAK1');
+data.setFormattedValue(17, 1, 'STAT5B');
+data.setValue(17, 2, 'BioGRID');
+data.setValue(18, 0, '3717');
+data.setValue(18, 1, '6777');
+data.setFormattedValue(18, 0, 'JAK2');
+data.setFormattedValue(18, 1, 'STAT5B');
+data.setValue(18, 2, 'BioGRID, HPRD');
+data.setValue(19, 0, '3718');
+data.setValue(19, 1, '6777');
+data.setFormattedValue(19, 0, 'JAK3');
+data.setFormattedValue(19, 1, 'STAT5B');
+data.setValue(19, 2, 'BioGRID');
+data.setValue(20, 0, '3815');
+data.setValue(20, 1, '6777');
+data.setFormattedValue(20, 0, 'KIT');
+data.setFormattedValue(20, 1, 'STAT5B');
+data.setValue(20, 2, 'HPRD');
+data.setValue(21, 0, '5156');
+data.setValue(21, 1, '6777');
+data.setFormattedValue(21, 0, 'PDGFRA');
+data.setFormattedValue(21, 1, 'STAT5B');
+data.setValue(21, 2, 'HPRD');
+data.setValue(22, 0, '5159');
+data.setValue(22, 1, '6777');
+data.setFormattedValue(22, 0, 'PDGFRB');
+data.setFormattedValue(22, 1, 'STAT5B');
+data.setValue(22, 2, 'HPRD');
+data.setValue(23, 0, '5451');
+data.setValue(23, 1, '6777');
+data.setFormattedValue(23, 0, 'POU2F1');
+data.setFormattedValue(23, 1, 'STAT5B');
+data.setValue(23, 2, 'HPRD');
+data.setValue(24, 0, '5515');
+data.setValue(24, 1, '6777');
+data.setFormattedValue(24, 0, 'PPP2CA');
+data.setFormattedValue(24, 1, 'STAT5B');
+data.setValue(24, 2, 'HPRD');
+data.setValue(25, 0, '5594');
+data.setValue(25, 1, '6777');
+data.setFormattedValue(25, 0, 'MAPK1');
+data.setFormattedValue(25, 1, 'STAT5B');
+data.setValue(25, 2, 'HPRD');
+data.setValue(26, 0, '5770');
+data.setValue(26, 1, '6777');
+data.setFormattedValue(26, 0, 'PTPN1');
+data.setFormattedValue(26, 1, 'STAT5B');
+data.setValue(26, 2, 'MINT, HPRD');
+data.setValue(27, 0, '5771');
+data.setValue(27, 1, '6777');
+data.setFormattedValue(27, 0, 'PTPN2');
+data.setFormattedValue(27, 1, 'STAT5B');
+data.setValue(27, 2, 'HPRD');
+data.setValue(28, 0, '5777');
+data.setValue(28, 1, '6777');
+data.setFormattedValue(28, 0, 'PTPN6');
+data.setFormattedValue(28, 1, 'STAT5B');
+data.setValue(28, 2, 'BioGRID, HPRD');
+data.setValue(29, 0, '5781');
+data.setValue(29, 1, '6777');
+data.setFormattedValue(29, 0, 'PTPN11');
+data.setFormattedValue(29, 1, 'STAT5B');
+data.setValue(29, 2, 'BioGRID, HPRD');
+data.setValue(30, 0, '5914');
+data.setValue(30, 1, '6777');
+data.setFormattedValue(30, 0, 'RARA');
+data.setFormattedValue(30, 1, 'STAT5B');
+data.setValue(30, 2, 'HPRD');
+data.setValue(31, 0, '6464');
+data.setValue(31, 1, '6777');
+data.setFormattedValue(31, 0, 'SHC1');
+data.setFormattedValue(31, 1, 'STAT5B');
+data.setValue(31, 2, 'BioGRID, HPRD');
+data.setValue(32, 0, '6714');
+data.setValue(32, 1, '6777');
+data.setFormattedValue(32, 0, 'SRC');
+data.setFormattedValue(32, 1, 'STAT5B');
+data.setValue(32, 2, 'HPRD');
+data.setValue(33, 0, '6772');
+data.setValue(33, 1, '6777');
+data.setFormattedValue(33, 0, 'STAT1');
+data.setFormattedValue(33, 1, 'STAT5B');
+data.setValue(33, 2, 'HPRD');
+data.setValue(34, 0, '6774');
+data.setValue(34, 1, '6777');
+data.setFormattedValue(34, 0, 'STAT3');
+data.setFormattedValue(34, 1, 'STAT5B');
+data.setValue(34, 2, 'HPRD');
+data.setValue(35, 0, '6776');
+data.setValue(35, 1, '6777');
+data.setFormattedValue(35, 0, 'STAT5A');
+data.setFormattedValue(35, 1, 'STAT5B');
+data.setValue(35, 2, 'BioGRID, HPRD');
+data.setValue(36, 0, '6777');
+data.setValue(36, 1, '867');
+data.setFormattedValue(36, 0, 'STAT5B');
+data.setFormattedValue(36, 1, 'CBL');
+data.setValue(36, 2, 'HPRD');
+data.setValue(37, 0, '6777');
+data.setValue(37, 1, '919');
+data.setFormattedValue(37, 0, 'STAT5B');
+data.setFormattedValue(37, 1, 'CD247');
+data.setValue(37, 2, 'BioGRID, HPRD');
+data.setValue(38, 0, '6777');
+data.setValue(38, 1, '6777');
+data.setFormattedValue(38, 0, 'STAT5B');
+data.setFormattedValue(38, 1, 'STAT5B');
+data.setValue(38, 2, 'HPRD');
+data.setValue(39, 0, '6777');
+data.setValue(39, 1, '7010');
+data.setFormattedValue(39, 0, 'STAT5B');
+data.setFormattedValue(39, 1, 'TEK');
+data.setValue(39, 2, 'HPRD');
+data.setValue(40, 0, '6777');
+data.setValue(40, 1, '7852');
+data.setFormattedValue(40, 0, 'STAT5B');
+data.setFormattedValue(40, 1, 'CXCR4');
+data.setValue(40, 2, 'HPRD');
+data.setValue(41, 0, '6777');
+data.setValue(41, 1, '9111');
+data.setFormattedValue(41, 0, 'STAT5B');
+data.setFormattedValue(41, 1, 'NMI');
+data.setValue(41, 2, 'BioGRID, IntAct, HPRD');
+data.setValue(42, 0, '6777');
+data.setValue(42, 1, '9612');
+data.setFormattedValue(42, 0, 'STAT5B');
+data.setFormattedValue(42, 1, 'NCOR2');
+data.setValue(42, 2, 'HPRD');
+data.setValue(43, 0, '55250');
+data.setValue(43, 1, '6777');
+data.setFormattedValue(43, 0, 'ELP2');
+data.setFormattedValue(43, 1, 'STAT5B');
+data.setValue(43, 2, 'BioGRID, HPRD');
+data.setValue(44, 0, '55620');
+data.setValue(44, 1, '6777');
+data.setFormattedValue(44, 0, 'STAP2');
+data.setFormattedValue(44, 1, 'STAT5B');
+data.setValue(44, 2, 'MINT, HPRD');
+data.setValue(45, 0, '55835');
+data.setValue(45, 1, '6777');
+data.setFormattedValue(45, 0, 'CENPJ');
+data.setFormattedValue(45, 1, 'STAT5B');
+data.setValue(45, 2, 'HPRD');
+data.insertColumn(0,"string");
+	allData = data;
+	return allData;
+}
+
+function getDataOne(){
+	if(window.oneData !== undefined) { return oneData; }
+	//use local scope for data
+	var data = new google.visualization.DataTable();	
+data.addColumn('string', 'interactor1');
+data.addColumn('string', 'interactor2');
+data.addColumn('string', 'sources');
+data.addRows(15);
+data.setValue(0, 0, '1234');
+data.setValue(0, 1, '6777');
+data.setFormattedValue(0, 0, 'CCR5');
+data.setFormattedValue(0, 1, 'STAT5B');
+data.setValue(0, 2, 'BioGRID');
+data.setValue(1, 0, '1956');
+data.setValue(1, 1, '6777');
+data.setFormattedValue(1, 0, 'EGFR');
+data.setFormattedValue(1, 1, 'STAT5B');
+data.setValue(1, 2, 'BioGRID');
+data.setValue(2, 0, '2690');
+data.setValue(2, 1, '6777');
+data.setFormattedValue(2, 0, 'GHR');
+data.setFormattedValue(2, 1, 'STAT5B');
+data.setValue(2, 2, 'BioGRID');
+data.setValue(3, 0, '2908');
+data.setValue(3, 1, '6777');
+data.setFormattedValue(3, 0, 'NR3C1');
+data.setFormattedValue(3, 1, 'STAT5B');
+data.setValue(3, 2, 'BioGRID');
+data.setValue(4, 0, '3560');
+data.setValue(4, 1, '6777');
+data.setFormattedValue(4, 0, 'IL2RB');
+data.setFormattedValue(4, 1, 'STAT5B');
+data.setValue(4, 2, 'BioGRID');
+data.setValue(5, 0, '3716');
+data.setValue(5, 1, '6777');
+data.setFormattedValue(5, 0, 'JAK1');
+data.setFormattedValue(5, 1, 'STAT5B');
+data.setValue(5, 2, 'BioGRID');
+data.setValue(6, 0, '3717');
+data.setValue(6, 1, '6777');
+data.setFormattedValue(6, 0, 'JAK2');
+data.setFormattedValue(6, 1, 'STAT5B');
+data.setValue(6, 2, 'BioGRID');
+data.setValue(7, 0, '3718');
+data.setValue(7, 1, '6777');
+data.setFormattedValue(7, 0, 'JAK3');
+data.setFormattedValue(7, 1, 'STAT5B');
+data.setValue(7, 2, 'BioGRID');
+data.setValue(8, 0, '5777');
+data.setValue(8, 1, '6777');
+data.setFormattedValue(8, 0, 'PTPN6');
+data.setFormattedValue(8, 1, 'STAT5B');
+data.setValue(8, 2, 'BioGRID');
+data.setValue(9, 0, '5781');
+data.setValue(9, 1, '6777');
+data.setFormattedValue(9, 0, 'PTPN11');
+data.setFormattedValue(9, 1, 'STAT5B');
+data.setValue(9, 2, 'BioGRID');
+data.setValue(10, 0, '6464');
+data.setValue(10, 1, '6777');
+data.setFormattedValue(10, 0, 'SHC1');
+data.setFormattedValue(10, 1, 'STAT5B');
+data.setValue(10, 2, 'BioGRID');
+data.setValue(11, 0, '6776');
+data.setValue(11, 1, '6777');
+data.setFormattedValue(11, 0, 'STAT5A');
+data.setFormattedValue(11, 1, 'STAT5B');
+data.setValue(11, 2, 'BioGRID');
+data.setValue(12, 0, '6777');
+data.setValue(12, 1, '919');
+data.setFormattedValue(12, 0, 'STAT5B');
+data.setFormattedValue(12, 1, 'CD247');
+data.setValue(12, 2, 'BioGRID');
+data.setValue(13, 0, '6777');
+data.setValue(13, 1, '9111');
+data.setFormattedValue(13, 0, 'STAT5B');
+data.setFormattedValue(13, 1, 'NMI');
+data.setValue(13, 2, 'BioGRID');
+data.setValue(14, 0, '55250');
+data.setValue(14, 1, '6777');
+data.setFormattedValue(14, 0, 'ELP2');
+data.setFormattedValue(14, 1, 'STAT5B');
+data.setValue(14, 2, 'BioGRID');
+data.insertColumn(0,"string");
+	oneData = data;
+	return oneData;
+}
+function getDataThree(){
+	if(window.threeData !== undefined) { return threeData; }
+	//use local scope for data
+	var data = new google.visualization.DataTable();
+data.addColumn('string', 'interactor1');
+data.addColumn('string', 'interactor2');
+data.addColumn('string', 'sources');
+data.addRows(20);
+data.setValue(0, 0, '1234');
+data.setValue(0, 1, '6777');
+data.setFormattedValue(0, 0, 'CCR5');
+data.setFormattedValue(0, 1, 'STAT5B');
+data.setValue(0, 2, 'BioGRID');
+data.setValue(1, 0, '1387');
+data.setValue(1, 1, '6777');
+data.setFormattedValue(1, 0, 'CREBBP');
+data.setFormattedValue(1, 1, 'STAT5B');
+data.setValue(1, 2, 'IntAct');
+data.setValue(2, 0, '1956');
+data.setValue(2, 1, '6777');
+data.setFormattedValue(2, 0, 'EGFR');
+data.setFormattedValue(2, 1, 'STAT5B');
+data.setValue(2, 2, 'BioGRID, MINT');
+data.setValue(3, 0, '2057');
+data.setValue(3, 1, '6777');
+data.setFormattedValue(3, 0, 'EPOR');
+data.setFormattedValue(3, 1, 'STAT5B');
+data.setValue(3, 2, 'IntAct');
+data.setValue(4, 0, '2066');
+data.setValue(4, 1, '6777');
+data.setFormattedValue(4, 0, 'ERBB4');
+data.setFormattedValue(4, 1, 'STAT5B');
+data.setValue(4, 2, 'MINT');
+data.setValue(5, 0, '2690');
+data.setValue(5, 1, '6777');
+data.setFormattedValue(5, 0, 'GHR');
+data.setFormattedValue(5, 1, 'STAT5B');
+data.setValue(5, 2, 'BioGRID');
+data.setValue(6, 0, '2908');
+data.setValue(6, 1, '6777');
+data.setFormattedValue(6, 0, 'NR3C1');
+data.setFormattedValue(6, 1, 'STAT5B');
+data.setValue(6, 2, 'BioGRID');
+data.setValue(7, 0, '3560');
+data.setValue(7, 1, '6777');
+data.setFormattedValue(7, 0, 'IL2RB');
+data.setFormattedValue(7, 1, 'STAT5B');
+data.setValue(7, 2, 'BioGRID');
+data.setValue(8, 0, '3716');
+data.setValue(8, 1, '6777');
+data.setFormattedValue(8, 0, 'JAK1');
+data.setFormattedValue(8, 1, 'STAT5B');
+data.setValue(8, 2, 'BioGRID');
+data.setValue(9, 0, '3717');
+data.setValue(9, 1, '6777');
+data.setFormattedValue(9, 0, 'JAK2');
+data.setFormattedValue(9, 1, 'STAT5B');
+data.setValue(9, 2, 'BioGRID');
+data.setValue(10, 0, '3718');
+data.setValue(10, 1, '6777');
+data.setFormattedValue(10, 0, 'JAK3');
+data.setFormattedValue(10, 1, 'STAT5B');
+data.setValue(10, 2, 'BioGRID');
+data.setValue(11, 0, '5770');
+data.setValue(11, 1, '6777');
+data.setFormattedValue(11, 0, 'PTPN1');
+data.setFormattedValue(11, 1, 'STAT5B');
+data.setValue(11, 2, 'MINT');
+data.setValue(12, 0, '5777');
+data.setValue(12, 1, '6777');
+data.setFormattedValue(12, 0, 'PTPN6');
+data.setFormattedValue(12, 1, 'STAT5B');
+data.setValue(12, 2, 'BioGRID');
+data.setValue(13, 0, '5781');
+data.setValue(13, 1, '6777');
+data.setFormattedValue(13, 0, 'PTPN11');
+data.setFormattedValue(13, 1, 'STAT5B');
+data.setValue(13, 2, 'BioGRID');
+data.setValue(14, 0, '6464');
+data.setValue(14, 1, '6777');
+data.setFormattedValue(14, 0, 'SHC1');
+data.setFormattedValue(14, 1, 'STAT5B');
+data.setValue(14, 2, 'BioGRID');
+data.setValue(15, 0, '6776');
+data.setValue(15, 1, '6777');
+data.setFormattedValue(15, 0, 'STAT5A');
+data.setFormattedValue(15, 1, 'STAT5B');
+data.setValue(15, 2, 'BioGRID');
+data.setValue(16, 0, '6777');
+data.setValue(16, 1, '919');
+data.setFormattedValue(16, 0, 'STAT5B');
+data.setFormattedValue(16, 1, 'CD247');
+data.setValue(16, 2, 'BioGRID');
+data.setValue(17, 0, '6777');
+data.setValue(17, 1, '9111');
+data.setFormattedValue(17, 0, 'STAT5B');
+data.setFormattedValue(17, 1, 'NMI');
+data.setValue(17, 2, 'BioGRID, IntAct');
+data.setValue(18, 0, '55250');
+data.setValue(18, 1, '6777');
+data.setFormattedValue(18, 0, 'ELP2');
+data.setFormattedValue(18, 1, 'STAT5B');
+data.setValue(18, 2, 'BioGRID');
+data.setValue(19, 0, '55620');
+data.setValue(19, 1, '6777');
+data.setFormattedValue(19, 0, 'STAP2');
+data.setFormattedValue(19, 1, 'STAT5B');
+data.setValue(19, 2, 'MINT');
+data.insertColumn(0,"string");
+	threeData = data;
+	return threeData;
+}
+//global named array to describe the example cases
+exampleCases = {
+	listOfAllSources:["HPRD","MINT","IntAct","MIPS","BioGrid"],
+	allSources:{dataFunction:getDataAll,checkedBoxes:{HPRD:true,MINT:true,IntAct:true,MIPS:true,BioGrid:true}},
+	oneSource:{dataFunction:getDataOne,checkedBoxes:{HPRD:false,MINT:true,IntAct:false,MIPS:false,BioGrid:false}},
+	threeSources:{dataFunction:getDataThree,checkedBoxes:{HPRD:false,MINT:true,IntAct:true,MIPS:false,BioGrid:true}}
+	};
+	
+google.setOnLoadCallback(function(){drawExample("allSources");}); // Set callback to run when API is loaded
+
+function drawExample(whichCase) {
+	for(var i = 0; i< exampleCases.listOfAllSources.length; i++)
+	{
+		$(exampleCases.listOfAllSources[i]).checked=exampleCases[whichCase].checkedBoxes[exampleCases.listOfAllSources[i]];
+		//alert(exampleCases.listOfAllSources[i]);
+		//if(exampleCases[whichCase].checkedBoxes[exampleCases.listOfAllSources[i]]){
+		//	alert(exampleCases.listOfAllSources[i]);
+		//	$(exampleCases.listOfAllSources[i]).checked="true";
+		//	}
+	}
+    networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
+    networkvis.draw(exampleCases[whichCase].dataFunction(), {layout:'ForceDirected'});	
+	}
+
+</script>
+
+
+</head>
+
+<body >
+	<!-- header -->
+	<!-- title -->
+	<div style="position:absolute;
+			text-align:right; 
+ 			left:20px;
+ 			top:20px;
+ 			width:800px;
+ 			height:40px;">
+			<span style="font-size: 1.5em;">Literature-Curated Interactions:</span><br/>
+			Network Visualization with Force Directed Layout
+		</div>
+		
+	<!-- left column 190 px by 630 -->
+	<div style="position:absolute; 
+ 			left:20px;
+ 			top:80px;
+ 			width:190px;
+ 			height:150px;">
+ 			Examples:<br/>
+ 		<div style="position:absolute; 
+ 				left:10px;
+ 				top:20px;">
+ 			Literature-Curated Data:<br/>
+ 			&nbsp<a onclick="drawExample('allSources')" href="#">from 5 source</a><br/>
+ 			&nbsp<a onclick="drawExample('threeSources')" href="#">from 3 sources</a><br/>
+ 			&nbsp<a onclick="drawExample('oneSource')" href="#">from 1 source</a><br/>
+ 		</div>
+ 	</div>
+	<form style="position:absolute; 
+ 			left:20px;
+ 			top:230px;
+ 			width:190px;
+ 			height:430px;" disabled="true">
+		<div style="position:absolute; 
+ 			left:0px;
+ 			top:0px;">
+			Show Data From:
+		</div>
+		<div style="position:absolute; 
+ 			left:0px;
+ 			top:30px;">
+			<input id="HPRD" type="checkbox" disabled="true"/>HPRD<br/>
+			<input id="MINT" type="checkbox" disabled="true"/>MINT<br/>
+			<input id="IntAct" type="checkbox" disabled="true"/>IntAct<br/>
+			<input id="MIPS" type="checkbox" disabled="true"/>MIPS<br/>
+			<input id="BioGrid" type="checkbox" disabled="true"/>BioGRID<br/>
+		</div>
+		<div style="position:absolute; 
+ 			left:0px;
+ 			top:140px;">
+			Genes:<br/>
+		</div>
+		<TEXTAREA
+			disabled="true"
+			style="position:absolute; 
+ 			left:0px;
+ 			top:170px;
+ 			height:280px; 
+ 			width:150px;">
+ 			STAT5B
+ 			CREBBP
+ 			CRK
+ 			CRKL
+ 			CTLA4
+ 			EGFR
+ 			EP300
+ 			EPOR
+ 			ERBB4
+ 			ETS1
+ 			ETS2
+ 			GHR
+ 			NR3C1
+ 			HSPB1
+ 			IL2RA
+ 			IL2RB
+ 			IL7R
+ 			INSR
+ 			JAK1
+ 			JAK2
+ 			JAK3
+ 			KIT
+ 			PDGFRA
+ 			PDGFRB
+ 			POU2F1
+ 			PPP2CA
+ 			ELP2
+ 			STAP2
+ 			CENPJ
+ 			MAPK1
+ 			PTPN1
+ 			PTPN2
+ 			PTPN6
+ 			PTPN1
+ 			RARA
+ 			RPL4
+ 			SHC1
+ 			SRC
+ 			STAT1
+ 			STAT3
+ 			STAT5A
+ 			TEK
+ 			CXCR4
+ 			CBL
+ 			NMI
+ 			CD247
+ 			NCOR2				
+		</TEXTAREA>	
+
+ 		<input type="button" style="position:absolute; 
+ 			left:70px;
+ 			top:460px;
+ 			width:80px;" 
+ 			disabled="true" 
+ 			value="Submit" />
+
+	</form>
+	
+	<!-- right column vis is 630 by 630-->
+	<div style="position:absolute;
+			left:190px;
+ 			top:80px;
+ 			height:630px; 
+ 			width:630px;
+ 			border: 1px black solid;">
+ 			
+		<div id="exampleVisContainer"></div>
+	</div>
+	
+	<!-- footer -->
+	<div style="position:absolute;
+			text-align:center; 
+ 			left:20px;
+ 			top:720px;
+ 			width:800px;">
+ 			Paper refrence and copyright
+ 			
+	</div>
+	
+
+	
+</body>
+</html>
