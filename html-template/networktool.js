@@ -21,21 +21,28 @@
 	  	  log("update query");
 	  	  log(update_query);
 	  	  center=node_id;
-	  	  update_query.send(processUpdate);
+	  	  update_query.send(processUpdate, true);
 	  	}
       
-     function fetch_urls(urls){
+     function fetch_urls(urls, isAnUpdate){
      	log("fetch urls");
       	//reqId=0;
       	cnt=0;
       	options = new Object;
 		number_urls=0;
-		for (k in urls){ number_urls++};
-		log("number urls" + number_urls);
-				
+		if (typeof(isAnUpdate)=="undefined"){
+			console.log("update is false");
+			update=false;
+		}
+		else {
+			console.log("update is true");
+			update=true;
+		}
+	    	
 		//set config
 		center='23645';
-	
+		queries=[];
+		funcs=[];
 		reqId=0;
 		for (var i in urls) {
 			log("key " + i);
@@ -43,6 +50,9 @@
 			if (i==='dataurl'){
 				func = processData;
 				query_url = url+'?tqx=reqId:'+reqId+';&format=google';
+				number_urls+=1;
+				funcs.push(func);
+				queries.push(new google.visualization.Query(query_url));
 			}
 			else if (i==='attributeurl'){
 				func=processAttributes;
@@ -50,16 +60,26 @@
 			else if (i==='layouturl'){
 				func=processLayout;
 				query_url = url+'&tqx=reqId:'+reqId+';&format=google';
+				number_urls+=1;
+				funcs.push(func);
+				queries.push(new google.visualization.Query(query_url));
 			}
 			//everything else goes in the options object to be passed via draw_vis()
 			else{
 				options[i] = urls[i];
 			}
-			log("url " + query_url);	
-			query=new google.visualization.Query(query_url);
-			query.send(func);
-			query.setTimeout(300);
-			reqId+=1;
+			//if (i in {'dataurl':'', 'attributeurl':'', 'layouturl':''}){
+				//log("url " + query_url);	
+				//query=new google.visualization.Query(query_url);
+				//query.send(func);
+				//query.setTimeout(300);
+				//reqId+=1;
+			//}
+		
+		}
+		for (i=0; i<queries.length; i++){
+			log("sending query # " + i);
+			queries[i].send(funcs[i]);
 		} 	
       }
 
@@ -68,7 +88,14 @@
 		networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
 		//(data, options)
        	//networkvis.draw(data, {layout:layout_data, center:center, data_format:"google"});
-    	networkvis.draw(data, options);
+       	if (update==false){
+       		log("draw");
+    		networkvis.draw(data, options);
+       	}
+       	else {
+       		log("redraw");
+       		network.redraw(data, options);
+       	}
        	//networkvis.draw(data, {center:center, data_format:"google"});
 	}
 	  	
@@ -91,7 +118,6 @@
 				break;
 			}
 		}
-
 		
 		log("count: "+ cnt);
 		if (cnt===number_urls){
