@@ -243,13 +243,20 @@ package {
 			this.network.data.nodes.setProperties({x:315, y:315});     	
 	    	this.network.continuousUpdates = true;
 	    	//force directed layout
-			var lay:ForceDirectedLayout = new ForceDirectedLayout(true,120);
+	    	var lay:ForceDirectedLayout = new ForceDirectedLayout(true,1);
 	    	lay.simulation.dragForce.drag=1;
-	    	lay.simulation.nbodyForce.gravitation=-128;  
+	    	lay.simulation.nbodyForce.gravitation=-256;  
 	        lay.defaultParticleMass= 6;
 	        lay.defaultSpringLength=100;
 	        lay.defaultSpringTension= 0.1;
 	        this.network.operators.add(lay);
+//			var lay:ForceDirectedLayout3d = new ForceDirectedLayout3d(false,1);
+//	    	lay.simulation.dragForce.drag=1;
+//	    	lay.simulation.nbodyForce.gravitation=-4;  
+//	        lay.defaultParticleMass= 6;
+//	        lay.defaultSpringLength=100;
+//	        lay.defaultSpringTension= 0.1;
+//	        this.network.operators.add(lay);
 		
 		}
 		else{
