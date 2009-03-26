@@ -173,10 +173,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
     // set's the current selected rows, cols or cells
 
     setSelection: function(selection) {
-    	////log("set selection called");
-        ////log("selection is"+ selection.toString());
         this._selected = selection;
-        ////////log(this.SWFid);
         var swf =this.getSWF(this.SWFid);
         swf.selectionSetViaJS(Object.toJSON(selection));
 
@@ -222,7 +219,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 		dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
 	}
 	return dumped_text;
-},
+}
 
     
 });
