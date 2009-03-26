@@ -29,7 +29,7 @@ package org.systemsbiology.visualization.bionetwork.data
 		public function addEdgeIfNotExist(source:NodeSprite, target:NodeSprite, directed:Object = false):EdgeSprite
 		{
 			if (!checkEdge(source.name, target.name,directed)){
-				return this.data.addEdgeFor(source, target);
+				return this.data.addEdgeFor(source, target, directed);
 			}
 			else {
 				return this.findEdgeByNodes(source.name,target.name);
@@ -87,7 +87,6 @@ package org.systemsbiology.visualization.bionetwork.data
 			trace("setNodeShape");
 			//var nodeShape:Shape = ShapePalette.getShape("TRIANGLE");
 			trace(shape);
-			
 			this.data.nodes.setProperty("shape", "Shapes."+shape, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
 		}		
 		
@@ -102,8 +101,7 @@ package org.systemsbiology.visualization.bionetwork.data
 			var targets:Array = [];
 			var sources:Array = [];	
 			targets=getTargets();
-			sources==getSources();
-			
+			sources==getSources();	
 			for (var i:Number = 0; i<targets.length; i++){
 				var source:NodeSprite = targets[i];
 				var target:NodeSprite = targets[i];
@@ -118,7 +116,6 @@ package org.systemsbiology.visualization.bionetwork.data
 				} 
 			}
 			return false;
-			
 		}
 //		
 		public function findNodeByName(name:String):NodeSprite
@@ -136,11 +133,9 @@ package org.systemsbiology.visualization.bionetwork.data
 		}
 		
 		public function findEdgeByNodes(source_name:String, target_name:String):EdgeSprite{
-
 			var edge_index:int = -1;
 			var targets:Array = this.getTargets();
 			var sources:Array = this.getSources();
-			
 			for (var i:Number = 0; i<targets.length; i++){
 				var source:NodeSprite = targets[i];
 				var target:NodeSprite = targets[i];
@@ -163,9 +158,7 @@ package org.systemsbiology.visualization.bionetwork.data
 				
 		}
 			
-//		
 		//helper functions
-		
 		public function addNodeIfNotExist(name:String):NodeSprite
 		{
 			trace("adding" + name);

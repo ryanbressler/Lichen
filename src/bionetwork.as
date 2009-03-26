@@ -1,8 +1,6 @@
 package {
 	import com.adobe.serialization.json.JSON;
 	
-	import flare.animate.Pause;
-	import flare.animate.Sequence;
 	import flare.animate.Transitioner;
 	import flare.display.RectSprite;
 	import flare.display.TextSprite;
@@ -12,9 +10,12 @@ package {
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.events.SelectionEvent;
+	import flare.vis.legend.Legend;
 	import flare.vis.operator.label.Labeler;
+	import flare.vis.operator.layout.CircleLayout;
 	import flare.vis.operator.layout.ForceDirectedLayout;
-	
+	import flare.vis.operator.layout.Layout;
+	import flare.util.Shapes;
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -23,12 +24,14 @@ package {
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
-	
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.display.MultiEdgeRenderer;
 	import org.systemsbiology.visualization.bionetwork.layout.*;
 	import org.systemsbiology.visualization.control.ClickDragControl;
 	import org.systemsbiology.visualization.data.DataView;
+	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
+	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
+	//the network object persists the data
 	public class bionetwork extends Sprite
 	{	
 		private var data:Data = new Data();
@@ -36,10 +39,12 @@ package {
 		//config variables
 		private var options:Object; 
 		private var centerNode:int;
-		private var layout:DataView;
+		private var layoutTable:DataView;
+		private var tempTable:DataView;
+		private var layoutType:String;
 		private var containerId:String;
 		private var dataTable:DataView
-		private var attributes:DataView;
+		private var attributesTable:DataView;
 		private var visWidth:int = stage.stageWidth;
 		private var visHeight:int = stage.stageHeight;
 		private var vis:Visualization;
@@ -47,7 +52,7 @@ package {
 		private var _detail:TextSprite;
 		private var maxLabelWidth:Number;
 		private var maxLabelHeight:Number;
-		private var _trans:Object = { };
+		private var _trans:Object = {};
 		private var _nodes:Array;
 		private var regularColor:uint = 0xff0000ff;
 		private var rootColor:uint = 0xffff0000;
@@ -55,7 +60,7 @@ package {
 		private var lastRoot:NodeSprite = null;
 		private var info1:TextSprite;
 		private var info2:TextSprite;
-		
+		private var legend:Legend;
 		//font
         // We must embed a font so that we can rotate text and do other special effects
            [Embed(systemFont='Helvetica', 
@@ -110,38 +115,44 @@ package {
 //            drawAfterResize(dataTable,{},{});         
 		}
 			
-		//basic graph drawing
-	public function draw(dataJSON:String, optionsJSON:String) :void {						
-		trace("DATAJSON: " + dataJSON);	
-		this.options = JSON.decode(optionsJSON);	
+		//de-serialize
+	private function importFromJSON(dataJSON:String, optionsJSON:String) :void {						
+		this.options = JSON.decode(optionsJSON);
+		this.layoutType = this.options['layout'];	
 		this.centerNode=this.options['center'];	
 		var layoutValues:Array = new Array();
+		//data tables
+		//import data JSON
+		if (this.dataTable!=null){
+			//loop through datatable and add rows; does the table need to be updated?
+			this.tempTable = new DataView(dataJSON, "");
+			this.constructGraph(this.tempTable);
+		}
+		else {
+			this.dataTable = new DataView(dataJSON, "");
+		}
 		
-		if (this.options['layout_data']){			
-			trace("test layout");	
-			trace(this.options['layout_data']);
-//					this.dataTable = new DataView(dataJSON, "");
-			//need to change and mak
-			trace(options['layout_data']);
-			this.layout = new DataView(JSON.encode(this.options['layout_data']),"");
+		if (this.options['layout_data']){				
+			this.layoutTable = new DataView(JSON.encode(this.options['layout_data']),"");
 		}
 		else{
-			this.layout=null;
+			this.layoutTable=null;
 		}
-
-		this.dataTable = new DataView(dataJSON, "");
-		trace("Test data table");
-		trace(this.dataTable);
-
+		
 		if (this.options['attributes']){
-			this.attributes = new DataView(JSON.encode(this.options['attributes']), "True");	
+			//already exist
+			if (this.attributesTable!=null){
+				
+			}
+			else {
+				this.attributesTable = new DataView(JSON.encode(this.options['attributes']), "");
+			}	
 		}
 		else{
-			this.attributes=null;
+			this.attributesTable=null;
 		}
-		
         this.resizeStage(containerId, dataTable, options);
-        drawAfterResize(this.dataTable, this.attributes, this.layout);         
+        //drawAfterResize(this.dataTable, this.attributes, this.layout);         
 	}
 
 	//redraw without loading new data
@@ -156,54 +167,29 @@ package {
 //	}
 
 		// draw!
-	private function drawAfterResize(dataTable:DataView, attributeTable:*=null, layoutTable:*=null) :void {            			
-
-		trace("draw after resize");	
-		var interactor_name1:String;
-		var interactor_value1:String;
-		var interactor_name2:String;
-		var interactor_value2:String;
-		var interactor1:NodeSprite;
-		var interactor2:NodeSprite;
-		var ixnsources:Array;
-		var edge:EdgeSprite;
+	private function draw(dataJSON:String, optionsJSON:String) :void {            			
+		
 		trace("EDGE DATA");
-		for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
-			interactor_name1=dataTable.getFormattedValue(i,1);
-			trace("formatted_name1" + interactor_name1);
-			interactor_value1=dataTable.getValue(i,1);
-			trace("formatted_value1" + interactor_value1);
-			interactor_name2=dataTable.getFormattedValue(i,2);
-			interactor_value2=dataTable.getValue(i,2);
-			trace(dataTable.getValue(i,3));
-			ixnsources = dataTable.getValue(i,3).split(", ");
-			trace("IXN_SOURCES" + ixnsources[0]);	
-			interactor1=this.network.addNodeIfNotExist(interactor_value1);
-			interactor2=this.network.addNodeIfNotExist(interactor_value2);			
-			edge=this.network.addEdgeIfNotExist(interactor1, interactor2);
-			//this.network.addEdge(interactor1, interactor2);
-			trace("length" + ixnsources.length);
-			for (var j:Number=0; j<ixnsources.length; j++){
-				trace("j" + j);
-				this.network.addEdgeSource(edge, ixnsources[j]);
-			}		
-		}
+		
+		this.importFromJSON(dataJSON, optionsJSON);
+		this.resizeStage(containerId, this.dataTable, options);
+		
+		this.constructGraph(this.dataTable);
 		
 		var params:Object = {};
 		trace("LAYOUT DATA");
 		//layout from layoutTable
 		if (layoutTable!=null){
-			for (var i:Number = 0; i<layoutTable.getNumberOfRows(); i++) {
+			for (var i:Number = 0; i<this.layoutTable.getNumberOfRows(); i++) {
 				//first column name
-				var interactor_name:String = layoutTable.getValue(i,0);
+				var interactor_name:String = this.layoutTable.getValue(i,0);
 				//rest of columns layout attributes (first two are x,y)
-				for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
-					var columnName:String = layoutTable.getColumnLabel(j);
-					var layoutAttributeValue:String = layoutTable.getValue(i,j);
-					trace(columnName + layoutAttributeValue);
+				for (var j:Number = 1; j < this.layoutTable.getNumberOfColumns(); j++){
+					var columnName:String = this.layoutTable.getColumnLabel(j);
+					var layoutAttributeValue:String = this.layoutTable.getValue(i,j);
 					//branch to set main nodesprite properties
 					if (columnName=='shape'){
-						this.network.setNodeShape(interactor_name, layoutAttributeValue);
+						this.network.setNodeShape(interactor_name, "flare.util.Shapes.SQUARE");
 					}
 					else if (columnName == 'color'){
 						this.network.setNodeColor(interactor_name, layoutAttributeValue);
@@ -220,11 +206,11 @@ package {
 		}		
 			
 		//attributes-user defined node params
-		if (attributeTable!=null){
+		if (this.attributesTable!=null){
 			trace("attributes");
-			for (var i:Number = 0; i<attributeTable.getNumberOfRows(); i++) {
-				var interactor_name:String = attributeTable.getFormattedValue(i,0);
-				for (var j:Number = 1; j < attributeTable.getNumberOfColumns(); j++){
+			for (var i:Number = 0; i<this.attributesTable.getNumberOfRows(); i++) {
+				var interactor_name:String = this.attributesTable.getFormattedValue(i,0);
+				for (var j:Number = 1; j < this.attributesTable.getNumberOfColumns(); j++){
 					var columnName:String = layoutTable.getColumnLabel(j);
 					var attributeValue:int = layoutTable.getValue(i,j);
 					params[columnName]=attributeValue;
@@ -233,7 +219,77 @@ package {
 			}
 		}
 
+		this.setLayout();
 		
+		var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);
+		
+		this.setLabels();
+        this.network.x = 0;
+        this.network.y = 0;
+		this.network.controls.add(cdc);
+		if (this.options['legend']!='false'){
+			this.createLegend();
+		}
+		addChild(this.network);
+		
+		this.network.update();
+}	
+	private function createLegend():void {
+		var legend_fmt:TextFormat = new TextFormat("Verdana",14);
+		legend = Legend.fromValues(null, [
+				{color: 0x3366CC, size: 0.75, label: "HPRD"},
+				{color: 0x339900, size: 0.75, label: "MINT"},
+				{color: 0xA2627A, size: 0.75, label: "IntAct"},
+				{color: 0xFF6600, size: 0.75, label: "MIPS"},
+				{color: 0xFF0000, size: 0.75, label: "BioGRID"}
+			]);
+			legend.labelTextFormat = legend_fmt;
+			//legend.labelTextMode = TextSprite.EMBED;
+			legend.update();
+			addChild(legend);
+	}
+
+	private function constructGraph(dataTable:DataView):void {
+		var interactor_name1:String;
+		var interactor_value1:String;
+		var interactor_name2:String;
+		var interactor_value2:String;
+		var interactor1:NodeSprite;
+		var interactor2:NodeSprite;
+		var ixnsources:Array;
+		var edge:EdgeSprite;
+		for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
+			interactor_name1=dataTable.getFormattedValue(i,1);
+			trace("formatted_name1" + interactor_name1);
+			interactor_value1=dataTable.getValue(i,1);
+			trace("value1" + interactor_value1);
+			interactor_name2=dataTable.getFormattedValue(i,2);
+			interactor_value2=dataTable.getValue(i,2);
+			
+			//prefer a formatted gene name to ID when available 
+			if (interactor_name1 && interactor_name2){
+				interactor1=this.network.addNodeIfNotExist(interactor_name1);
+				interactor2=this.network.addNodeIfNotExist(interactor_name2);	
+			}
+			else{
+				interactor1=this.network.addNodeIfNotExist(interactor_value1);
+				interactor2=this.network.addNodeIfNotExist(interactor_value2);	
+			}		
+			edge=this.network.addEdgeIfNotExist(interactor1, interactor2);
+			//this.network.addEdge(interactor1, interactor2);
+			
+			//fourth column reserved for sources for now. 
+			if (dataTable.getNumberOfColumns()>3){
+				ixnsources = dataTable.getValue(i,3).split(", ");	
+				trace("length" + ixnsources.length);
+				for (var j:Number=0; j<ixnsources.length; j++){
+					this.network.addEdgeSource(edge, ixnsources[j]);
+				}
+			}		
+		}
+	}
+
+	private function setLayout():void{
 		//set defaults
 		this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     
 		//this.network.data.nodes.setProperties({renderer: CircularHeatmapRenderer.instance});
@@ -241,83 +297,50 @@ package {
 		//var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
 		if (this.options['layout']=="ForceDirected"){
 			this.network.data.nodes.setProperties({x:315, y:315});     	
-	    	this.network.continuousUpdates = true;
+	    	this.network.continuousUpdates = false;
 	    	//force directed layout
-	    	var lay:ForceDirectedLayout = new ForceDirectedLayout(true,1);
-	    	lay.simulation.dragForce.drag=1;
-	    	lay.simulation.nbodyForce.gravitation=-256;  
-	        lay.defaultParticleMass= 6;
-	        lay.defaultSpringLength=100;
-	        lay.defaultSpringTension= 0.1;
-	        this.network.operators.add(lay);
-//			var lay:ForceDirectedLayout3d = new ForceDirectedLayout3d(false,1);
-//	    	lay.simulation.dragForce.drag=1;
-//	    	lay.simulation.nbodyForce.gravitation=-4;  
-//	        lay.defaultParticleMass= 6;
-//	        lay.defaultSpringLength=100;
-//	        lay.defaultSpringTension= 0.1;
-//	        this.network.operators.add(lay);
-		
+
+			var fdlay:ForceDirectedLayout = new ForceDirectedLayout(true,120);
+	    	fdlay.simulation.dragForce.drag=1;
+	    	fdlay.simulation.nbodyForce.gravitation=-128;  
+	        fdlay.defaultParticleMass= 6;
+	        fdlay.defaultSpringLength=100;
+	        fdlay.defaultSpringTension= 0.1;
+	        this.network.operators.add(fdlay);	
 		}
-		else{
-		
-			var lay2:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
-			this.network.operators.add(lay2);
+		else if (this.options['layout']=="GoogleDataTableDriven"){
+			var gddlay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
+			this.network.operators.add(gddlay);
+			
+			//shape: flare.util.Shapes.SQUARE,
+		}
+		//default circular layout
+		else {
+			var clay:CircleLayout =  new CircleLayout(null, null, false);
+			this.network.operators.add(clay);
 		}
 		
+		if (this.options['edgeRenderer']=='multiedge'){
+			this.network.data.edges.setProperties({
+				lineWidth: 0.5,
+				lineAlpha: 1,
+				lineColor: 0xff0000bb,
+				mouseEnabled: true,
+				visible:true,
+				renderer: MultiEdgeRenderer.instance
+			});
+		}
 		
-		this.network.data.edges.setProperties({
-			lineWidth: 0.5,
-			lineAlpha: 1,
-			lineColor: 0xff0000bb,
-			mouseEnabled: true,
-			visible:true,
-			renderer: MultiEdgeRenderer.instance
-		});
-			var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);
-//			cdc.addEventListener(SelectionEvent.SELECT,onSingleClick);
-//			cdc.addEventListener(SelectionEvent.DESELECT, onSingleClickDeselect);
-//		
-//		//this.network.data.nodes.setProperties({renderer: CircularHeatmapRenderer.instance});
-//		//var lay:CircleLayout =  new CircleLayout(null, null, false);
-//		//var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
-//		if (this.options['layout']=="ForceDirected"){
-//			this.network.data.nodes.setProperties({x:315, y:315});     	
-//	    	this.network.continuousUpdates = true;
-//	    	//force directed layout
-//	    	var lay:ForceDirectedLayout = new ForceDirectedLayout(true,1);
-//	    	lay.simulation.dragForce.drag= 4;
-//	    	lay.simulation.nbodyForce.gravitation=-128;  
-//	        lay.defaultParticleMass= 16;
-//	        lay.defaultSpringLength= 120;
-//	        lay.defaultSpringTension= .1;
-//	        this.network.operators.add(lay);
-//		
-//		}
-//		else{
-//			var lay2:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
-//			this.network.operators.add(lay2);
-//		}
-		
-		var fmt:TextFormat = new TextFormat("Verdana", 7);
-//		this.network.operators.add(new Labeler(
-//				function(d:NodeSprite):String {
-//					var txt:String = d.data.name;
-//					return txt;
-//				}, this.network.data.NODES, fmt, function():Boolean {return true}));
-	var labeller:Labeler = new Labeler(function(d:DataSprite):String {
-	//trace(String(d.data.name)); 
+	}
+
+	private function setLabels():void {
+			var labeller:Labeler = new Labeler(function(d:DataSprite):String {
 		return String(d.data.name);
-	});
-	labeller.yOffset=15;
-	labeller.xOffset=5;
-	this.network.operators.add(labeller);
-        this.network.x = 0;
-        this.network.y = 0;
-		this.network.controls.add(cdc);
-		addChild(this.network);
-		this.network.update();
-}	
+		});
+		labeller.yOffset=15;
+		labeller.xOffset=5;
+		this.network.operators.add(labeller);
+	}
 	private function getTransitioner(taskname:String,duration:Number=1,easing:Function=null,optimize: Boolean = false):Transitioner {
                 
 		if (_trans[taskname] != null) {    //here we could also check for running but disposing never harms ...        
@@ -360,7 +383,6 @@ package {
 	}
 		
 	//methods for ClickDragControl
-		
 	private function onComplete(evt:Event):void {
 			var li:LoaderInfo = evt.target as LoaderInfo;
 			var ns:NodeSprite = li.loader.parent as NodeSprite;	

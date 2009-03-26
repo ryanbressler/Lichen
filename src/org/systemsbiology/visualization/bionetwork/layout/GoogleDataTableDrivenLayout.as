@@ -33,17 +33,19 @@ public class GoogleDataTableDrivenLayout extends Layout
 		var items:Array = new Array();
  		for (i=0; i<nn; ++i) items.push(d.nodes[i]);
 		// perform the layout
+	
 		for (i=0; i<items.length; i++) {
 			var n:NodeSprite = items[i];
-			trace(n.data.name);
+			trace("name" + n.data.name);
+			trace(n.props.x);
+			trace(n.props.y);
 				_t.$(n).x = n.props.x;
-
 				_t.$(n).y = n.props.y;
-
     	}
-
+		
 		updateEdgePoints(_t);
 		_t = null;
+		trace("finished");
 	}
 
 } // end of class 
