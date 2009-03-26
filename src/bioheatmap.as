@@ -14,17 +14,18 @@ package
         import flash.text.TextField;
         import flash.text.TextFormat;
         
+        import org.systemsbiology.visualization.GoogleVisAPISprite;
         import org.systemsbiology.visualization.bioheatmap.ColLabel;
         import org.systemsbiology.visualization.bioheatmap.HeatMapCell;
         import org.systemsbiology.visualization.bioheatmap.RowLabel;
         import org.systemsbiology.visualization.bioheatmap.discretecolorrange;
         import org.systemsbiology.visualization.data.*;
  		
-        public class bioheatmap extends Sprite
+        public class bioheatmap extends GoogleVisAPISprite
         {
 
                 //paramaters
-                public var visindex : String;
+                
                 public var myData:Object;// = new Array();
                 public var options:Object;// = new Array();
                 
@@ -108,20 +109,11 @@ package
                 
                 //constructor
                 public function bioheatmap(){
-            		this.visindex = root.loaderInfo.parameters.flashvarsId;//ExternalInterface.objectID;
-					//ensure that coordinate system remians centered at upper left even after resize
-					stage.scaleMode = StageScaleMode.NO_SCALE;
-					stage.align = StageAlign.TOP_LEFT;
-                	this._log("Vis Initalized");
-					
-                    ExternalInterface.addCallback("draw", draw);
-					ExternalInterface.addCallback("selectionSetViaJS", selectionSetViaJS);
-					var callJas:String = "isbSWFvisualizations."+this.visindex+".bioheatmapFlashReady";
-					ExternalInterface.call(callJas);
+            		super();
 
                 }
           
-                public function draw(dataJSON:String,optionsJSON:String):void
+                public override function draw(dataJSON:String,optionsJSON:String):void
                 {
                 	this._log("Draw called");
                 	this.myData = new org.systemsbiology.visualization.data.DataView(dataJSON,"");
@@ -377,32 +369,7 @@ package
 			    //this function is called by JS when the selection is set. It gets fired via the bubbled event or 
 			    //any api compliant JS selection change.
 			    
-			    public function selectionSetViaJS(selection : String) : void {
-			    	//decode
-			    	var selectionObj : Object = JSON.decode(selection)[0];
-
-			    	//draw
-			    	this._clearSelection();
-			    	if( selectionObj.hasOwnProperty("row") && selectionObj.row!=null && selectionObj.hasOwnProperty("col") && selectionObj.col!=null)
-			    	{
-			    		this._setSelectionCell(selectionObj.row, selectionObj.col);
-			    		return;	
-			    	}
-			    	
-			    	if( selectionObj.hasOwnProperty("col") && selectionObj.col!=null)
-			    	{
-			    		this._setSelectionCol(selectionObj.col);
-			    		return;	
-			    	}
-			    	
-			    	if( selectionObj.hasOwnProperty("row") && selectionObj.row!=null)
-			    	{
-			    		this._setSelectionRow(selectionObj.row);
-			    		return;	
-			    	}
-			    	
-			    		
-			    }
+			    
 			    
 			    private function _drawSelectionRect(x : int, y : int, width : int, height : int) : void {
 			    	var cellShape : Shape = new Shape();

@@ -14,16 +14,16 @@ package {
 	import flare.vis.operator.label.Labeler;
 	import flare.vis.operator.layout.CircleLayout;
 	import flare.vis.operator.layout.ForceDirectedLayout;
-	import flare.vis.operator.layout.Layout;
-	import flare.util.Shapes;
+	
 	import flash.display.LoaderInfo;
-	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
+	
+	import org.systemsbiology.visualization.GoogleVisAPISprite;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.display.MultiEdgeRenderer;
 	import org.systemsbiology.visualization.bionetwork.layout.*;
@@ -32,7 +32,7 @@ package {
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
 	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
 	//the network object persists the data
-	public class bionetwork extends Sprite
+	public class bionetwork extends GoogleVisAPISprite
 	{	
 		private var data:Data = new Data();
 		private var network:Network = new Network(data);		
@@ -42,7 +42,6 @@ package {
 		private var layoutTable:DataView;
 		private var tempTable:DataView;
 		private var layoutType:String;
-		private var containerId:String;
 		private var dataTable:DataView
 		private var attributesTable:DataView;
 		private var visWidth:int = stage.stageWidth;
@@ -75,17 +74,8 @@ package {
 
 	//for basic network	
 	public function bionetwork() {
-		this.containerId = root.loaderInfo.parameters.flashvarsId;
-		//ensure that coordinate system remians centered at upper left even after resize
-		stage.scaleMode = StageScaleMode.NO_SCALE;
-		stage.align = StageAlign.TOP_LEFT;
-		stage.addEventListener(Event.ACTIVATE, activateHandler);
-        ExternalInterface.addCallback("draw", draw);
-        ExternalInterface.addCallback("redraw", redraw);		
-        //ExternalInterface.addCallback("update_data", update_data);		
-		var callJas:String = "isbSWFvisualizations."+this.containerId+".bioheatmapFlashReady";
-		ExternalInterface.call(callJas);
-		trace("Vis Initalized");		
+		ExternalInterface.addCallback("redraw", redraw);
+		super();	
 	}
 		
 	//for sprouting
@@ -111,7 +101,7 @@ package {
 //			trace("attribute encoding");
 //			//need to loop through datatable to see what already exists, currently writes over data
 //			this.attributes = new DataView(JSON.encode(this.options['attributes']), "False");
-//            this.resizeStage(containerId, dataTable, options);
+//            this.resizeStage(visindex, dataTable, options);
 //            drawAfterResize(dataTable,{},{});         
 		}
 			
@@ -151,7 +141,7 @@ package {
 		else{
 			this.attributesTable=null;
 		}
-        this.resizeStage(containerId, dataTable, options);
+        this.resizeStage(visindex, dataTable, options);
         //drawAfterResize(this.dataTable, this.attributes, this.layout);         
 	}
 
@@ -167,12 +157,12 @@ package {
 //	}
 
 		// draw!
-	private function draw(dataJSON:String, optionsJSON:String) :void {            			
+	public override function draw(dataJSON:String, optionsJSON:String) :void {            			
 		
 		trace("EDGE DATA");
 		
 		this.importFromJSON(dataJSON, optionsJSON);
-		this.resizeStage(containerId, this.dataTable, options);
+		this.resizeStage(visindex, this.dataTable, options);
 		
 		this.constructGraph(this.dataTable);
 		
@@ -354,13 +344,13 @@ package {
 		// calculates the size of the visualization from the data and options
 		// then resizes the container element via javascript
 		
-	private function resizeStage(containerId:String, dataTable:DataView, options:Object) :void {
+	private function resizeStage(visindex:String, dataTable:DataView, options:Object) :void {
      	//calculate width and height ...			
      	var width:int = 630;
      	var height:int = 630;         	
 		//resize containing div to resize the flash movie (which is set to height/width 100%)
-        ExternalInterface.call("function(){isbSWFvisualizations."+this.containerId+".containerElement.style.height = "+ height +" + \"px\"; $(\""+ containerId +"\").style.width = "+ width +" + \"px\";  }");
-        ExternalInterface.call("function(){isbSWFvisualizations."+this.containerId+".containerElement.style.scroll = yes;  }");
+        ExternalInterface.call("function(){isbSWFvisualizations."+this.visindex+".containerElement.style.height = "+ height +" + \"px\"; $(\""+ visindex +"\").style.width = "+ width +" + \"px\";  }");
+        ExternalInterface.call("function(){isbSWFvisualizations."+this.visindex+".containerElement.style.scroll = yes;  }");
 		this.network.bounds = new Rectangle(0, 0, width, height);
 		// resizeHandler(event) is now called!
 	}
