@@ -118,7 +118,7 @@ package org.systemsbiology.visualization.bionetwork.layout
 				items.push(visualization.data.nodes[i]);
 			}
 			
-			this.render(_t,items,coordinates,layoutBounds,.02*_gen,20,20,50,1200,true,30,.1);
+			this.render(_t,items,coordinates,layoutBounds,.02*_gen,6,6,50,1200,true,30,.01);
 
 			//visualization.data.nodes.visit(update); // update positions
 			updateEdgePoints(_t);
