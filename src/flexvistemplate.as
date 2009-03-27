@@ -59,7 +59,9 @@ package
                 	//drawing logic goes here
                 	
                 	//wireinto selection events by creating objects that inherit from Sprite
-                	//and have row and or column properties
+                	//and have row and or column properties or something like
+                	// props.selection=[{row:1},{row:2,col:1}]
+                	// and attach a the selectionHandler as follows:
                 	//someSprite.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
                 	
                 	

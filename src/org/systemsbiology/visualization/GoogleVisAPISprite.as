@@ -79,21 +79,26 @@ package org.systemsbiology.visualization
 		//interprets events as selections the sends the appropriate notification to the js side
 	    protected function _selectionHandeler(eventObject: Event): void {
 	    	
+	    	if(eventObject.currentTarget.hasOwnProperty("props") && eventObject.currentTarget.props.hasOwnProperty("selection") )
+	    	{
+	    		this._bubbleSelection(eventObject.currentTarget.props.selection);
+	    		return;
+	    	}
 	    	if(eventObject.currentTarget.hasOwnProperty("row") && eventObject.currentTarget.hasOwnProperty("col"))
 	    	{
-	    		this._bubbleSelection({row: eventObject.currentTarget.row, col: eventObject.currentTarget.col});
+	    		this._bubbleSelection([{row: eventObject.currentTarget.row, col: eventObject.currentTarget.col}]);
 	    		return;	
 	    	}
 	    	
 	    	if( eventObject.currentTarget.hasOwnProperty("col"))
 	    	{
-	    		this._bubbleSelection({row: "null",col: eventObject.currentTarget.col});
+	    		this._bubbleSelection([{row: "null",col: eventObject.currentTarget.col}]);
 	    		return;	
 	    	}
 	    	
 	    	if( eventObject.currentTarget.hasOwnProperty("row"))
 	    	{
-	    		this._bubbleSelection({row: eventObject.currentTarget.row, col: "null"});
+	    		this._bubbleSelection([{row: eventObject.currentTarget.row, col: "null"}]);
 	    		return;	
 	    	}
 	    	
@@ -102,7 +107,7 @@ package org.systemsbiology.visualization
 	    //sends the selection to the js side and makes it available to other visualizations
 		private function _bubbleSelection(selection:Object) : void {
 			var jsstring : String = "function(){"
-			jsstring += "isbSWFvisualizations."+this.visindex+".setSelection([{row: "+selection.row+", col: "+selection.col+"}]);";
+			jsstring += "isbSWFvisualizations."+this.visindex+".setSelection("+JSON.encode(selection)+");";
 			jsstring += "google.visualization.events.trigger(isbSWFvisualizations."+this.visindex+", 'select', null);"
 			jsstring +="}"
 			ExternalInterface.call(jsstring);// .setSelection('test');}");// google.visualization.events.trigger(isbSWFvisualizations."+this.visindex+", 'select', null);}");

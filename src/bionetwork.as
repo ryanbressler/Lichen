@@ -16,9 +16,8 @@ package {
 	import flare.vis.operator.layout.ForceDirectedLayout;
 	
 	import flash.display.LoaderInfo;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
@@ -166,6 +165,7 @@ package {
 		
 		this.constructGraph(this.dataTable);
 		
+		
 		var params:Object = {};
 		trace("LAYOUT DATA");
 		//layout from layoutTable
@@ -266,7 +266,10 @@ package {
 				interactor2=this.network.addNodeIfNotExist(interactor_value2);	
 			}		
 			edge=this.network.addEdgeIfNotExist(interactor1, interactor2);
+			_addSelectionCapabilities(edge,interactor1,interactor2,i);
 			//this.network.addEdge(interactor1, interactor2);
+			
+			//append selection data
 			
 			//fourth column reserved for sources for now. 
 			if (dataTable.getNumberOfColumns()>3){
@@ -277,7 +280,37 @@ package {
 				}
 			}		
 		}
+		//this.network.data.nodes.visit(addSelectListener);
+		//this.network.data.edges.visit(addSelectListener);
 	}
+	
+	private function _addSelectionCapabilities(edge:EdgeSprite, interactor1 :NodeSprite, interactor2:NodeSprite, i:int) : void
+	{
+		interactor1.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+		interactor2.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+		edge.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+		_appendSelectionInfo(edge,{row:i});
+		_appendSelectionInfo(interactor1,{row:i,col:1});
+		_appendSelectionInfo(interactor2,{row:i,col:2});	
+		
+	}
+	
+	private function _appendSelectionInfo(ds:DataSprite,selection : Object) : void
+	{
+		if(ds.props.hasOwnProperty("selection"))
+		{
+			ds.props.selection.push(selection);
+		}
+		else
+		{
+			ds.props.selection = [selection];
+		}
+	}
+	
+	private function addSelectListener (ds:DataSprite):Boolean {
+		ds.addEventListener(MouseEvent.CLICK,this._selectionHandeler); 
+		return true;
+		}
 
 	private function setLayout():void{
 		//set defaults
