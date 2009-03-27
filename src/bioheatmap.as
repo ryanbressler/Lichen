@@ -102,10 +102,7 @@ package
 
 				
                 
-                //out puts a message to either the debugger player log file or flexbuilder consol	
-                private function _log (msg : String) : void {
-                		trace(msg);
-                	}
+               
                 
                 //constructor
                 public function bioheatmap(){
@@ -144,13 +141,9 @@ package
 		                this._setDefaultsByCellSize(myData);
 		
 		            }
-					this._log("resize"); 
-					var resizetxt : String = "function(){";
-					resizetxt +="isbSWFvisualizations."+this.visindex+".containerElement.style.height = "+this._SpriteHeight+" + \"px\";";
-					resizetxt +="isbSWFvisualizations."+this.visindex+".containerElement.style.width = "+(this._SpriteWidth+this._columnLabelHeight*.85)+" + \"px\";";
-					resizetxt +="}";
-					
-					ExternalInterface.call(resizetxt);
+					this._log("resize");
+					this.resizeContainer(Math.ceil(this._SpriteWidth+this._columnLabelHeight*.85),this._SpriteHeight);
+
 
 					this._log("Creating Sprites"); 
                 	this._colSprite = new Sprite();
@@ -249,7 +242,7 @@ package
 		                colSprite.x = bottomLeftPoint.x;
 		                colSprite.y = bottomLeftPoint.y;
 		                
-		                colSprite.addEventListener(MouseEvent.CLICK,this._clickHandeler);
+		                colSprite.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
 		                this._colSprite.addChild(colSprite);
 
 			
@@ -274,7 +267,7 @@ package
 
 			                rowSprite.x = topLeftPoint.x;
 			                rowSprite.y = topLeftPoint.y;
-			                rowSprite.addEventListener(MouseEvent.CLICK,this._clickHandeler)
+			                rowSprite.addEventListener(MouseEvent.CLICK,this._selectionHandeler)
 			                
 			                this._rowSprite.addChild(rowSprite);
 
@@ -298,47 +291,17 @@ package
                    cellSprite.x = topLeftPoint.x;
                    cellSprite.y = topLeftPoint.y;
                    
-                   cellSprite.addEventListener(MouseEvent.CLICK,this._clickHandeler);
+                   cellSprite.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
 
                     this._mapSprite.addChild(cellSprite);
 
 			
 			    }
 			    
-			    //interprets clicks as selections the sends the appropriate notification to the js side
-			    private function _clickHandeler(eventObject: Event): void {
-			    	
-			    	if(eventObject.currentTarget.hasOwnProperty("row") && eventObject.currentTarget.hasOwnProperty("col"))
-			    	{
-			    		this._bubbleSelection({row: eventObject.currentTarget.row, col: eventObject.currentTarget.col});
-			    		return;	
-			    	}
-			    	
-			    	if( eventObject.currentTarget.hasOwnProperty("col"))
-			    	{
-			    		this._bubbleSelection({row: "null",col: eventObject.currentTarget.col});
-			    		return;	
-			    	}
-			    	
-			    	if( eventObject.currentTarget.hasOwnProperty("row"))
-			    	{
-			    		this._bubbleSelection({row: eventObject.currentTarget.row, col: "null"});
-			    		return;	
-			    	}
-			    	
-			    }
 			    
-			    //sends the selection to the js side and makes it available to other visualizations
-				private function _bubbleSelection(selection:Object) : void {
-					var jsstring : String = "function(){"
-					jsstring += "isbSWFvisualizations."+this.visindex+".setSelection([{row: "+selection.row+", col: "+selection.col+"}]);";
-					jsstring += "google.visualization.events.trigger(isbSWFvisualizations."+this.visindex+", 'select', null);"
-					jsstring +="}"
-					ExternalInterface.call(jsstring);// .setSelection('test');}");// google.visualization.events.trigger(isbSWFvisualizations."+this.visindex+", 'select', null);}");
-				}
 				
 				//clears the selection in the AS context
-				private function _clearSelection() : void {
+				protected override function _clearSelection() : void {
 
 					for( var child : int = 0; child < this._selectionSprite.numChildren; child++)
 					{
@@ -348,26 +311,25 @@ package
 			    }			    
 			    
 			    //these 3 functions  do the actuall selecting in the AS context (display)
-			    private function _setSelectionCell(row : *, col : *) : void {
+			    protected override function _setSelectionCell(row : *, col : *) : void {
 					this._log("cell selected");
 					var topLeftPoint : Object = this._getCellXYTopLeft(row, col);
 					this._drawSelectionRect(topLeftPoint.x,topLeftPoint.y,this._cellWidth,this._cellHeight);
 			    }
 			    
-			    private function _setSelectionCol(col : *) : void {
+			    protected override function _setSelectionCol(col : *) : void {
 			    	var topLeftPoint : Object = this._getCellXYTopLeft(0, col);
 			    	this._drawSelectionRect(topLeftPoint.x,topLeftPoint.y,this._cellWidth,this._heatMapHeight);
 
 
 			    }
 			    
-			    private function _setSelectionRow(row : *) : void {
+			    protected override function _setSelectionRow(row : *) : void {
 			    	var topLeftPoint : Object = this._getCellXYTopLeft(row, 1);
 			    	this._drawSelectionRect(0,topLeftPoint.y,this._heatMapWidth,this._cellHeight);
 			    }
 			    
-			    //this function is called by JS when the selection is set. It gets fired via the bubbled event or 
-			    //any api compliant JS selection change.
+
 			    
 			    
 			    

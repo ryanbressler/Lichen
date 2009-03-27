@@ -75,7 +75,7 @@ org.systemsbiology.visualization.FlexVisTemplate = Class.create({
     	{
     		this.flashLoading = false;
     	};
-    	this.flexvistemplateFlashReady = readyFnc.bind(this);
+    	this.flashReady = readyFnc.bind(this);
     	
  		//the embed string
     	//leading hidden empty div to get around ie 6 foolishness with scope/noscope objects
