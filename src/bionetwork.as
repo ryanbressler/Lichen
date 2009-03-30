@@ -1,5 +1,6 @@
 package {
-	import com.adobe.serialization.json.JSON;	
+	import com.adobe.serialization.json.JSON;
+	
 	import flare.animate.Transitioner;
 	import flare.display.RectSprite;
 	import flare.display.TextSprite;
@@ -13,12 +14,14 @@ package {
 	import flare.vis.operator.label.Labeler;
 	import flare.vis.operator.layout.CircleLayout;
 	import flare.vis.operator.layout.ForceDirectedLayout;
+	import flare.vis.data.render.ArrowType;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
+	
 	import org.systemsbiology.visualization.GoogleVisAPISprite;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.display.MultiEdgeRenderer;
@@ -159,15 +162,16 @@ package {
 		this.constructGraph(this.dataTable);
 		var params:Object = {};
 		trace("LAYOUT DATA");
+		var layoutAttributeValue:String;
 		//layout from layoutTable
 		if (layoutTable!=null){
-			for (var i:Number = 0; i<this.layoutTable.getNumberOfRows(); i++) {
+			for (var i:Number = 0; i<this.layoutTable.getNumberOfRows();i++) {
 				//first column name
 				var interactor_name:String = this.layoutTable.getValue(i,0);
 				//rest of columns layout attributes (first two are x,y)
 				for (var j:Number = 1; j < this.layoutTable.getNumberOfColumns(); j++){
 					var columnName:String = this.layoutTable.getColumnLabel(j);
-					var layoutAttributeValue:String = this.layoutTable.getValue(i,j);
+					layoutAttributeValue = this.layoutTable.getValue(i,j);
 					//branch to set main nodesprite properties
 					if (columnName=='shape'){
 						this.network.setNodeShape(interactor_name, layoutAttributeValue);
@@ -242,6 +246,7 @@ package {
 		var interactor2:NodeSprite;
 		var ixnsources:Array;
 		var edge:EdgeSprite;
+		var directed:Boolean;	
 		for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
 			interactor_name1=dataTable.getFormattedValue(i,1);
 			trace("formatted_name1" + interactor_name1);
@@ -249,6 +254,24 @@ package {
 			trace("value1" + interactor_value1);
 			interactor_name2=dataTable.getFormattedValue(i,2);
 			interactor_value2=dataTable.getValue(i,2);
+			trace("YYQ");
+			//for other columns
+			trace(dataTable.getNumberOfColumns());
+//			if (dataTable.getNumberOfColumns()>2){
+				for(var j:Number=3; j<dataTable.getNumberOfColumns(); j++){
+					var cellValue:String = dataTable.getValue(i,j);
+					trace("Cell" + cellValue);
+					var columnName:String = dataTable.getColumnLabel(j);
+					if (columnName=='sources'){
+						trace("SOURCES");
+						ixnsources=cellValue.split(", ");
+					}
+					else if (columnName=='directed'){
+						directed = Boolean(cellValue=='true');
+						trace("dir:" + directed);
+					}
+				//}
+			}
 			//prefer a formatted gene name to ID when available 
 			if (interactor_name1 && interactor_name2){
 				interactor1=this.network.addNodeIfNotExist(interactor_name1);
@@ -258,24 +281,31 @@ package {
 				interactor1=this.network.addNodeIfNotExist(interactor_value1);
 				interactor2=this.network.addNodeIfNotExist(interactor_value2);	
 			}		
-			edge=this.network.addEdgeIfNotExist(interactor1, interactor2);
+			edge=this.network.addEdgeIfNotExist(interactor1, interactor2, directed);
 			_addSelectionCapabilities(edge,interactor1,interactor2,i);
+			//loop through ixn sources
+			if (ixnsources){
+				for (var k:Number=0; k<ixnsources.length; k++){
+					this.network.addEdgeSource(edge, ixnsources[k]);
+				}
+			}
 			//this.network.addEdge(interactor1, interactor2);
 			
 			//append selection data
 			
 			//add directionality
 			//fourth column reserved for sources for now. 
-			if (dataTable.getNumberOfColumns()>3){
-				ixnsources = dataTable.getValue(i,3).split(", ");	
-				trace("length" + ixnsources.length);
-				for (var j:Number=0; j<ixnsources.length; j++){
-					this.network.addEdgeSource(edge, ixnsources[j]);
-				}
-			}		
-		}
-		//this.network.data.nodes.visit(addSelectListener);
-		//this.network.data.edges.visit(addSelectListener);
+//			if (dataTable.getNumberOfColumns()>3){
+//				ixnsources = dataTable.getValue(i,3).split(", ");	
+//				trace("length" + ixnsources.length);
+//				for (var j:Number=0; j<ixnsources.length; j++){
+//					this.network.addEdgeSource(edge, ixnsources[j]);
+//				}
+//			}		
+//		}
+		this.network.data.nodes.visit(addSelectListener);
+		this.network.data.edges.visit(addSelectListener);
+	}
 	}
 	
 	private function _addSelectionCapabilities(edge:EdgeSprite, interactor1 :NodeSprite, interactor2:NodeSprite, i:int) : void
@@ -341,12 +371,25 @@ package {
 			this.network.data.edges.setProperties({
 				lineWidth: 0.5,
 				lineAlpha: 1,
+				arrowType: "TRIANGLE",
 				lineColor: 0xff0000bb,
 				mouseEnabled: true,
 				visible:true,
 				renderer: MultiEdgeRenderer.instance
 			});
 		}
+		
+		this.network.data.edges.setProperties({
+			arrowType: ArrowType.TRIANGLE,
+			lineAlpha: 1,
+			visible:true,
+			arrowWidth: 15,
+			arrowHeight: 15
+			});
+			
+		this.network.data.nodes.setProperties({
+			fillAlpha: 0.5
+			});
 		
 	}
 
