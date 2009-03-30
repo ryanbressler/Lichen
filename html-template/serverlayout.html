@@ -38,12 +38,8 @@ Learn more about Flex at http://flex.org
 	google.setOnLoadCallback(drawChart); // Set callback to run when API is loaded
 	
 function drawChart() {
-	log("test");
 	center='23645';
-	 query = new google.visualization.Query('http://sdee.hdbase.org/networkviz/NearestNeighbors/'+center+'/?tqx=reqId:1;&format=google');
-	 //query = new google.visualization.Query('http://sdee.hdbase.org/graph.json');
-	 query.send(processDataAndLayout);
-	 //query.send(processNetworkData);
+	fetch_urls({dataurl:'http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/', layouturl:'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/', layout:'GoogleDataTableDriven', clickdrag: 'true', legend:'false'});
 }
 	
 </script>

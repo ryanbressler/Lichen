@@ -5,7 +5,10 @@ package org.systemsbiology.visualization.bionetwork.data
 	import flare.vis.data.Data;
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
-	
+	import flare.util.palette.ShapePalette;
+	import flare.util.Geometry;
+	import flare.util.Shapes;
+		
 	public class Network extends Visualization
 	{
 		private var changed:Boolean = false;	
@@ -50,7 +53,6 @@ package org.systemsbiology.visualization.bionetwork.data
 			return edge.props.ixsources;
 		}
 		
-		
 		public function checkNode(name:String):Boolean
 		{
 			trace("check node: " + name);
@@ -84,10 +86,10 @@ package org.systemsbiology.visualization.bionetwork.data
 		}	
 		
 		public function setNodeShape(name:String, shape:String):void{
-			trace("setNodeShape");
-			//var nodeShape:Shape = ShapePalette.getShape("TRIANGLE");
-			trace(shape);
-			this.data.nodes.setProperty("shape", "Shapes."+shape, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
+			//shape="VERTICAL_BAR";
+			this.data.nodes.setProperty("shape", "TRIANGLE", null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
+			this.data.nodes.setProperty("shape", Shapes[shape]);
+//			this.data.nodes.setProperty("size", 10); 
 		}		
 		
 		public function setNodeSize(name:String, size:Number):void{

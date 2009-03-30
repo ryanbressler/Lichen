@@ -1,6 +1,5 @@
 package {
-	import com.adobe.serialization.json.JSON;
-	
+	import com.adobe.serialization.json.JSON;	
 	import flare.animate.Transitioner;
 	import flare.display.RectSprite;
 	import flare.display.TextSprite;
@@ -14,14 +13,12 @@ package {
 	import flare.vis.operator.label.Labeler;
 	import flare.vis.operator.layout.CircleLayout;
 	import flare.vis.operator.layout.ForceDirectedLayout;
-	
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
-	
 	import org.systemsbiology.visualization.GoogleVisAPISprite;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.display.MultiEdgeRenderer;
@@ -157,15 +154,9 @@ package {
 
 		// draw!
 	public override function draw(dataJSON:String, optionsJSON:String) :void {            			
-		
-		trace("EDGE DATA");
-		
 		this.importFromJSON(dataJSON, optionsJSON);
 		this.resizeStage(visindex, this.dataTable, options);
-		
 		this.constructGraph(this.dataTable);
-		
-		
 		var params:Object = {};
 		trace("LAYOUT DATA");
 		//layout from layoutTable
@@ -179,7 +170,7 @@ package {
 					var layoutAttributeValue:String = this.layoutTable.getValue(i,j);
 					//branch to set main nodesprite properties
 					if (columnName=='shape'){
-						this.network.setNodeShape(interactor_name, "flare.util.Shapes.SQUARE");
+						this.network.setNodeShape(interactor_name, layoutAttributeValue);
 					}
 					else if (columnName == 'color'){
 						this.network.setNodeColor(interactor_name, layoutAttributeValue);
@@ -196,32 +187,34 @@ package {
 		}		
 			
 		//attributes-user defined node params
-		if (this.attributesTable!=null){
-			trace("attributes");
-			for (var i:Number = 0; i<this.attributesTable.getNumberOfRows(); i++) {
-				var interactor_name:String = this.attributesTable.getFormattedValue(i,0);
-				for (var j:Number = 1; j < this.attributesTable.getNumberOfColumns(); j++){
-					var columnName:String = layoutTable.getColumnLabel(j);
-					var attributeValue:int = layoutTable.getValue(i,j);
-					params[columnName]=attributeValue;
-					this.network.updateNodeParams(interactor_name,params);
-				}
-			}
-		}
+//		if (this.attributesTable!=null){
+//			trace("attributes");
+//			for (var i:Number = 0; i<this.attributesTable.getNumberOfRows(); i++) {
+//				var interactor_name:String = this.attributesTable.getFormattedValue(i,0);
+//				for (var j:Number = 1; j < this.attributesTable.getNumberOfColumns(); j++){
+//					var columnName:String = layoutTable.getColumnLabel(j);
+//					var attributeValue:int = layoutTable.getValue(i,j);
+//					params[columnName]=attributeValue;
+//					this.network.updateNodeParams(interactor_name,params);
+//				}
+//			}
+//		}
 
 		this.setLayout();
 		
-		var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);
-		
+		if (options['clickdrag']!=false){
+			var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);
+			this.network.controls.add(cdc);
+		}
 		this.setLabels();
         this.network.x = 0;
         this.network.y = 0;
-		this.network.controls.add(cdc);
+		
 		if (this.options['legend']!='false'){
 			this.createLegend();
 		}
 		addChild(this.network);
-		
+		trace("update network sprite");
 		this.network.update();
 }	
 	private function createLegend():void {
@@ -240,6 +233,7 @@ package {
 	}
 
 	private function constructGraph(dataTable:DataView):void {
+		trace("construct graph");
 		var interactor_name1:String;
 		var interactor_value1:String;
 		var interactor_name2:String;
@@ -255,7 +249,6 @@ package {
 			trace("value1" + interactor_value1);
 			interactor_name2=dataTable.getFormattedValue(i,2);
 			interactor_value2=dataTable.getValue(i,2);
-			
 			//prefer a formatted gene name to ID when available 
 			if (interactor_name1 && interactor_name2){
 				interactor1=this.network.addNodeIfNotExist(interactor_name1);
@@ -271,6 +264,7 @@ package {
 			
 			//append selection data
 			
+			//add directionality
 			//fourth column reserved for sources for now. 
 			if (dataTable.getNumberOfColumns()>3){
 				ixnsources = dataTable.getValue(i,3).split(", ");	
