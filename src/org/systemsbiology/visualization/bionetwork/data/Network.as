@@ -86,9 +86,11 @@ package org.systemsbiology.visualization.bionetwork.data
 		}	
 		
 		public function setNodeShape(name:String, shape:String):void{
+			trace("setNodeShape");
+			trace(shape);
 			//shape="VERTICAL_BAR";
-			this.data.nodes.setProperty("shape", "TRIANGLE", null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
-			this.data.nodes.setProperty("shape", Shapes[shape]);
+			//this.data.nodes.setProperty("shape", shape, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
+			this.data.nodes.setProperty("shape", Shapes[shape], null,  function(n:NodeSprite):Boolean{return n.data.name==name;});
 //			this.data.nodes.setProperty("size", 10); 
 		}		
 		
