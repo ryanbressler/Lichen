@@ -60,6 +60,7 @@
 			else if (i==='layouturl'){
 				func=processLayout;
 				query_url = url+'&tqx=reqId:'+reqId+';&format=google';
+				log(query_url);
 				number_urls+=1;
 				funcs.push(func);
 				queries.push(new google.visualization.Query(query_url));

@@ -254,7 +254,6 @@ package {
 			trace("value1" + interactor_value1);
 			interactor_name2=dataTable.getFormattedValue(i,2);
 			interactor_value2=dataTable.getValue(i,2);
-			trace("YYQ");
 			//for other columns
 			trace(dataTable.getNumberOfColumns());
 //			if (dataTable.getNumberOfColumns()>2){
