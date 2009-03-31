@@ -25,11 +25,11 @@ package org.systemsbiology.visualization.bionetwork.data
 		
 		public function addEdge(source:NodeSprite, target:NodeSprite, directed:Object = false):EdgeSprite
 		{
-			return this.data.addEdgeFor(source, target);
+			return this.data.addEdgeFor(source, target, directed);
 		}
 		
 		//add edge if doesn't already exist; if exist returns node
-		public function addEdgeIfNotExist(source:NodeSprite, target:NodeSprite, directed:Object = false):EdgeSprite
+		public function addEdgeIfNotExist(source:NodeSprite, target:NodeSprite, directed:Boolean = false):EdgeSprite
 		{
 			if (!checkEdge(source.name, target.name,directed)){
 				return this.data.addEdgeFor(source, target, directed);

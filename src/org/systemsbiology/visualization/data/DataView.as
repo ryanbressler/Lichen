@@ -10,6 +10,8 @@ public class DataView {
     private var columnIndicies:Array;
 
     public function DataView(dataJSON:String, isGoogle:String) {
+    	trace(dataJSON);
+    	trace(isGoogle);
         this.dataTable = new DataTable();
         if(isGoogle) {
         	this.dataTable.importGoogleDataTableJSON(dataJSON);

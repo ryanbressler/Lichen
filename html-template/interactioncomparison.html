@@ -2493,7 +2493,7 @@ function drawExample(whichCase) {
 		//	}
 	}
     networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-    networkvis.draw(exampleCases[whichCase].dataFunction(), {layout:'ForceDirected'});	
+    networkvis.draw(exampleCases[whichCase].dataFunction(), {layout:'ForceDirected', edgeRenderer:'multiedge'});	
 	}
 
 </script>

@@ -11,7 +11,7 @@ package org.systemsbiology.visualization.bionetwork.display
 	{
 		public var lineWidth:Number = 3;
 		public var offsetIncr:Number = 3;
-		public var colorMap:Object = {HPRD:"0x3366CC",MINT:"0x339900",IntAct:"0xFF0033", MIPS:"0xFF6600", BioGrid:"0xFF0000"};
+		public var colorMap:Object = {HPRD:"0x3366CC",MINT:"0x339900",IntAct:"0xA2627A", MIPS:"0xFF6600", BioGRID:"0xFF0000"};
 //		private var data_sources:Array = ["HPRD","MINT","IntAct","MIPS","BioGrid"];
 		
 		private static var _instance:MultiEdgeRenderer = new MultiEdgeRenderer();
@@ -31,10 +31,7 @@ package org.systemsbiology.visualization.bionetwork.display
 
 			var g:Graphics = e.graphics;
 			g.clear();
-			
 			var c:Number;
-			//0xff0000, 0xffcc00, 0x00ff00, 0x0066ff	
-			
 			//delta_x1 and delta_x2 perpendicular vector of unit length
 			delta_x1 = x1-x2;
 			delta_y1 = y1-y2;

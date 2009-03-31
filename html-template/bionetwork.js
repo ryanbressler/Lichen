@@ -64,8 +64,6 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
     	
     	},
 
-
-
     // Main drawing logic.
 
     // Parameter data is of type google.visualization.DataTable.
@@ -90,12 +88,18 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 		//wait for swf to be ready...is this necesairy?
 		//log("dataparam");
 		var dataparam = this.buildDataParam(data);
-		////log(dataparam);
-		//onsole.//log("building options param");
-		////log(dump(options));
 		//var optionsparam = this.buildDataParam(options);
+		var optionsparam = {};
+		for (key in options){
+			if (typeof(options[key])=='object'){
+				optionsparam[key] = this.buildDataParam(options[key]);
+			}
+			else{
+				optionsparam[key] = options[key];
+			}
+		}
 		
-    myPe = new PeriodicalExecuter(this.swfPoll.bind(this,dataparam,options), .01);
+    myPe = new PeriodicalExecuter(this.swfPoll.bind(this,dataparam,optionsparam), .01);
 	//myPe = new PeriodicalExecuter(this.swfPoll.bind(this,dataparam,optionsparam),.01);
 		//alert(Object.toJSON(data));
     },
@@ -145,7 +149,6 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 			dataParam.rows[rowi].c[coli]={v:dataTable.getValue(rowi,coli)};
 			if(dataTable.getFormattedValue(rowi,coli))
 				dataParam.rows[rowi].c[coli].f=dataTable.getFormattedValue(rowi,coli);
-				
 			
 			}
 		}

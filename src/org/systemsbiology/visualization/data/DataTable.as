@@ -27,7 +27,7 @@ public class DataTable {
 
     public function importGoogleDataTableJSON(dataJSON:String) :void {
         var decoded:Object = JSON.decode(dataJSON);
-		this.importData(decoded.h, decoded.e);
+		this.importData(decoded.A, decoded.C);
     }
 
     public function addColumn(type:String, label:String, id:String) :void {
@@ -36,10 +36,20 @@ public class DataTable {
 
     public function addRow() :void {
         //Debug.trace("WARNING - DataTable.as: method NYI");
+        var rowIndex:int=this.getNumberOfRows();
+        for (var i:int=0;i<this.getNumberOfColumns(); i++){
+        	rowData[rowIndex].c[i] = {v: null};
+        }
+        
     }
-
+	
+	//All the cells of the new rows are assigned a null value.
     public function addRows(numberOfRow:int) :void {
         //Debug.trace("WARNING - DataTable.as: method NYI");
+        for (var i:int=0; i<this.rowData.length; i++){
+  			addRow();      
+        }
+  
     }
 
     public function clone() :void {
@@ -185,6 +195,7 @@ public class DataTable {
         var value:* = this.rowData[rowIndex].c[columnIndex].v;;
         return value;
     }
+    
 
     public function insertColumn(columnIndex:int, type:String, label:String, id:String) :void {
         //Debug.trace("WARNING - DataTable.as: method NYI");
@@ -192,6 +203,7 @@ public class DataTable {
 
     public function insertRows(rowIndex:int, numberOfRows:int) :void {
         //Debug.trace("WARNING - DataTable.as: method NYI");
+
     }
 
     public function removeColumn(columnIndex:int) :void {
