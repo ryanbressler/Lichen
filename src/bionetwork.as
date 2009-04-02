@@ -9,12 +9,13 @@ package {
 	import flare.vis.data.DataSprite;
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
+	import flare.vis.data.render.ArrowType;
 	import flare.vis.events.SelectionEvent;
 	import flare.vis.legend.Legend;
 	import flare.vis.operator.label.Labeler;
 	import flare.vis.operator.layout.CircleLayout;
 	import flare.vis.operator.layout.ForceDirectedLayout;
-	import flare.vis.data.render.ArrowType;
+	
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -39,6 +40,7 @@ package {
 		private var options:Object; 
 		private var centerNode:int;
 		private var layoutTable:DataView;
+		private var nodeDataTable:DataView;
 		private var tempTable:DataView;
 		private var layoutType:String;
 		private var dataTable:DataView
@@ -109,7 +111,7 @@ package {
 		this.options = JSON.decode(optionsJSON);
 		this.layoutType = this.options['layout'];	
 		this.centerNode=this.options['center'];	
-		var layoutValues:Array = new Array();
+		
 		//data tables
 		//import data JSON
 		if (this.dataTable!=null){
@@ -127,6 +129,14 @@ package {
 		else{
 			this.layoutTable=null;
 		}
+		
+		if (this.options['node_data']){				
+			this.nodeDataTable = new DataView(JSON.encode(this.options['node_data']),"");
+		}
+		else{
+			this.nodeDataTable=null;
+		}
+		
 		
 		if (this.options['attributes']){
 			//already exist
@@ -160,35 +170,16 @@ package {
 		this.importFromJSON(dataJSON, optionsJSON);
 		this.resizeStage(visindex, this.dataTable, options);
 		this.constructGraph(this.dataTable);
-		var params:Object = {};
+
 		trace("LAYOUT DATA");
-		var layoutAttributeValue:String;
 		//layout from layoutTable
-		if (layoutTable!=null){
-			for (var i:Number = 0; i<this.layoutTable.getNumberOfRows();i++) {
-				//first column name
-				var interactor_name:String = this.layoutTable.getValue(i,0);
-				//rest of columns layout attributes (first two are x,y)
-				for (var j:Number = 1; j < this.layoutTable.getNumberOfColumns(); j++){
-					var columnName:String = this.layoutTable.getColumnLabel(j);
-					layoutAttributeValue = this.layoutTable.getValue(i,j);
-					//branch to set main nodesprite properties
-					if (columnName=='shape'){
-						this.network.setNodeShape(interactor_name, layoutAttributeValue);
-					}
-					else if (columnName == 'color'){
-						this.network.setNodeColor(interactor_name, layoutAttributeValue);
-					}
-					else if (columnName == 'size'){
-						this.network.setNodeSize(interactor_name, int(layoutAttributeValue));
-					}
-					else {
-						params[columnName]=int(layoutAttributeValue);
-						this.network.updateNodeParams(interactor_name,params);
-					}
-				}	
-			}
+		if (this.layoutTable!=null){
+			this.importLayout(this.layoutTable);
 		}		
+		
+		if (this.nodeDataTable!=null){
+			this.importTimeCourseData(this.nodeDataTable);
+		}
 			
 		//attributes-user defined node params
 //		if (this.attributesTable!=null){
@@ -288,23 +279,53 @@ package {
 					this.network.addEdgeSource(edge, ixnsources[k]);
 				}
 			}
-			//this.network.addEdge(interactor1, interactor2);
-			
-			//append selection data
-			
-			//add directionality
-			//fourth column reserved for sources for now. 
-//			if (dataTable.getNumberOfColumns()>3){
-//				ixnsources = dataTable.getValue(i,3).split(", ");	
-//				trace("length" + ixnsources.length);
-//				for (var j:Number=0; j<ixnsources.length; j++){
-//					this.network.addEdgeSource(edge, ixnsources[j]);
-//				}
-//			}		
-//		}
 		this.network.data.nodes.visit(addSelectListener);
 		this.network.data.edges.visit(addSelectListener);
+		}
 	}
+
+    private function importLayout(layoutTable:DataView):void {
+    	var layoutValues:Array = new Array();
+    	var layoutAttributeValue:String;
+    	var params:Object = {};
+   		for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
+			//first column name
+			var interactor_name:String = layoutTable.getValue(i,0);
+			//rest of columns layout attributes (first two are x,y)
+			for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
+				var columnName:String = layoutTable.getColumnLabel(j);
+				layoutAttributeValue = layoutTable.getValue(i,j);
+				//branch to set main nodesprite properties
+				if (columnName=='shape'){
+					this.network.setNodeShape(interactor_name, layoutAttributeValue);
+				}
+				else if (columnName == 'color'){
+					this.network.setNodeColor(interactor_name, layoutAttributeValue);
+				}
+				else if (columnName == 'size'){
+					this.network.setNodeSize(interactor_name, int(layoutAttributeValue));
+				}
+				else {
+					params[columnName]=int(layoutAttributeValue);
+					this.network.updateNodeParams(interactor_name,params);
+				}
+			}	
+		}
+    }
+	
+	private function importTimeCourseData(nodeDataTable:DataView):void{
+		trace("IMPORT_TIME_COURSE_DATA");
+		var data = {};
+		for (var i:Number = 0; i<nodeDataTable.getNumberOfRows();i++) {
+			//first column name
+			var interactor_name:String = nodeDataTable.getValue(i,0);
+			for (var j:Number = 1; j < nodeDataTable.getNumberOfColumns(); j++){
+				trace(nodeDataTable.getColumnLabel(j));
+				data[nodeDataTable.getColumnLabel(j)]=nodeDataTable.getValue(i,j);
+			}
+			this.network.setTimecourseData(interactor_name, data);
+			data={}
+		}
 	}
 	
 	private function _addSelectionCapabilities(edge:EdgeSprite, interactor1 :NodeSprite, interactor2:NodeSprite, i:int) : void

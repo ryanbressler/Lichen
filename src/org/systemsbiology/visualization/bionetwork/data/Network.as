@@ -1,13 +1,11 @@
 package org.systemsbiology.visualization.bionetwork.data
 {
 	import flare.query.methods.*;
+	import flare.util.Shapes;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
-	import flare.util.palette.ShapePalette;
-	import flare.util.Geometry;
-	import flare.util.Shapes;
 		
 	public class Network extends Visualization
 	{
@@ -65,8 +63,8 @@ package org.systemsbiology.visualization.bionetwork.data
 			return -1!=names.indexOf(name);
 		}
 		
+		//for none built-in param
 		public function updateNodeParams(name:String, params:Object):void{
-			//add params 
 			trace("updateNodeParams");
 			var node:NodeSprite=this.findNodeByName(name);
 			for(var param in params){
@@ -74,6 +72,13 @@ package org.systemsbiology.visualization.bionetwork.data
 				this.data.nodes.setProperty("props."+param, params[param], null, function(n:NodeSprite):Boolean{return n.data.name==name;});				
 			}
 		}	
+		
+		//set time course data
+		public function setTimecourseData(name:String, timecourse_data:Object) :void{
+			trace("setTimecourseData");
+			trace(name);
+			this.data.nodes.setProperty("props.timecourse_data", timecourse_data, null, function(n:NodeSprite):Boolean{return n.data.name==name;});			
+		}
 		
 		//need to work in backword direction too or just accept edge
 		public function setEdgeColor(source:NodeSprite, target:NodeSprite, color:String){
@@ -88,8 +93,6 @@ package org.systemsbiology.visualization.bionetwork.data
 		public function setNodeShape(name:String, shape:String):void{
 			trace("setNodeShape");
 			trace(shape);
-			//shape="VERTICAL_BAR";
-			//this.data.nodes.setProperty("shape", shape, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
 			this.data.nodes.setProperty("shape", Shapes[shape], null,  function(n:NodeSprite):Boolean{return n.data.name==name;});
 //			this.data.nodes.setProperty("size", 10); 
 		}		
