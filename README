@@ -1,0 +1,111 @@
+This is a provisional readme file for BioVisualization, a set of  browser 
+independent Google Visuailzation API compliant biology oriented visualizations 
+implemented in javascript and actionscript 3. Please feel free to 
+edit and expand it. If something you need to do is not covered here contact 
+us and we will update it.
+
+Before starting you should read the google Visualization API documents 
+to learn the basics of creating a data table and using API compliant 
+visualizations:
+	http://code.google.com/apis/visualization/
+	
+Table of Contents
+
+1.  Getting set up in Flex Builder and building code.
+2. BioNetwork Parmaters
+3. BioHeatmap Parmaters
+4. Deploying on a server
+5. Creating your own visualization using flexvistemplate
+6. List of Dependencies
+
+1.  Getting set up in Flex Builder and building code.
+
+	-check out from cvs using a command like: 
+	cvs -d :pserver:anonymous@isbiology.cvs.sourceforge.net:/cvsroot/isbiology checkout  BioVisualizations
+	
+	- open flex builder and go to file>New>ActionScript Project
+	set the path to your BioVisualizations dir and the name to BioVisualizations
+	and hit finish.
+	
+	- go to project>properties. Go to actionscript build path, and then go to the
+	lib dir tab, click the add swc folder hit 'browse' button, and choose the 
+	BioVisualizations/lib sub dir.
+	
+	- Set bionetwork.as, bioheatmap.as or flexvistemplate.as as your default 
+	executable (use theright click menu)
+	
+	- delete the contents of your html-template dir  and src/biovisualizations.as 
+	(to get rid of all auto generated stuff).
+	
+	- go to the BIoVisulizations dir in a shell and run cvs update -d to recreate
+	the files in html-template from cvs.
+	
+	- Hit the build button and wait. A browser with bionetwork.html shoudl come
+	up, you can open any of the other html files at this point.
+	
+	- Make sure the swf is built into bin-debug. Then you 
+	can go to bin-debug folder and open any html files under that folder.
+	
+	You may need to change the font family being embeded if your system does not have helvetica installed
+
+2. BioNetwork Parmaters
+3. BioHeatmap Parmaters
+	data:
+		A google api datatable with numeric or string values, Column names and a row lable column in column 0.
+		
+		Strings will be parsed as numbers with the exception of special values Y and N
+		
+		If you provide row and column base urls (see below) the column id and column 0 value will be
+		appended to them for links from the column and row lables.
+		
+	Options:
+		noRowNames
+		startColor
+		endColor
+		emptyDataColor
+		numberOfColors
+		passThroughBlack
+		lockHeaders
+		useRowLabels
+		useCellLabels
+		rowBaseUrl
+		columnBaseUrl
+		_cellBaseUrl
+		cellWidth
+		cellHeight
+		mapWidth
+		mapHeight
+		fontHeight
+		horizontalPadding
+		cellBorder
+		drawBorder
+		
+		TODO:
+		_specialValueColors
+		
+4. Deploying on a server
+	To deploy a visualization on a server you need to host the associated js and swf files. 
+	Currentley, if you wish to host these files in a seperate directory you need to edit the path
+	to the swf file in two places in the embed tag string. You can do this using find and replace 
+	(EX bionetwork.swf -> /js/bionetwork.swf).
+	
+	We are looking for a more maintainable solution if anybody has any ideas.
+
+5. Creating your own visualization using flexvistemplate
+
+	The easiest way to start work on your own visualization is to create a copy of flexvistemplate.as,
+	flexvistemplate.js and flexvistemplate.html. and use find and replace to update all occurences of
+	flexvistemplate (should be mostly file names) and FlexVisTemplate (class names).
+	
+	After you have done this you can verify that everything is working using the debuger. Set your 
+	new as file as the default executable, set a break point in the draw function after data import and 
+	compile and run in debug mode.
+	
+6. List of Dependencies (Track Versions Here as we update)
+	corelib.swc
+		http://code.google.com/p/as3corelib/
+	flare.swc
+		http://flare.prefuse.org/
+	com.clevr.*
+		http://clevrlib.riaforge.org/
+	FlexUnit.swc (Not currentley used?)
