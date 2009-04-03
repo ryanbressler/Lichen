@@ -15,7 +15,7 @@ package {
 	import flare.vis.operator.label.Labeler;
 	import flare.vis.operator.layout.CircleLayout;
 	import flare.vis.operator.layout.ForceDirectedLayout;
-	
+	import flare.query.methods.eq;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -43,7 +43,7 @@ package {
 		private var nodeDataTable:DataView;
 		private var tempTable:DataView;
 		private var layoutType:String;
-		private var dataTable:DataView
+		private var dataTable:DataView;
 		private var attributesTable:DataView;
 		private var visWidth:int = stage.stageWidth;
 		private var visHeight:int = stage.stageHeight;
@@ -181,20 +181,6 @@ package {
 			this.importTimeCourseData(this.nodeDataTable);
 		}
 			
-		//attributes-user defined node params
-//		if (this.attributesTable!=null){
-//			trace("attributes");
-//			for (var i:Number = 0; i<this.attributesTable.getNumberOfRows(); i++) {
-//				var interactor_name:String = this.attributesTable.getFormattedValue(i,0);
-//				for (var j:Number = 1; j < this.attributesTable.getNumberOfColumns(); j++){
-//					var columnName:String = layoutTable.getColumnLabel(j);
-//					var attributeValue:int = layoutTable.getValue(i,j);
-//					params[columnName]=attributeValue;
-//					this.network.updateNodeParams(interactor_name,params);
-//				}
-//			}
-//		}
-
 		this.setLayout();
 		
 		if (options['clickdrag']!=false){
@@ -227,6 +213,8 @@ package {
 			addChild(legend);
 	}
 
+	//DATA IMPORT FUNCTIONS
+
 	private function constructGraph(dataTable:DataView):void {
 		trace("construct graph");
 		var interactor_name1:String;
@@ -237,7 +225,7 @@ package {
 		var interactor2:NodeSprite;
 		var ixnsources:Array;
 		var edge:EdgeSprite;
-		var directed:Boolean;	
+		var directed:Boolean=false;	
 		for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
 			interactor_name1=dataTable.getFormattedValue(i,1);
 			trace("formatted_name1" + interactor_name1);
@@ -328,6 +316,20 @@ package {
 		}
 	}
 	
+	//Currently written specifically for GO
+	private function importAnnotations(annotationTable:DataView):void{
+		var columnName:String;
+		var attributeValue:String;
+		if (annotationTable!=null){
+			for (var i:Number = 0; i<annotationTable.getNumberOfRows(); i++) {
+				var interactor_name:String = annotationTable.getFormattedValue(i,0);
+				var annotation_id:String = annotationTable.getValue(i,1);
+				var annotation_name:String = annotationTable.getValue(i,2);
+				this.network.addAnnotation(interactor_name, annotation_name);
+			}
+		}
+	}
+	
 	private function _addSelectionCapabilities(edge:EdgeSprite, interactor1 :NodeSprite, interactor2:NodeSprite, i:int) : void
 	{
 		interactor1.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
@@ -402,10 +404,11 @@ package {
 		this.network.data.edges.setProperties({
 			arrowType: ArrowType.TRIANGLE,
 			lineAlpha: 1,
-			visible:true,
 			arrowWidth: 15,
 			arrowHeight: 15
-			});
+			}, null, function(e:EdgeSprite):Boolean{return e.directed==true;}
+		);
+			
 			
 		this.network.data.nodes.setProperties({
 			fillAlpha: 0.5
