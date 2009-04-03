@@ -13,21 +13,27 @@ package org.systemsbiology.visualization.bionetwork.data
 		public function Network(data:Data)
 		{	
 			super(data);
+			this.data.addGroup("Annotations");
 		}
 		
-		//add node if doesn't already exist; if exist return dedge
-		public function addNode(n:Object):NodeSprite
+		//function from data class tweaked to make it easier to add nodes with type
+		public function addNode(n:Object, groupName:String=null):NodeSprite
 		{
-			return this.data.addNode(n);
+			var node:NodeSprite=this.data.addNode(n);
+			if (groupName!=null){
+				this.data.group(groupName).add(node);
+			}
+			return node;
 		}
 		
+		//wrapper function
 		public function addEdge(source:NodeSprite, target:NodeSprite, directed:Object = false):EdgeSprite
 		{
 			return this.data.addEdgeFor(source, target, directed);
 		}
 		
 		//add edge if doesn't already exist; if exist returns node
-		public function addEdgeIfNotExist(source:NodeSprite, target:NodeSprite, directed:Boolean = false):EdgeSprite
+		public function addEdgeIfNotExist(source:NodeSprite, target:NodeSprite, directed:Object = false):EdgeSprite
 		{
 			if (!checkEdge(source.name, target.name,directed)){
 				return this.data.addEdgeFor(source, target, directed);
@@ -37,12 +43,13 @@ package org.systemsbiology.visualization.bionetwork.data
 			}
 		}
 		
+		//tie a source to an edge
 		public function addEdgeSource(edge:EdgeSprite, source:String){
 			if (edge.props.ixnsources==null){
 				edge.props.ixnsources = [source];
 			}
 			else{
-				edge.props.ixnsources.push(source);
+				edge.props.ixnsources.push(source); 
 			}
 		}
 		
@@ -172,7 +179,7 @@ package org.systemsbiology.visualization.bionetwork.data
 			var interactor:NodeSprite;
 			if (!this.checkNode(name)){
 					trace("create");
-					interactor=this.data.addNode({name:name});
+					interactor=this.addNode({name:name});
 				}
 			else{
 					interactor=this.findNodeByName(name);
@@ -180,9 +187,12 @@ package org.systemsbiology.visualization.bionetwork.data
 			return interactor;
 		}
 		
-		public function addAttribute(name:String):NodeSprite
+		public function addAnnotation(geneName:String, annotationName:String):NodeSprite
 		{
-			return null;
+			var annotation:NodeSprite=this.addNode({name:geneName},"Annotations");
+			var interactor:NodeSprite=this.findNodeByName(geneName);
+			this.addEdgeIfNotExist(interactor, annotation);
+			return annotation;
 		}
 		
 //		public function addEdgeToAttribute(name:String):EdgeSprite
