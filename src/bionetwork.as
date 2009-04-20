@@ -15,7 +15,7 @@ package {
 	import flare.vis.operator.label.Labeler;
 	import flare.vis.operator.layout.CircleLayout;
 	import flare.vis.operator.layout.ForceDirectedLayout;
-	import flare.query.methods.eq;
+	
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -254,15 +254,33 @@ package {
 					}
 				//}
 			}
-			//prefer a formatted gene name to ID when available 
-			if (interactor_name1 && interactor_name2){
-				interactor1=this.network.addNodeIfNotExist(interactor_name1);
-				interactor2=this.network.addNodeIfNotExist(interactor_name2);	
+			
+			//this section replace network.addnodeifnotexsistant calls
+			//i needed to be able to do things to nodes once on creation for selection stuff
+			//
+			//
+			interactor_name1 = interactor_name1 ? interactor_name1 : interactor_value1;
+			interactor_name2 = interactor_name2 ? interactor_name2 : interactor_value2;
+			var interactors : Array = new Array();
+			for each(var name : * in [interactor_name1,interactor_name2])
+			{	
+				if (!network.checkNode(name)){
+					trace("create");
+					var interactor : NodeSprite = network.addNode({name:name});
+					//things that need to be done to each node once
+					interactor.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+					_appendSelectionInfo(interactor,{node:name});					
+					interactors.push(interactor);
+				}
+				else{
+					interactors.push(network.findNodeByName(name));
+				}
+				
 			}
-			else{
-				interactor1=this.network.addNodeIfNotExist(interactor_value1);
-				interactor2=this.network.addNodeIfNotExist(interactor_value2);	
-			}		
+			interactor1 = interactors[0];
+			interactor2 = interactors[1];
+			
+					
 			edge=this.network.addEdgeIfNotExist(interactor1, interactor2, directed);
 			_addSelectionCapabilities(edge,interactor1,interactor2,i);
 			//loop through ixn sources
@@ -271,8 +289,7 @@ package {
 					this.network.addEdgeSource(edge, ixnsources[k]);
 				}
 			}
-		this.network.data.nodes.visit(addSelectListener);
-		this.network.data.edges.visit(addSelectListener);
+		
 		}
 	}
 
@@ -336,12 +353,15 @@ package {
 	
 	private function _addSelectionCapabilities(edge:EdgeSprite, interactor1 :NodeSprite, interactor2:NodeSprite, i:int) : void
 	{
-		interactor1.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-		interactor2.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+//		interactor1.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+//		interactor2.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
 		edge.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+//		_appendSelectionInfo(interactor1,{node:interactor1.name});
+//		_appendSelectionInfo(interactor2,{node:interactor2.name});
 		_appendSelectionInfo(edge,{row:i});
 		_appendSelectionInfo(interactor1,{row:i,col:1});
-		_appendSelectionInfo(interactor2,{row:i,col:2});	
+		_appendSelectionInfo(interactor2,{row:i,col:2});
+			
 		
 	}
 	
@@ -356,6 +376,11 @@ package {
 			ds.props.selection = [selection];
 		}
 	}
+	
+	private function addNodeSelectionInfo (ns:NodeSprite):Boolean {
+		_appendSelectionInfo(ns,{node:ns.name});
+		return true;
+		}
 	
 	private function addSelectListener (ds:DataSprite):Boolean {
 		ds.addEventListener(MouseEvent.CLICK,this._selectionHandeler); 

@@ -172,10 +172,26 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
         return this._selected;
 
     },
+    
+    getSelectionNodes: function() {
+
+        return this._selectedNodes;
+
+    },
 
     // set's the current selected rows, cols or cells
 
     setSelection: function(selection) {
+    	this._selectedNodes=new Array();
+    	for (var rowi=0;rowi<selection.length;rowi++) 
+		{
+			if(selection[rowi].node)
+			{
+				this._selectedNodes.push({node:selection[rowi].node});
+				selection.splice(rowi,1);
+				rowi--;
+			}
+		}
         this._selected = selection;
         var swf =this.getSWF(this.SWFid);
         swf.selectionSetViaJS(Object.toJSON(selection));
@@ -197,32 +213,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 		//} else {
 			return document[movieName];
 		//}
-	},
-	
-	dump: function (arr,level) {
-	var dumped_text = "";
-	if(!level) level = 0;
-	
-	//The padding given at the beginning of the line.
-	var level_padding = "";
-	for(var j=0;j<level+1;j++) level_padding += "    ";
-	
-	if(typeof(arr) == 'object') { //Array/Hashes/Objects 
-		for(var item in arr) {
-			var value = arr[item];
-			
-			if(typeof(value) == 'object') { //If it is an array,
-				dumped_text += level_padding + "'" + item + "' ...\n";
-				dumped_text += dump(value,level+1);
-			} else {
-				dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
-			}
-		}
-	} else { //Stings/Chars/Numbers etc.
-		dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
 	}
-	return dumped_text;
-}
 
     
 });
