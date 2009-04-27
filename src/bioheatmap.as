@@ -350,7 +350,10 @@ package
 				{
 			
 					// PUBLIC options
-			
+					if(options.dataMin)
+						this._dataRange.min=options.dataMin;
+					if(options.dataMax)
+						this._dataRange.max=options.dataMax;	
 					if (options.noRowNames)
 						this._useRowNames = false;
 					if (options.startColor)
