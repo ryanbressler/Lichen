@@ -20,8 +20,12 @@ Table of Contents
 
 1.  Getting set up in Flex Builder and building code.
 
-	-check out from git using a command like: 
-	git clone git://github.com/ryanbressler/Lichen
+	-creat your own fork on github if you wish to develop against the code
+	(see: http://github.com/guides/fork-a-project-and-submit-your-modifications)
+
+	-check out from github using a command like: 
+	git clone git@github.com:YOURUSERNAME/Lichen.git (if you have forked)
+	git clone git://github.com/ryanbressler/Lichen (if you do not wish to fork)
 	
 	- open flex builder and go to file>New>ActionScript Project
 	set the path to your Lichen dir and the name to Lichen
@@ -41,10 +45,10 @@ Table of Contents
 		git checkout html-template
 	 to recreate the files in html-template from github.
 	
-	- Hit the build button and wait. A browser with bionetwork.html shoudl come
+	- Hit the build button and wait. A browser with bionetwork.html should come
 	up, you can open any of the other html files at this point.
 	
-	- Make sure the swf is built into bin-debug. Then you 
+	- Make sure the swf is built in bin-debug. Then you 
 	can go to bin-debug folder and open any html files under that folder.
 	
 	You may need to change the font family being embeded if your system does not have helvetica installed
