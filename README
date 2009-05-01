@@ -1,21 +1,3 @@
-Copyright (C) 2003-2009 Institute for Systems Biology
-                        Seattle, Washington, USA.
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; If not, see <http://www.gnu.org/licenses/>.
-=======================================================================
-
-
 This is a provisional readme file for BioVisualization, a set of  browser 
 independent Google Visuailzation API compliant biology oriented visualizations 
 implemented in javascript and actionscript 3. Please feel free to 
@@ -38,35 +20,30 @@ Table of Contents
 
 1.  Getting set up in Flex Builder and building code.
 
-	-creat your own fork on github if you wish to develop against the code
-	(see: http://github.com/guides/fork-a-project-and-submit-your-modifications)
-
-	-check out from github using a command like: 
-	git clone git@github.com:YOURUSERNAME/Lichen.git (if you have forked)
-	git clone git://github.com/ryanbressler/Lichen (if you do not wish to fork)
+	-check out from cvs using a command like: 
+	cvs -d :pserver:anonymous@isbiology.cvs.sourceforge.net:/cvsroot/isbiology checkout  BioVisualizations
 	
 	- open flex builder and go to file>New>ActionScript Project
-	set the path to your Lichen dir and the name to Lichen
+	set the path to your BioVisualizations dir and the name to BioVisualizations
 	and hit finish.
 	
 	- go to project>properties. Go to actionscript build path, and then go to the
 	lib dir tab, click the add swc folder hit 'browse' button, and choose the 
-	Lichen/lib sub dir.
+	BioVisualizations/lib sub dir.
 	
 	- Set bionetwork.as, bioheatmap.as or flexvistemplate.as as your default 
 	executable (use theright click menu)
 	
-	- delete the contents of your html-template dir  and src/lichen.as 
+	- delete the contents of your html-template dir  and src/biovisualizations.as 
 	(to get rid of all auto generated stuff).
 	
-	- go to the Lichen dir in a shell and run: 
-		git checkout html-template
-	 to recreate the files in html-template from github.
+	- go to the BIoVisulizations dir in a shell and run cvs update -d to recreate
+	the files in html-template from cvs.
 	
-	- Hit the build button and wait. A browser with bionetwork.html should come
+	- Hit the build button and wait. A browser with bionetwork.html shoudl come
 	up, you can open any of the other html files at this point.
 	
-	- Make sure the swf is built in bin-debug. Then you 
+	- Make sure the swf is built into bin-debug. Then you 
 	can go to bin-debug folder and open any html files under that folder.
 	
 	You may need to change the font family being embeded if your system does not have helvetica installed
