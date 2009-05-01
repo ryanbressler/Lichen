@@ -62,13 +62,16 @@ Table of Contents
 	- go to the Lichen dir in a shell and run: 
 		git checkout html-template
 	 to recreate the files in html-template from github.
-	 
-	- Make sure the Lichen/bin-debug directory is served by a web browser
-	  Then go to Project/Properties, ActionScript Build Path, and set Output Folder URL
-	  to the URL where the bin-debug file can be found (example: http://localhost/Lichen).
 	
 	- Hit the build button and wait. A browser with bionetwork.html should come
 	up, you can open any of the other html files at this point.
+	
+	- If you encounter a security zone error there are two possible fixes:
+		1) Ensure there are no spaces in the path to the html file.
+		
+	 	2) Serve the Lichen/bin-debug directory with a web server then go to Project/Properties, 
+	 	ActionScript Build Path, and set Output Folder URL to the URL where the bin-debug file 
+	 	can be found (example: http://localhost/Lichen).
 	
 	- Make sure the swf is built in bin-debug. Then you 
 	can go to bin-debug folder and open any html files under that folder.
