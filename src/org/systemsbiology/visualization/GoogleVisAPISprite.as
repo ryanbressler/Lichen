@@ -145,26 +145,31 @@ package org.systemsbiology.visualization
 		public function selectionSetViaJS(selection : String) : void 
 		{
 	    	//decode
-	    	var selectionObj : Object = JSON.decode(selection)[0];
+	    	var selectionArray : Array = JSON.decode(selection) as Array;
 
 	    	//draw
 	    	this._clearSelection();
-	    	if( selectionObj.hasOwnProperty("row") && selectionObj.row!=null && selectionObj.hasOwnProperty("col") && selectionObj.col!=null)
-	    	{
-	    		this._setSelectionCell(selectionObj.row, selectionObj.col);
-	    		return;	
-	    	}
 	    	
-	    	if( selectionObj.hasOwnProperty("col") && selectionObj.col!=null)
+	    	for each (var selectionObj : Object in selectionArray)
 	    	{
-	    		this._setSelectionCol(selectionObj.col);
-	    		return;	
-	    	}
-	    	
-	    	if( selectionObj.hasOwnProperty("row") && selectionObj.row!=null)
-	    	{
-	    		this._setSelectionRow(selectionObj.row);
-	    		return;	
+		    	
+		    	if( selectionObj.hasOwnProperty("row") && selectionObj.row!=null && selectionObj.hasOwnProperty("col") && selectionObj.col!=null)
+		    	{
+		    		this._setSelectionCell(selectionObj.row, selectionObj.col);
+		    		return;	
+		    	}
+		    	
+		    	if( selectionObj.hasOwnProperty("col") && selectionObj.col!=null)
+		    	{
+		    		this._setSelectionCol(selectionObj.col);
+		    		return;	
+		    	}
+		    	
+		    	if( selectionObj.hasOwnProperty("row") && selectionObj.row!=null)
+		    	{
+		    		this._setSelectionRow(selectionObj.row);
+		    		return;	
+		    	}
 	    	}
 	    	
 	    		
