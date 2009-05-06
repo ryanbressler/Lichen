@@ -150,22 +150,23 @@ package org.systemsbiology.visualization
 	    	//draw
 	    	this._clearSelection();
 	    	
+	    	
 	    	for each (var selectionObj : Object in selectionArray)
 	    	{
 		    	
-		    	if( selectionObj.hasOwnProperty("row") && selectionObj.row!=null && selectionObj.hasOwnProperty("col") && selectionObj.col!=null)
+		    	if( checkObjProp(selectionObj,"row") && checkObjProp(selectionObj,"col") )
 		    	{
 		    		this._setSelectionCell(selectionObj.row, selectionObj.col);
 		    		continue;	
 		    	}
 		    	
-		    	if( selectionObj.hasOwnProperty("col") && selectionObj.col!=null)
+		    	if( checkObjProp(selectionObj,"col"))
 		    	{
 		    		this._setSelectionCol(selectionObj.col);
 		    		continue;	
 		    	}
 		    	
-		    	if( selectionObj.hasOwnProperty("row") && selectionObj.row!=null)
+		    	if( checkObjProp(selectionObj,"row"))
 		    	{
 		    		this._setSelectionRow(selectionObj.row);
 		    		continue;	
@@ -174,6 +175,12 @@ package org.systemsbiology.visualization
 	    	
 	    		
 	    }
+	    
+	    protected function checkObjProp(selectionObj:Object, propname : String) : Boolean
+	    {
+	    	return selectionObj.hasOwnProperty(propname) && selectionObj[propname]!=null && selectionObj[propname]!= "null";
+	    }
+	    
 		
 	}
 }

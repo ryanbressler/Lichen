@@ -424,6 +424,36 @@ package {
 		ds.addEventListener(MouseEvent.CLICK,this._selectionHandeler); 
 		return true;
 		}
+	
+			
+	///////////////////////////////////////////////////////
+	//Selection display functions
+	
+	//handle nodes in the incoming selection from js
+	public override function selectionSetViaJS(selection : String) : void 
+		{
+	    	super.selectionSetViaJS(selection);
+	    	//decode
+	    	var selectionArray : Array = JSON.decode(selection) as Array;
+	    	
+	    	for each (var selectionObj : Object in selectionArray)
+	    	{
+		    	
+		    	if( selectionObj.hasOwnProperty("node"))
+		    	{
+		    		this._setSelectionNode(selectionObj.node);
+		    		continue;	
+		    	}
+	    	}    		
+	    }
+	    
+	protected override function _setSelectionRow(row : *) : void {
+			//implement display of selected edges here
+	    }
+	
+	protected function _setSelectionNode(nodeName : *) : void {
+			//implement display of selected nodes here
+	    }
 
 	private function setLayout():void{
 		//set defaults

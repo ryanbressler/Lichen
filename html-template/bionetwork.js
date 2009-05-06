@@ -183,16 +183,18 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 
     setSelection: function(selection) {
     	this._selectedNodes=new Array();
+    	this._selected = new Array();
     	for (var rowi=0;rowi<selection.length;rowi++) 
 		{
 			if(selection[rowi].node)
 			{
-				this._selectedNodes.push({node:selection[rowi].node});
-				selection.splice(rowi,1);
-				rowi--;
+				this._selectedNodes.push(selection[rowi]);
+			}
+			else
+			{
+				this._selected.push(selection[rowi]);
 			}
 		}
-        this._selected = selection;
         var swf =this.getSWF(this.SWFid);
         swf.selectionSetViaJS(Object.toJSON(selection));
 
