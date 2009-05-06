@@ -123,7 +123,7 @@ package org.systemsbiology.visualization
 	    }
 	    
 	    //function for bubbleing arbitrary events
-		private function _bubbleEvent(eventName: String, paramaterKeyValues : Object = null ) : void {
+		protected function _bubbleEvent(eventName: String, paramaterKeyValues : Object = null ) : void {
 			var jsstring : String = "function(){"
 			jsstring += "google.visualization.events.trigger(isbSWFvisualizations."+this.visindex+", '"+eventName+"', "+JSON.encode(paramaterKeyValues)+");"
 			jsstring +="}"
