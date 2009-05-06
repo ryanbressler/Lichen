@@ -122,6 +122,14 @@ package org.systemsbiology.visualization
 	    	
 	    }
 	    
+	    //function for bubbleing arbitrary events
+		private function _bubbleEvent(eventName: String, paramaterKeyValues : Object = null ) : void {
+			var jsstring : String = "function(){"
+			jsstring += "google.visualization.events.trigger(isbSWFvisualizations."+this.visindex+", '"+eventName+"', "+JSON.encode(paramaterKeyValues)+");"
+			jsstring +="}"
+			ExternalInterface.call(jsstring);
+		}
+		
 	    //sends the selection to the js side and makes it available to other visualizations
 		private function _bubbleSelection(selection:Object) : void {
 			var jsstring : String = "function(){"
