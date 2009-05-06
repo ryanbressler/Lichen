@@ -156,19 +156,19 @@ package org.systemsbiology.visualization
 		    	if( selectionObj.hasOwnProperty("row") && selectionObj.row!=null && selectionObj.hasOwnProperty("col") && selectionObj.col!=null)
 		    	{
 		    		this._setSelectionCell(selectionObj.row, selectionObj.col);
-		    		return;	
+		    		continue;	
 		    	}
 		    	
 		    	if( selectionObj.hasOwnProperty("col") && selectionObj.col!=null)
 		    	{
 		    		this._setSelectionCol(selectionObj.col);
-		    		return;	
+		    		continue;	
 		    	}
 		    	
 		    	if( selectionObj.hasOwnProperty("row") && selectionObj.row!=null)
 		    	{
 		    		this._setSelectionRow(selectionObj.row);
-		    		return;	
+		    		continue;	
 		    	}
 	    	}
 	    	
