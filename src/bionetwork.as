@@ -369,6 +369,26 @@ package {
 		}
 	}
 	
+	/////////////////////////////////////////////////////////////////////////
+	// selection functions
+	
+	//over ride functions to add node selection capabilities
+	
+	protected override function _selectionHandeler(eventObject: Event): void {
+		if(eventObject.currentTarget is NodeSprite)
+		{
+			var ns : NodeSprite = eventObject.currentTarget as NodeSprite;
+			this._bubbleEvent("nodeclick",{node:{name:ns.name}});
+		}
+		if(eventObject.currentTarget is EdgeSprite)
+		{
+			var es : EdgeSprite = eventObject.currentTarget as EdgeSprite;
+			this._bubbleEvent("edgeclick",{edge:{}}); //TODO: put something in here
+		}
+		
+		super._selectionHandeler(eventObject);
+	}
+	
 	private function _addSelectionCapabilities(edge:EdgeSprite, interactor1 :NodeSprite, interactor2:NodeSprite, i:int) : void
 	{
 //		interactor1.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
