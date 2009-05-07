@@ -31,6 +31,7 @@ package
         import flash.geom.*;
         import flash.text.TextField;
         import flash.text.TextFormat;
+        import flash.utils.*;
         
         import org.systemsbiology.visualization.GoogleVisAPISprite;
         import org.systemsbiology.visualization.bioheatmap.ColLabel;
@@ -87,6 +88,11 @@ package
 		        private var _rowBaseUrl:String="";
 		        private var _columnBaseUrl:String="";
 		        private var _cellBaseUrl:String="";
+		        
+		        private var _selectionDisplay : Object = {mode : "flash", 
+		        								fill:{color:{ r: 0, g: 0, b: 0, a: .5 }}, 
+		        								border:{width:2,color:{ r: 0, g: 0, b: 0, a: 1 }}
+		        								};
 		        
 			
 		        // color defaults	
@@ -317,13 +323,19 @@ package
 			    }
 			    
 			    
+				public override function selectionSetViaJS(selection : String) : void
+				{
+					super.selectionSetViaJS(selection);
+					
+					//if flash clear selection display in 500 ms
+					if (this._selectionDisplay.mode == "flash") setTimeout(_clearSelection, 500);
+					
+				}
 				
 				//clears the selection in the AS context
 				protected override function _clearSelection() : void {
-
-					for( var child : int = 0; child < this._selectionSprite.numChildren; child++)
-					{
-						this._selectionSprite.removeChildAt(child);
+					while(this._selectionSprite.numChildren > 0){
+  						this._selectionSprite.removeChildAt(0);
 					}
 					
 			    }			    
@@ -352,14 +364,18 @@ package
 			    
 			    
 			    private function _drawSelectionRect(x : int, y : int, width : int, height : int) : void {
+			    	if (this._selectionDisplay.mode == "none") return;
+			    	
 			    	var cellShape : Shape = new Shape();
 	        
-					cellShape.graphics.beginFill(0,.5)
-		    		cellShape.graphics.lineStyle(2,0);
+					cellShape.graphics.beginFill(Number("0x"+this._discreteColorRange.ObjtoHex(this._selectionDisplay.fill.color)),this._selectionDisplay.fill.color.a)
+		    		cellShape.graphics.lineStyle(this._selectionDisplay.border.width, Number("0x"+this._discreteColorRange.ObjtoHex(this._selectionDisplay.border.color)),this._selectionDisplay.border.color.a);
 		    		cellShape.graphics.drawRect(x,y,width,height);
 		    		cellShape.graphics.endFill();
 		    		
 		    		this._selectionSprite.addChild(cellShape);
+		    		
+
 
 			    }
 			
@@ -445,6 +461,25 @@ package
 						this._drawHeatmapBorder = false;
 					else if (options.drawBorder == true)
 						this._drawHeatmapBorder = true;
+						
+					if (options.selectionDisplay)
+					{
+						this._selectionDisplay.mode = options.selectionDisplay.mode;
+						
+						if(options.selectionDisplay.fill)
+						{
+						this._selectionDisplay.fill.color = options.selectionDisplay.fill.color || this._selectionDisplay.fill.color;
+						
+						}
+						
+						if(options.selectionDisplay.border)
+						{
+							this._selectionDisplay.border = options.selectionDisplay.border.color || this._selectionDisplay.border.color;
+							this._selectionDisplay.border = options.selectionDisplay.border.width || this._selectionDisplay.border.width;
+						
+						}
+						
+					}
 			
 					// TODO : more OPTIONAL PARAMETERS?
 					// - Row normalize the data to average of 0 and variance +/-1?

@@ -109,6 +109,10 @@ Table of Contents
 		horizontalPadding
 		cellBorder
 		drawBorder
+		selectionDisplay = {mode :  "flash" || "highlight" || "none", 
+		        			fill:{color:{ r: 0, g: 0, b: 0, a: .5 }}, 
+		        			border:{width:2,color:{ r: 0, g: 0, b: 0, a: 1 }}
+		        			};
 		
 		TODO:
 		_specialValueColors
