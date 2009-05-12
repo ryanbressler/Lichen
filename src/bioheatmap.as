@@ -546,7 +546,10 @@ package
 			        }
 			
 			        this._cellWidth = cellDimension;			
-			        this._cellHeight = cellDimension;		
+			        this._cellHeight = cellDimension;
+			        
+			        this._heatMapHeight = this._cellHeight * this._numRows;			
+			        this._heatMapWidth = this._cellWidth * this._numDataColumns;		
 			
 			        
 			        this._checkCellAndFontSizes();
