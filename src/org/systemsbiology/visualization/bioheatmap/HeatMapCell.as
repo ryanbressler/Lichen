@@ -26,14 +26,21 @@ package org.systemsbiology.visualization.bioheatmap
 	{
 		public var row : int;
 		public var col : int;
+		public var value : String;
 		
-		public function HeatMapCell(row : int, col : int, height : *, width: *, cellValue : String, fillString : String,linkUrl:String, defaultTextFormat : *)
+		import flare.vis.controls.TooltipControl;
+        import flare.vis.events.TooltipEvent;
+ 		import flare.display.TextSprite;
+		
+		public function HeatMapCell(row : int, col : int, height : *, width: *, cellValue : String, toolTipText : String, fillString : String,linkUrl:String, defaultTextFormat : *)
 		{
 			this.row = row;
 			this.col = col;
 
 	        var cellText : TextField = new TextField();
 	        var cellShape : Shape = new Shape();
+	        
+	        
 	        
 	        cellText.defaultTextFormat =  defaultTextFormat;
             cellText.text = cellValue;
@@ -57,6 +64,17 @@ package org.systemsbiology.visualization.bioheatmap
             
 			addChild(cellShape);
             addChild(cellText);
+            
+            if(toolTipText != "")
+            {
+	            var ttc:TooltipControl = new TooltipControl();
+				ttc.addEventListener(TooltipEvent.SHOW,function(evt:TooltipEvent):void {
+							
+								(ttc.tooltip as TextSprite).textField.text = toolTipText;
+								(ttc.tooltip as TextSprite).render();
+				});
+				ttc.attach(this);
+            }
 
                     
 			super();

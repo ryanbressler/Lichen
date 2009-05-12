@@ -23,11 +23,7 @@ package
         
         import flash.display.Shape;
         import flash.display.Sprite;
-        import flash.display.StageAlign;
-        import flash.display.StageScaleMode;
-        import flash.events.Event;
         import flash.events.MouseEvent;
-        import flash.external.ExternalInterface;
         import flash.geom.*;
         import flash.text.TextField;
         import flash.text.TextFormat;
@@ -39,6 +35,8 @@ package
         import org.systemsbiology.visualization.bioheatmap.RowLabel;
         import org.systemsbiology.visualization.bioheatmap.discretecolorrange;
         import org.systemsbiology.visualization.data.*;
+        
+
  		
         public class bioheatmap extends GoogleVisAPISprite
         {
@@ -215,12 +213,15 @@ package
 		                }
 					}
 					
+					
+			
+			//this.network.controls.add(ttc);
+					
 
 
                 }
                 
-                //TODO: actually get max and min or make the user specify them
-                private function _calcDataRange(data:Object):void
+                 private function _calcDataRange(data:Object):void
                 {
                 	
 			        // determine the data range if needed
@@ -307,10 +308,11 @@ package
 			        var topLeftPoint : Object = this._getCellXYTopLeft(row, col);
 			        var fillString : String = this._discreteColorRange.getCellColorHex(cellValue); 
 					cellValue = cellValue == null ? "NA" : cellValue;
+					var toolTip : String  = cellValue;
 					cellValue = this._useCellLabels ? cellValue : "";
 					var linkUrl:String = this._cellBaseUrl==""?"":this._cellBaseUrl+this.myData.getValue(row,col);
 					
-					var cellSprite : HeatMapCell = new HeatMapCell(row, col,this._cellHeight, this._cellWidth, cellValue, fillString, linkUrl, this._labelTextFormat);
+					var cellSprite : HeatMapCell = new HeatMapCell(row, col,this._cellHeight, this._cellWidth, cellValue, toolTip, fillString, linkUrl, this._labelTextFormat);
               
                    cellSprite.x = topLeftPoint.x;
                    cellSprite.y = topLeftPoint.y;
