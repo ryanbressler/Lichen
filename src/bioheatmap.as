@@ -309,9 +309,13 @@ package
 			        var topLeftPoint : Object = this._getCellXYTopLeft(row, col);
 			        var fillString : String = this._discreteColorRange.getCellColorHex(cellValue); 
 					cellValue = cellValue == null ? "NA" : cellValue;
-					var toolTip : String  = ""; 
-					toolTip += _cellToolTipType == "headers" ? this.myData.getColumnLabel(col) + " "  : "";
+					
+					var toolTip : String  = "";
+										
+					toolTip += _cellToolTipType == "headers" ? this.myData.getColumnLabel(col) + "\n"  : "";
+					toolTip += (_cellToolTipType == "headers" && _useRowNames) ? this._getValueFormattedOrNot(row, 0) + "\n"  : "";
 					toolTip += (_cellToolTipType && _cellToolTipType!="none")? cellValue : "";
+					
 					cellValue = this._useCellLabels ? cellValue : "";
 					var linkUrl:String = this._cellBaseUrl==""?"":this._cellBaseUrl+this.myData.getValue(row,col);
 					
