@@ -86,6 +86,7 @@ package
 		        private var _rowBaseUrl:String="";
 		        private var _columnBaseUrl:String="";
 		        private var _cellBaseUrl:String="";
+		        private var _cellToolTipType:String="value";
 		        
 		        private var _selectionDisplay : Object = {mode : "flash", 
 		        								fill:{color:{ r: 0, g: 0, b: 0, a: .5 }}, 
@@ -308,7 +309,9 @@ package
 			        var topLeftPoint : Object = this._getCellXYTopLeft(row, col);
 			        var fillString : String = this._discreteColorRange.getCellColorHex(cellValue); 
 					cellValue = cellValue == null ? "NA" : cellValue;
-					var toolTip : String  = cellValue;
+					var toolTip : String  = ""; 
+					toolTip += _cellToolTipType == "headers" ? this.myData.getColumnLabel(col) + " "  : "";
+					toolTip += (_cellToolTipType && _cellToolTipType!="none")? cellValue : "";
 					cellValue = this._useCellLabels ? cellValue : "";
 					var linkUrl:String = this._cellBaseUrl==""?"":this._cellBaseUrl+this.myData.getValue(row,col);
 					
@@ -429,6 +432,12 @@ package
 					{
 						this._cellBaseUrl=options.cellBaseUrl;
 					}
+					
+					if(options.cellToolTips)
+					{
+						this._cellToolTipType=options.cellToolTips;
+					}
+					
 			
 					// height/width stuff
 			
