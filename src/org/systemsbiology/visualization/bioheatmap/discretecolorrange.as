@@ -266,7 +266,7 @@ package org.systemsbiology.visualization.bioheatmap
 	
 	public function ObjtoHex(Obj : Object) : String
 	{
-		return this._RGBtoHex(Obj.r as String, Obj.g as String, Obj.b as String);
+		return this._RGBtoHex(String(Obj.r), String(Obj.g), String(Obj.b));
 	}
     private function _RGBtoHex(R:String,G:String,B:String) : String {
         return this._toHex(R)+this._toHex(G)+this._toHex(B);

@@ -113,7 +113,7 @@ Table of Contents
 		selectionDisplay: {mode :  "flash" || "highlight" || "none", 
 		        			fill:{color:{ r: 0, g: 0, b: 0, a: .5 }}, 
 		        			border:{width:2,color:{ r: 0, g: 0, b: 0, a: 1 }}
-		        			};
+		        			}
 		    How to display the selection rectangles and what colors to use
 		        			
 		cellToolTips:  "value" || "none" || "headers"

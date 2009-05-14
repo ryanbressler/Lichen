@@ -375,10 +375,10 @@ package
 			    private function _drawSelectionRect(x : int, y : int, width : int, height : int) : void {
 			    	if (this._selectionDisplay.mode == "none") return;
 			    	
-			    	var cellShape : Shape = new Shape();
-	        
-					cellShape.graphics.beginFill(Number("0x"+this._discreteColorRange.ObjtoHex(this._selectionDisplay.fill.color)),this._selectionDisplay.fill.color.a)
-		    		cellShape.graphics.lineStyle(this._selectionDisplay.border.width, Number("0x"+this._discreteColorRange.ObjtoHex(this._selectionDisplay.border.color)),this._selectionDisplay.border.color.a);
+			    	var cellShape : Shape = new Shape()
+			    	var num : String = this._discreteColorRange.ObjtoHex(this._selectionDisplay.border.color);
+					cellShape.graphics.beginFill(int("0x"+this._discreteColorRange.ObjtoHex(this._selectionDisplay.fill.color)),this._selectionDisplay.fill.color.a)
+		    		cellShape.graphics.lineStyle(this._selectionDisplay.border.width, int("0x"+this._discreteColorRange.ObjtoHex(this._selectionDisplay.border.color)),this._selectionDisplay.border.color.a);
 		    		cellShape.graphics.drawRect(x,y,width,height);
 		    		cellShape.graphics.endFill();
 		    		
@@ -489,8 +489,8 @@ package
 						
 						if(options.selectionDisplay.border)
 						{
-							this._selectionDisplay.border = options.selectionDisplay.border.color || this._selectionDisplay.border.color;
-							this._selectionDisplay.border = options.selectionDisplay.border.width || this._selectionDisplay.border.width;
+							this._selectionDisplay.border.color = options.selectionDisplay.border.color || this._selectionDisplay.border.color;
+							this._selectionDisplay.border.width = options.selectionDisplay.border.width || this._selectionDisplay.border.width;
 						
 						}
 						
