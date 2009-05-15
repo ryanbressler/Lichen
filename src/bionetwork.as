@@ -33,9 +33,11 @@ package {
 	import flare.vis.operator.label.Labeler;
 	import flare.vis.operator.layout.CircleLayout;
 	import flare.vis.operator.layout.ForceDirectedLayout;
+	import flare.query.methods.div;
 	import flare.query.methods.eq;
 	import flare.query.methods.neq;
 	import flare.vis.operator.layout.BundledEdgeRouter;
+	import flare.vis.operator.encoder.PropertyEncoder;
 	
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
@@ -485,12 +487,12 @@ package {
 		}
 		else if (this.options['layout']=="bundledEdges")
 		{
-			//network.data.nodes.sortBy("-data.name.length");
+			network.data.nodes.sortBy("-data.name.length");
 			
 			// prepare data with default settings
 			network.data.nodes.setProperties({
-				//shape: null,                  // no shape, use labels instead
-				//visible: eq("childDegree",0), // only show leaf nodes
+			//	shape: null,                  // no shape, use labels instead
+			//	visible: eq("childDegree",0), // only show leaf nodes
 				buttonMode: true              // show hand cursor
 			});
 			network.data.edges.setProperties({
@@ -508,6 +510,10 @@ package {
 			CircleLayout(network.operators.last).startRadiusFraction = 3/5;
 			// bundle edges to route along the tree structure
 			network.operators.add(new BundledEdgeRouter(0.95));
+			// set the edge alpha values
+			// longer edge, lighter alpha: 1/(2*numCtrlPoints)
+			network.operators.add(new PropertyEncoder(
+			{alpha: div(1,"points.length")}, Data.EDGES));
 			//return;
 		}
 		//default circular layout
