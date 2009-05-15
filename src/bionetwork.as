@@ -214,7 +214,7 @@ package {
         this.network.x = 0;
         this.network.y = 0;
 		
-		if (this.options['legend']!='false'){
+		if (this.options['legend']){
 			this.createLegend();
 		}
 		addChild(this.network);
