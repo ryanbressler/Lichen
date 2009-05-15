@@ -74,7 +74,14 @@
             var heatmap3 = new org.systemsbiology.visualization.BioHeatMap(document.getElementById('heatmapContainer_ex3'));
             var data3 = BioHeatMapExampleData.example3();
             heatmap3.draw(data3, {startColor: {r:0, g:0, b:0, a:1},
-                                  endColor: {r:255, g:0, b:0, a:1},cellHeight: 10, cellWidth: 10,passThroughBlack:false, fontHeight: 7, drawBorder: false, useCellLabels: false, cellToolTips: "headers"});
+                                  endColor: {r:255, g:0, b:0, a:1},
+                                  cellHeight: 10, 
+                                  cellWidth: 10,
+                                  passThroughBlack:false, 
+                                  hideHeaders: true, 
+                                  drawBorder: false, 
+                                  useCellLabels: false, 
+                                  cellToolTips: "headers"});
 
             // ------------------------
             // EXAMPLE 4

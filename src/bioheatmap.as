@@ -70,6 +70,7 @@ package
 				private var _mapSprite : Sprite;
 				private var _selectionSprite : Sprite; 
 				private var _lockHeaders:Boolean = false;
+				private var _hideHeaders:Boolean = false;
 		        private var _cellSpacing:int = 0; // NOT SUPPORTED YET!	
 		        private var _cellWidth:int = 15;	
 		        private var _cellHeight:int = 15;	
@@ -200,8 +201,11 @@ package
 		            var colStartIndex : int = this._useRowNames ? 1 : 0;
 		            var rowNameIndex : int = 0;
 		            
-		           	this._drawColumLabels(colStartIndex); // draw column names
-		           	this._drawRowLabels(rowNameIndex); // draw row names if present
+		           	if (!this._hideHeaders) 
+		           	{
+		           		this._drawColumLabels(colStartIndex); // draw column names
+		           		this._drawRowLabels(rowNameIndex); // draw row names if present
+		           	}
 		
 		            for (var row : int = 0; row < myData.getNumberOfRows(); row++) {
 						this._log("Row: "+ row + " of " + this._numRows);
@@ -415,6 +419,8 @@ package
 						this._lockHeaders = false;
 					else if (options.lockHeaders == true)
 						this._lockHeaders = true;
+					if (options.hideHeaders == true)
+						this._hideHeaders = true;
 					if (options.useRowLabels != null && options.useRowLabels == false)
 						this._useRowNames = false;
 					else if (options.useRowLabels == true)
@@ -610,7 +616,12 @@ package
 			
 			    private function _calcLabelLengths() : void {
 			    	this._log("calc label lengths"); 
-			    
+					if(this._hideHeaders)
+					{
+						this._rowLabelWidth=0;
+						this._columnLabelHeight=0;
+						return;
+					}    
 			
 			        var  rowLabelIndex : int = 0;
 			        var textField : TextField = new TextField();
@@ -638,16 +649,19 @@ package
 			        
 					var colStartIndex : int = this._useRowNames ? 1 : 0;
 					
-					this._log("cols"); 
+					this._log("cols");
+					var sin45 : Number = 0.7071068;
 			        for (var col : int = colStartIndex; col < myData.getNumberOfColumns(); col++) {
 			
 			            var colName : String = myData.getColumnLabel(col);
 						textField.text = colName;
-			            var colNameWidth: Number = textField.textWidth;
-						this._log(textField.text+" textWidth: "+textField.textWidth);//+" measuredWidth :"+textField.measuredWidth);
-			            if (colNameWidth > this._columnLabelHeight) {
+			           // var colNameWidth: Number = textField.textWidth;
+						//var colNameHeight: Number = textField.textHeight;
+						var angledHeight: Number = (textField.textWidth+textField.textHeight);
+						//this._log(textField.text+" textWidth: "+textField.textWidth);//+" measuredWidth :"+textField.measuredWidth);
+			            if (angledHeight > this._columnLabelHeight) {
 			
-			                this._columnLabelHeight = Math.ceil(colNameWidth);
+			                this._columnLabelHeight = Math.ceil(angledHeight);
 			
 			            }
 			        }
