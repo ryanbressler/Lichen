@@ -1586,10 +1586,10 @@ data.setValue(307, 2, 'HPRD, BioGRID');
 data.insertColumn(0,"number");
 	 
        networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-       networkvis.draw(data, {layout: "bundledEdges", bundleEdges:.95});	
+       networkvis.draw(data, {layout: "bundledEdges"});	
        //console.log("data test");
        //console.log(data);
-       //networkvis.draw(data, {attributes: attribute_data, center:center, data_format:"google"});
+       //networkvis.draw(data, {attributes: attribute_data, center:center, data_format:"google",edgeRenderer:"multiedge"});
 
       }
       

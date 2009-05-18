@@ -487,7 +487,7 @@ package {
 		}
 		else if (this.options['layout']=="bundledEdges")
 		{
-			network.data.nodes.sortBy("-data.name.length");
+			//network.data.nodes.sortBy("-data.name.length");
 			
 			// prepare data with default settings
 			network.data.nodes.setProperties({
