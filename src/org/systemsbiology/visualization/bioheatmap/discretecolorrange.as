@@ -126,9 +126,13 @@ package org.systemsbiology.visualization.bioheatmap
         }
 
 		var dataNum : Number = Number(dataValue);
+		trace("data step");
+		trace(this._dataStep);
         var dataBin : Number = dataNum / this._dataStep;
         var binOffset : Number = this._dataRange.min/this._dataStep;
         var newDataBin : Number = (dataBin - binOffset);
+        trace("data bin");
+        trace(newDataBin);
         // round
         if(newDataBin<0)
             newDataBin = Math.ceil(newDataBin);
@@ -231,6 +235,9 @@ package org.systemsbiology.visualization.bioheatmap
 
         // calc data step
         this._maxDataSpace = Math.abs(dataRange.min) + Math.abs(dataRange.max);
+        trace("calc data space");
+        trace(this._maxDataSpace);
+        trace(maxColors);
         this._dataStep = this._maxDataSpace / maxColors;
 
         this._log('dataStep: '+this._dataStep);

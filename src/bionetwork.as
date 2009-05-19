@@ -42,7 +42,9 @@ package {
 	import flash.text.*;
 	
 	import org.systemsbiology.visualization.GoogleVisAPISprite;
+	import org.systemsbiology.visualization.bioheatmap.discretecolorrange;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
+	import org.systemsbiology.visualization.bionetwork.display.CircularHeatmapRenderer;
 	import org.systemsbiology.visualization.bionetwork.display.MultiEdgeRenderer;
 	import org.systemsbiology.visualization.bionetwork.layout.*;
 	import org.systemsbiology.visualization.control.ClickDragControl;
@@ -79,6 +81,18 @@ package {
 		private var info1:TextSprite;
 		private var info2:TextSprite;
 		private var legend:Legend;
+		
+		private var _discreteColorRange:discretecolorrange;
+			        // color defaults	
+		private var _maxColors:int = 64; // number of colors		
+		private var _backgroundColor:Object = { r: 0, g: 0, b: 0, a: 1 };		
+		private var _maxColor:Object = { r: 255, g: 0, b: 0, a: 1 };		
+		private var _minColor:Object = { r: 0, g: 255, b: 0, a: 1 };		
+		private var _emptyDataColor:Object = { r: 100, g: 100, b: 100, a: 1 };	
+		private var _specialValueColors:Array = [];	
+		private var _passThroughBlack:Boolean = true;
+		private var _dataRange:Object = { min: null, max: null };	
+		
 		//font
         // We must embed a font so that we can rotate text and do other special effects
            [Embed(systemFont='Helvetica', 
@@ -342,16 +356,19 @@ package {
 	
 	private function importTimeCourseData(nodeDataTable:DataView):void{
 		trace("IMPORT_TIME_COURSE_DATA");
-		var data = {};
+		//var data = {};
+		var data:Array = new Array();
 		for (var i:Number = 0; i<nodeDataTable.getNumberOfRows();i++) {
 			//first column name
 			var interactor_name:String = nodeDataTable.getValue(i,0);
 			for (var j:Number = 1; j < nodeDataTable.getNumberOfColumns(); j++){
 				trace(nodeDataTable.getColumnLabel(j));
-				data[nodeDataTable.getColumnLabel(j)]=nodeDataTable.getValue(i,j);
+				//data[nodeDataTable.getColumnLabel(j)]=nodeDataTable.getValue(i,j);
+				//data[nodeDataTable.getColumnLabel(j).match(/t_(\d*)/)[1]]=nodeDataTable.getValue(i,j);
+				data.push({index: nodeDataTable.getColumnLabel(j).match(/t_(\d*)/)[1], value: nodeDataTable.getValue(i,j)});
 			}
 			this.network.setTimecourseData(interactor_name, data);
-			data={}
+			data=[]
 		}
 	}
 	
@@ -458,7 +475,25 @@ package {
 	private function setLayout():void{
 		//set defaults
 		this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     
-		//this.network.data.nodes.setProperties({renderer: CircularHeatmapRenderer.instance});
+		
+		if (this.options['nodeRenderer']=="CircularHeatmap"){
+			var maxvalue:Number = int(this.options['maxval']);
+			var minvalue:Number = int(this.options['minval']);
+			trace(options['maxvalue']);
+			trace(options['minvalue']);
+			this._dataRange = { min: minvalue, max: maxvalue };
+			this._discreteColorRange = new discretecolorrange(this._maxColors, this._dataRange, { maxColor: this._maxColor,
+			minColor: this._minColor,
+			emptyDataColor: this._emptyDataColor,
+			passThroughBlack: this._passThroughBlack,
+			specialValueColors: this._specialValueColors
+			});
+			//this.network.data.nodes.setProperties({renderer: CircularHeatmapRenderer.instance});
+			for each (var target_node:NodeSprite in this.network.data.nodes){
+				var chr:CircularHeatmapRenderer = new CircularHeatmapRenderer(this._discreteColorRange);
+				target_node.setNodeProperties({renderer: chr});
+			}
+		}
 		//var lay:CircleLayout =  new CircleLayout(null, null, false);
 		//var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
 		if (this.options['layout']=="ForceDirected"){
