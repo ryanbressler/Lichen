@@ -22,6 +22,7 @@ package {
 	import flare.animate.Transitioner;
 	import flare.display.RectSprite;
 	import flare.display.TextSprite;
+	import flare.query.methods.div;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
 	import flare.vis.data.DataSprite;
@@ -30,14 +31,11 @@ package {
 	import flare.vis.data.render.ArrowType;
 	import flare.vis.events.SelectionEvent;
 	import flare.vis.legend.Legend;
+	import flare.vis.operator.encoder.PropertyEncoder;
 	import flare.vis.operator.label.Labeler;
+	import flare.vis.operator.layout.BundledEdgeRouter;
 	import flare.vis.operator.layout.CircleLayout;
 	import flare.vis.operator.layout.ForceDirectedLayout;
-	import flare.query.methods.div;
-	import flare.query.methods.eq;
-	import flare.query.methods.neq;
-	import flare.vis.operator.layout.BundledEdgeRouter;
-	import flare.vis.operator.encoder.PropertyEncoder;
 	
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
@@ -214,7 +212,7 @@ package {
         this.network.x = 0;
         this.network.y = 0;
 		
-		if (this.options['legend']){
+		if (this.options['legend'] && this.options['legend']!='false' ){
 			this.createLegend();
 		}
 		addChild(this.network);
@@ -488,6 +486,11 @@ package {
 		else if (this.options['layout']=="bundledEdges")
 		{
 			//network.data.nodes.sortBy("-data.name.length");
+
+			//network.data.nodes.sortBy(eq("data.name",options.center));
+			//network.data.nodes
+			//network.data.nodes.=network.getChildByName(options.center) as NodeSprite;
+			
 			
 			// prepare data with default settings
 			network.data.nodes.setProperties({
@@ -502,8 +505,6 @@ package {
 				//visible: neq("source.parentNode","target.parentNode")
 			});
 						
-			// define the visualization
-			//_vis = new Visualization(data);
 			// place around circle by tree structure, radius mapped to depth
 			// make a large inner radius so labels are closer to circumference
 			network.operators.add(new CircleLayout("depth", null, true));
@@ -573,12 +574,12 @@ package {
 	private function resizeStage(visindex:String, dataTable:DataView, options:Object) :void {
      	//calculate width and height ...			
      	var width:int = 630;
-     	var height:int = 630;         	
-		//resize containing div to resize the flash movie (which is set to height/width 100%)
-        ExternalInterface.call("function(){isbSWFvisualizations."+this.visindex+".containerElement.style.height = "+ height +" + \"px\"; $(\""+ visindex +"\").style.width = "+ width +" + \"px\";  }");
-        ExternalInterface.call("function(){isbSWFvisualizations."+this.visindex+".containerElement.style.scroll = yes;  }");
-		this.network.bounds = new Rectangle(0, 0, width, height);
-		// resizeHandler(event) is now called!
+     	var height:int = 630;
+     	
+     	var padding:int = 20;
+     	this.resizeContainer(width,height);         	
+		this.network.bounds = new Rectangle(padding, padding, width-2*padding, height-2*padding);
+
 	}
 		
 	private function updateRoot(n:NodeSprite):void {	
