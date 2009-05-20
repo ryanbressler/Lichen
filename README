@@ -79,6 +79,9 @@ Table of Contents
 	You may need to change the font family being embeded if your system does not have helvetica installed
 
 2. BioNetwork Parameters
+	padding
+	width
+	height
 3. BioHeatmap Parmaters
 	data:
 		A google api datatable with numeric or string values, Column names and a row lable column in column 0.

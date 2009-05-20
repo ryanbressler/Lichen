@@ -50,6 +50,7 @@ package {
 	import org.systemsbiology.visualization.bionetwork.layout.*;
 	import org.systemsbiology.visualization.control.ClickDragControl;
 	import org.systemsbiology.visualization.data.DataView;
+	import org.systemsbiology.visualization.bionetwork.layout.RootInCenterCircleLayout;
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
 	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
 	//the network object persists the data
@@ -310,7 +311,12 @@ package {
 					this.network.addEdgeSource(edge, ixnsources[k]);
 				}
 			}
+			
 		
+		}
+		if(options.center)
+		{
+			this.data.root = network.findNodeByName(options.center);
 		}
 	}
 
@@ -461,9 +467,7 @@ package {
 	private function setLayout():void{
 		//set defaults
 		this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     
-		//this.network.data.nodes.setProperties({renderer: CircularHeatmapRenderer.instance});
-		//var lay:CircleLayout =  new CircleLayout(null, null, false);
-		//var lay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
+
 		if (this.options['layout']=="ForceDirected"){
 			this.network.data.nodes.setProperties({x:315, y:315});     	
 	    	this.network.continuousUpdates = false;
@@ -485,13 +489,7 @@ package {
 		}
 		else if (this.options['layout']=="bundledEdges")
 		{
-			//network.data.nodes.sortBy("-data.name.length");
-
-			//network.data.nodes.sortBy(eq("data.name",options.center));
-			//network.data.nodes
-			//network.data.nodes.=network.getChildByName(options.center) as NodeSprite;
-			
-			
+			//network.data.nodes.sortBy("-data.name.length");	
 			// prepare data with default settings
 			network.data.nodes.setProperties({
 			//	shape: null,                  // no shape, use labels instead
@@ -515,12 +513,21 @@ package {
 			// longer edge, lighter alpha: 1/(2*numCtrlPoints)
 			network.operators.add(new PropertyEncoder(
 			{alpha: div(1,"points.length")}, Data.EDGES));
-			//return;
 		}
-		//default circular layout
 		else {
-			var clay:CircleLayout =  new CircleLayout(null, null, false);
-			this.network.operators.add(clay);
+			//default circular layout
+			if(options.center)
+			{
+				//this.network.findNodeByName(options.center);
+				var rootincenterlay:RootInCenterCircleLayout = new RootInCenterCircleLayout();
+				
+				this.network.operators.add(rootincenterlay);
+			}
+			else
+			{
+				var clay:CircleLayout =  new CircleLayout(null, null, false);
+				this.network.operators.add(clay);
+			}
 		}
 		
 		if (this.options['edgeRenderer']=='multiedge'){
@@ -573,10 +580,10 @@ package {
 		
 	private function resizeStage(visindex:String, dataTable:DataView, options:Object) :void {
      	//calculate width and height ...			
-     	var width:int = 630;
-     	var height:int = 630;
+     	var width:int = options.width || 630;
+     	var height:int = options.height || 630;
+     	var padding:int = options.padding || 5;
      	
-     	var padding:int = 20;
      	this.resizeContainer(width,height);         	
 		this.network.bounds = new Rectangle(padding, padding, width-2*padding, height-2*padding);
 
