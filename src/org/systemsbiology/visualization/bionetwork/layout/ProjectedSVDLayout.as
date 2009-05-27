@@ -23,8 +23,6 @@ package org.systemsbiology.visualization.bionetwork.layout
 	
 	import flare.vis.data.Data;
 	import flare.vis.data.NodeSprite;
-	
-	import org.systemsbiology.visualization.bionetwork.layout.Layout3d;
 
 	public class ProjectedSVDLayout extends Layout3d
 	{
@@ -72,11 +70,22 @@ package org.systemsbiology.visualization.bionetwork.layout
 		        var VArray: Array = SVD.getV().getArray();
 		        nn = items.length;
 		        
-		        this._3dValArray = this.projectDown(VArray, 5, 3);
+		        this._3dValArray = this.projectDown(VArray, 6, 3,.1,.2);
+		        
+		        for(var rowi : int = 0; rowi < this._3dValArray.length; rowi++)
+				{
+					var row : Array = this._3dValArray[rowi];
+					var norm : Number = Math.sqrt(row[0]*row[0]+row[1]*row[1]+row[2]*row[2]);
+				
+					row[0] = row[0]/norm; row[1] = row[1]/norm; row[2] = row[2]/norm;
+				}
 			}
 			
+
 			//render
-			this.render(_t,items,this._3dValArray,layoutBounds,.025*this._rotateBy,.5,.5);
+			this.render(_t,items,this._3dValArray,layoutBounds,.01*this._rotateBy,.6,.6,2,4,true,0,.6);
+			
+			
 			this._rotateBy++;
 			
 	    	

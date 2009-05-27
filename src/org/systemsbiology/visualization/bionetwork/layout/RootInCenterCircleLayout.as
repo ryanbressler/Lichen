@@ -16,7 +16,7 @@
 **    License along with this library; If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.systemsbiology.visualization.layout {
+package org.systemsbiology.visualization.bionetwork.layout {
 	import flare.animate.Transitioner;
 import flare.vis.data.Data;
 import flare.vis.data.DataSprite;

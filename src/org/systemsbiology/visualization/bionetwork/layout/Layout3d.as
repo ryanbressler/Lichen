@@ -129,7 +129,7 @@ package org.systemsbiology.visualization.bionetwork.layout
 					if(toDim==2)
 					{
 						//store scale factor if projecting into 2d
-						newValArray[2][ii] =1/valArray[3][ii];
+						newValArray[2][ii] =1/valArray[valArray.length-1][ii];
 					}
 				}
 				dataMat = newDataMat;
@@ -173,7 +173,7 @@ package org.systemsbiology.visualization.bionetwork.layout
 				
 				
 				//resize node and ajust alpha
-				_t.$(node).setNodeProperties({size:(resizeNodes?valArray[i][2]*resizeNodes:1),alpha:(alphaFade?valArray[i][2]/alphaFade:1)});
+				_t.$(node).setNodeProperties({size:(resizeNodes?valArray[i][2]*resizeNodes:1),alpha:(alphaFade?alphaFade/valArray[i][2]:1)});
 				
 				if(zSort){
 					if(zMin>valArray[i][2])
