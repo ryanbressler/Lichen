@@ -1,0 +1,288 @@
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Lichen: Visualization on the Web</title>
+	
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {});
+  google.load("prototype", "1.6");
+</script>
+<script type="text/javascript" src="bionetwork.js"></script>
+<script type="text/javascript" src="bioheatmap.js"></script>
+<script language="JavaScript" type="text/javascript">	
+
+	google.setOnLoadCallback(drawChart); // Set callback to run when API is loaded
+	
+function drawChart() {
+		var data = new google.visualization.DataTable();
+data.addColumn('string', 'interactor1');
+data.addColumn('string', 'interactor2');
+data.addColumn('string', 'sources');
+data.addRows(26);
+data.setValue(0, 0, '6772');
+data.setValue(0, 1, '6772');
+data.setFormattedValue(0, 0, 'STAT1');
+data.setFormattedValue(0, 1, 'STAT1');
+data.setValue(0, 2, 'HPRD, BioGRID');
+data.setValue(1, 0, '6772');
+data.setValue(1, 1, '6773');
+data.setFormattedValue(1, 0, 'STAT1');
+data.setFormattedValue(1, 1, 'STAT2');
+data.setValue(1, 2, 'HPRD, IntAct, BioGRID');
+data.setValue(2, 0, '6772');
+data.setValue(2, 1, '6777');
+data.setFormattedValue(2, 0, 'STAT1');
+data.setFormattedValue(2, 1, 'STAT5B');
+data.setValue(2, 2, 'HPRD');
+data.setValue(3, 0, '6774');
+data.setValue(3, 1, '6772');
+data.setFormattedValue(3, 0, 'STAT3');
+data.setFormattedValue(3, 1, 'STAT1');
+data.setValue(3, 2, 'HPRD, BioGRID');
+data.setValue(4, 0, '6774');
+data.setValue(4, 1, '6773');
+data.setFormattedValue(4, 0, 'STAT3');
+data.setFormattedValue(4, 1, 'STAT2');
+data.setValue(4, 2, 'IntAct');
+data.setValue(5, 0, '6774');
+data.setValue(5, 1, '6774');
+data.setFormattedValue(5, 0, 'STAT3');
+data.setFormattedValue(5, 1, 'STAT3');
+data.setValue(5, 2, 'HPRD');
+data.setValue(6, 0, '6774');
+data.setValue(6, 1, '6776');
+data.setFormattedValue(6, 0, 'STAT3');
+data.setFormattedValue(6, 1, 'STAT5A');
+data.setValue(6, 2, 'HPRD');
+data.setValue(7, 0, '6774');
+data.setValue(7, 1, '6777');
+data.setFormattedValue(7, 0, 'STAT3');
+data.setFormattedValue(7, 1, 'STAT5B');
+data.setValue(7, 2, 'HPRD');
+data.setValue(8, 0, '6775');
+data.setValue(8, 1, '6775');
+data.setFormattedValue(8, 0, 'STAT4');
+data.setFormattedValue(8, 1, 'STAT4');
+data.setValue(8, 2, 'HPRD');
+data.setValue(9, 0, '6776');
+data.setValue(9, 1, '6772');
+data.setFormattedValue(9, 0, 'STAT5A');
+data.setFormattedValue(9, 1, 'STAT1');
+data.setValue(9, 2, 'HPRD');
+data.setValue(10, 0, '6776');
+data.setValue(10, 1, '6776');
+data.setFormattedValue(10, 0, 'STAT5A');
+data.setFormattedValue(10, 1, 'STAT5A');
+data.setValue(10, 2, 'HPRD');
+data.setValue(11, 0, '6776');
+data.setValue(11, 1, '6777');
+data.setFormattedValue(11, 0, 'STAT5A');
+data.setFormattedValue(11, 1, 'STAT5B');
+data.setValue(11, 2, 'HPRD, BioGRID');
+data.setValue(12, 0, '6777');
+data.setValue(12, 1, '6777');
+data.setFormattedValue(12, 0, 'STAT5B');
+data.setFormattedValue(12, 1, 'STAT5B');
+data.setValue(12, 2, 'HPRD, Sanger Interaction Map');
+data.setValue(13, 0, '6778');
+data.setValue(13, 1, '6773');
+data.setFormattedValue(13, 0, 'STAT6');
+data.setFormattedValue(13, 1, 'STAT2');
+data.setValue(13, 2, 'HPRD');
+data.setValue(14, 0, '6778');
+data.setValue(14, 1, '6778');
+data.setFormattedValue(14, 0, 'STAT6');
+data.setFormattedValue(14, 1, 'STAT6');
+data.setValue(14, 2, 'HPRD');
+data.setValue(15, 0, '6891');
+data.setValue(15, 1, '6890');
+data.setFormattedValue(15, 0, 'TAP2');
+data.setFormattedValue(15, 1, 'TAP1');
+data.setValue(15, 2, 'HPRD, MINT, IntAct, BioGRID');
+data.setValue(16, 0, '7096');
+data.setValue(16, 1, '7097');
+data.setFormattedValue(16, 0, 'TLR1');
+data.setFormattedValue(16, 1, 'TLR2');
+data.setValue(16, 2, 'HPRD, BioGRID, Reactome');
+data.setValue(17, 0, '7096');
+data.setValue(17, 1, '7099');
+data.setFormattedValue(17, 0, 'TLR1');
+data.setFormattedValue(17, 1, 'TLR4');
+data.setValue(17, 2, 'HPRD, BioGRID');
+data.setValue(18, 0, '7096');
+data.setValue(18, 1, '7100');
+data.setFormattedValue(18, 0, 'TLR1');
+data.setFormattedValue(18, 1, 'TLR5');
+data.setValue(18, 2, 'HPRD');
+data.setValue(19, 0, '7096');
+data.setValue(19, 1, '54106');
+data.setFormattedValue(19, 0, 'TLR1');
+data.setFormattedValue(19, 1, 'TLR9');
+data.setValue(19, 2, 'HPRD');
+data.setValue(20, 0, '7096');
+data.setValue(20, 1, '81793');
+data.setFormattedValue(20, 0, 'TLR1');
+data.setFormattedValue(20, 1, 'TLR10');
+data.setValue(20, 2, 'HPRD');
+data.setValue(21, 0, '7097');
+data.setValue(21, 1, '7097');
+data.setFormattedValue(21, 0, 'TLR2');
+data.setFormattedValue(21, 1, 'TLR2');
+data.setValue(21, 2, 'BioGRID');
+data.setValue(22, 0, '7097');
+data.setValue(22, 1, '10333');
+data.setFormattedValue(22, 0, 'TLR2');
+data.setFormattedValue(22, 1, 'TLR6');
+data.setValue(22, 2, 'HPRD, Reactome');
+data.setValue(23, 0, '7097');
+data.setValue(23, 1, '81793');
+data.setFormattedValue(23, 0, 'TLR2');
+data.setFormattedValue(23, 1, 'TLR10');
+data.setValue(23, 2, 'HPRD');
+data.setValue(24, 0, '7098');
+data.setValue(24, 1, '7098');
+data.setFormattedValue(24, 0, 'TLR3');
+data.setFormattedValue(24, 1, 'TLR3');
+data.setValue(24, 2, 'HPRD');
+data.setValue(25, 0, '7100');
+data.setValue(25, 1, '7099');
+data.setFormattedValue(25, 0, 'TLR5');
+data.setFormattedValue(25, 1, 'TLR4');
+data.setValue(25, 2, 'HPRD');
+data.insertColumn(0,"number");
+	 
+       networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
+       networkvis.draw(data, {width:300, height:300});
+       google.visualization.events.addListener(networkvis, "nodeclick", clickHandeler);
+       drawLegend($('legendDiv'));
+      }
+      
+dictionary = {STAT1:6772,
+	STAT2:6773,
+	STAT3:6774,
+	STAT4:6775,
+	STAT5A:6776,
+	STAT5B:6777,
+	STAT6:6778,
+	TAP1:6890,
+	TAP2:6891,
+	TLR1:7096,
+	TLR2:7097,
+	TLR3:7098,
+	TLR4:7099,
+	TLR5:7100,
+	TLR6:10333,
+	TLR7:51284,
+	TLR8:51311,
+	TLR9:54106,
+	TLR10:81793};
+
+function processDataResponseAndDraw (response){
+
+		if (response.isError()) {
+			var reasons = response.getReasons();
+
+			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+			return;
+			
+		}
+		heatmapdata = response.getDataTable();
+	
+		if(heatmapdata.getNumberOfColumns()>0)
+		{
+			
+				heatmap = new org.systemsbiology.visualization.BioHeatMap($('heatmapDiv'));
+
+				heatmap.draw(heatmapdata, {cellHeight:12,
+								cellWidth:12, 
+                                useCellLabels: false,
+                                hideHeaders: true,
+                                selectionDisplay: {mode :  "highlight", 
+		        				fill:{color:{ r: 0, g: 0, b: 0, a: 0 }}, 
+		        				border:{width:2,color:{ r:255, g:255, b: 0, a: .5 }}
+		        			}});
+                google.visualization.events.addListener(heatmap, "select", heatmapClick);
+				
+				
+		}
+		
+		$("cellInfo").innerHTML="Click a heatmap cell to identify it.";
+			
+	}
+		
+function drawLegend (legDiv){
+		var data = new google.visualization.DataTable();        
+		data.addColumn('string', 'Upregulated');
+		data.addColumn('string', 'Downregulated');
+		data.addColumn('string', 'No Change/Not Significant');
+		data.addColumn('string', 'Significant');
+		data.addColumn('string', 'No Data');
+		
+		data.addRows(1);       
+		data.setValue(0, 0, '1');
+		data.setValue(0, 1, '-1');
+		data.setValue(0, 2, '0');
+		data.setValue(0, 3, 'Y');
+		data.setValue(0, 4, null);
+ 
+		legend = new org.systemsbiology.visualization.BioHeatMap(legDiv);
+		legend.draw(data, {cellHeight:25,cellWidth:25, useRowLabels:false});
+		
+	}
+	
+
+geneIds="";
+
+function clickHandeler(target){
+
+	if(geneIds!="")
+	{
+		geneIds+=",";
+	}
+	geneIds+=dictionary[target.node.name];
+	var serviceUrl = "http://sdee.hdbase.org/meta/";
+	var assayUrl = serviceUrl+"assays/";
+	var queryString = serviceUrl+"datagrid/gene_ids="+geneIds+"/?filter=interesting";
+	query = new google.visualization.Query(queryString);
+	query.send(processDataResponseAndDraw);
+	
+	
+
+	
+}
+
+function heatmapClick(){
+	var selection = heatmap.getSelection();
+	if("row" in selection[0] && "col" in selection[0])
+	{
+		$("cellInfo").innerHTML="Gene: " + heatmapdata.getFormattedValue(selection[0].row,0)+"; Condition: "+heatmapdata.getColumnLabel(selection[0].col);
+	}
+
+}
+	
+</script>
+
+<style>
+body { margin: 10px; text-align: center; }
+</style>
+
+</head>
+
+<body scroll="no">
+	
+	<div id="exampleVisContainer"></div>
+	<div id="legendDiv" style="position: absolute; top: 10px; left: 300px;"></div>
+	<div id="cellInfo" style="position: absolute; top: 188px; left: 320px;"></div>
+	<div id="heatmapDiv" style="position: absolute; top: 224px; left: 304px;">&nbsp&nbsp&nbsp&nbsp&nbsp Click nodes to build a heatmap.</div>
+
+	<div style="position: absolute; bottom: 40px; margin-left: auto;
+    margin-right: auto; text-align: center;"> 
+	A sample web application that uses the network visualization to load data from t1dbase.org into a heatmap.<br/>
+	<a href="slide06.html">previous</a> <a href="slide08.html">next</a> </div>
+
+
+	
+</body>
+</html>
