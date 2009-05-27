@@ -1,0 +1,149 @@
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Lichen: Visualization on the Web</title>
+	
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {});
+  google.load("prototype", "1.6");
+</script>
+<script type="text/javascript" src="bionetwork.js"></script>
+<script language="JavaScript" type="text/javascript">	
+
+	google.setOnLoadCallback(drawChart); // Set callback to run when API is loaded
+	
+function drawChart() {
+		center='23645';
+		fetch_urls({dataurl:'http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/', layouturl:'http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/23645/', layout:'GoogleDataTableDriven', clickdrag: 'true', legend:'false', width: 720, height: 720});
+		
+      }
+      
+ function fetch_urls(urls, isAnUpdate){
+     	
+      	cnt=0;
+      	options = new Object;
+		number_urls=0;
+		if (typeof(isAnUpdate)=="undefined"){
+
+			update=false;
+		}
+		else {
+
+			update=true;
+		}
+	    	
+		//set config
+		center='23645';
+		queries=[];
+		funcs=[];
+		reqId=0;
+		for (var i in urls) {
+
+			url = eval('urls.' + i);
+			if (i==='dataurl'){
+				func = processData;
+				query_url = url+'?tqx=reqId:'+reqId+';&format=google';
+				number_urls+=1;
+				funcs.push(func);
+				queries.push(new google.visualization.Query(query_url));
+			}
+			else if (i==='attributeurl'){
+				func=processAttributes;
+			}
+			else if (i==='layouturl'){
+				func=processLayout;
+				query_url = url+'&tqx=reqId:'+reqId+';&format=google';
+				number_urls+=1;
+				funcs.push(func);
+				queries.push(new google.visualization.Query(query_url));
+			}
+			//everything else goes in the options object to be passed via draw_vis()
+			else{
+				options[i] = urls[i];
+			}
+
+		
+		}
+		for (i=0; i<queries.length; i++){
+
+			queries[i].send(funcs[i]);
+		} 	
+      }
+
+	function draw_vis(){
+
+		networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
+
+       	if (update==false){
+
+    		networkvis.draw(data, options);
+       	}
+       	else {
+
+       		network.redraw(data, options);
+       	}
+       	//networkvis.draw(data, {center:center, data_format:"google"});
+	}
+	  	
+	 function processLayout(response){
+	 	//layout_data='';
+
+	 	if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+		}
+
+		layout_data = null;
+		layout_data = response.getDataTable();
+		
+		while(true){
+			if (!(layout_data===null)){
+				options['layout_data']=layout_data;
+				cnt+=1;
+				break;
+			}
+		}
+		
+		if (cnt===number_urls){
+			draw_vis();
+		}
+	 } 	
+	 
+	 function processData(response){
+	 	if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+		}
+		data = null;
+		data = response.getDataTable();
+		while(true){
+			if (!(data===null)){
+				cnt+=1;
+				break;
+			} 
+		 }
+	
+		if (cnt===number_urls){
+			draw_vis();
+		}
+	 }
+
+	
+</script>
+
+<style>
+body { margin: 0px; text-align: center;}
+</style>
+
+</head>
+
+<body scroll="no">
+	<div id="exampleVisContainer" style="margin-left: auto;
+    margin-right: auto;"></div>
+    Our network visualizer loading random data from webservices. If nothing appears, these webservices may have been taken down.<br/>
+	<a href="slide03.html">previous</a> &nbsp&nbsp<a href="slide05.html">next</a>
+
+
+	
+</body>
+</html>

@@ -1,0 +1,67 @@
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Lichen: Visualization on the Web</title>
+	
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["table"]});
+  google.load("prototype", "1.6");
+</script>
+<script type="text/javascript" src="bioheatmap.js"></script>
+<script language="JavaScript" type="text/javascript">	
+
+	google.setOnLoadCallback(drawChart); // Set callback to run when API is loaded
+	
+function drawChart() {
+			var heatmap3 = new org.systemsbiology.visualization.BioHeatMap(document.getElementById('heatmapdiv'));
+            var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Gene Name');
+
+               var nCols = 41;
+               var nRows = 40;
+               for (col = 1; col < nCols; col++) {
+                   data.addColumn('number', 'Col' + col);
+
+               }
+               var max = 10;
+               var min = -10;
+               for (var i = 0; i < nRows; i++) {
+                   data.addRows(1);
+                   data.setCell(i, 0, 'Row' + i);
+                   for (col = 1; col < nCols; col++) {
+                       var value = (Math.random() * (max - min + 1)) + min;
+                       data.setCell(i, col, value);
+                   }
+               }
+            heatmap3.draw(data, {startColor: {r:0, g:0, b:0, a:1},
+                                  endColor: {r:255, g:0, b:0, a:1},
+                                  cellHeight: 10, 
+                                  cellWidth: 10,
+                                  passThroughBlack:false, 
+                                  hideHeaders: true, 
+                                  drawBorder: false, 
+                                  useCellLabels: false, 
+                                  cellToolTips: "headers"});
+      }
+
+	
+</script>
+
+<style>
+body { margin: 30px; text-align: center;}
+</style>
+
+</head>
+
+<body scroll="no">
+	<div id="heatmapdiv" style="margin-left: auto;
+    margin-right: auto;"></div>
+    A large heatmap with 1600 random data points and informative tool tips.<br/>
+	<a href="slide02.html">previous</a> &nbsp&nbsp <a href="slide04.html">next</a>
+
+
+	
+</body>
+</html>
