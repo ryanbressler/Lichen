@@ -50,7 +50,6 @@ package {
 	import org.systemsbiology.visualization.bionetwork.layout.*;
 	import org.systemsbiology.visualization.control.ClickDragControl;
 	import org.systemsbiology.visualization.data.DataView;
-	import org.systemsbiology.visualization.bionetwork.layout.RootInCenterCircleLayout;
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
 	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
 	//the network object persists the data
@@ -387,7 +386,8 @@ package {
 		if(eventObject.currentTarget is NodeSprite)
 		{
 			var ns : NodeSprite = eventObject.currentTarget as NodeSprite;
-			this._bubbleEvent("nodeclick",{node:{name:ns.name}});
+			
+			this._bubbleEvent("nodeclick",{node:{name:ns.data.name}});
 		}
 		if(eventObject.currentTarget is EdgeSprite)
 		{
@@ -466,7 +466,12 @@ package {
 
 	private function setLayout():void{
 		//set defaults
-		this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});     
+		this.network.data.nodes.setProperties({fillColor:0xff0055cc, fillAlpha: 0.2, lineWidth:0.5, visible:true});
+		this.network.data.edges.setProperties({	
+			lineAlpha: .4,
+			lineWidth: 1.5,
+			lineColor: 0x00000000
+			});     
 
 		if (this.options['layout']=="ForceDirected"){
 			this.network.data.nodes.setProperties({x:315, y:315});     	
@@ -480,6 +485,17 @@ package {
 	        fdlay.defaultSpringLength=100;
 	        fdlay.defaultSpringTension= 0.1;
 	        this.network.operators.add(fdlay);	
+		}
+		else if (this.options['layout']=="3dSVD"){
+			this.network.continuousUpdates = true;
+			var psvdlay:ProjectedSVDLayout = new ProjectedSVDLayout();
+			this.network.operators.add(psvdlay);
+			this.network.data.edges.setProperties({	
+			lineAlpha: .3,
+			lineWidth: 1
+			}); 
+			
+			//shape: flare.util.Shapes.SQUARE,
 		}
 		else if (this.options['layout']=="GoogleDataTableDriven"){
 			var gddlay:GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
@@ -544,7 +560,6 @@ package {
 		
 		this.network.data.edges.setProperties({
 			arrowType: ArrowType.TRIANGLE,
-			lineAlpha: 1,
 			arrowWidth: 15,
 			arrowHeight: 15
 			}, null, function(e:EdgeSprite):Boolean{return e.directed==true;}
