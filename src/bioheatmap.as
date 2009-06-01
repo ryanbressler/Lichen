@@ -216,9 +216,15 @@ package
 
 		                for (var col : int = colStartIndex; col < myData.getNumberOfColumns(); col++) {
 		                	this._log("Col: "+ col +  " of " + myData.getNumberOfColumns());
-						
-		                    this._drawHeatMapCell(row, col);
-		                
+							try
+							{
+		                    	this._drawHeatMapCell(row, col);
+		     				}
+		                	catch(error:Error)
+		                	{
+		                		//how to handle errors?
+		                		
+		                	}
 		                }
 					}
 					
