@@ -93,6 +93,7 @@ Table of Contents
 		
 	Options:
 		noRowNames
+			Indicates col 0 in the data is data not row lables. Redundent with use rowlables.
 		startColor
 		endColor
 		emptyDataColor
@@ -100,6 +101,7 @@ Table of Contents
 		passThroughBlack
 		lockHeaders
 		useRowLabels
+			Indicates col 0 in the data is row lables and not data. Redundent with use noRowNames.
 		useCellLabels
 		rowBaseUrl
 		columnBaseUrl
@@ -121,6 +123,13 @@ Table of Contents
 		        			
 		cellToolTips:  "value" || "none" || "headers"
 			The type of tool tips to use on the heatmap cells
+		
+		hideHeaders
+			hide row and columne headers
+		hideColHeaders
+			hide col headers
+		hideRowHeaders
+			hide row headers regardless of weather row 0 is data or lables.
 		
 		TODO:
 		_specialValueColors

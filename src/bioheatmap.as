@@ -71,6 +71,8 @@ package
 				private var _selectionSprite : Sprite; 
 				private var _lockHeaders:Boolean = false;
 				private var _hideHeaders:Boolean = false;
+				private var _hideColHeaders:Boolean = false;
+				private var _hideRowHeaders:Boolean = false;
 		        private var _cellSpacing:int = 0; // NOT SUPPORTED YET!	
 		        private var _cellWidth:int = 15;	
 		        private var _cellHeight:int = 15;	
@@ -203,8 +205,10 @@ package
 		            
 		           	if (!this._hideHeaders) 
 		           	{
-		           		this._drawColumLabels(colStartIndex); // draw column names
-		           		this._drawRowLabels(rowNameIndex); // draw row names if present
+		           		if(!this._hideColHeaders)
+		           			this._drawColumLabels(colStartIndex); // draw column names
+		           		if(!this._hideRowHeaders)
+		           			this._drawRowLabels(rowNameIndex); // draw row names if present
 		           	}
 		
 		            for (var row : int = 0; row < myData.getNumberOfRows(); row++) {
@@ -421,6 +425,10 @@ package
 						this._lockHeaders = true;
 					if (options.hideHeaders == true)
 						this._hideHeaders = true;
+					if (options.hideColHeaders == true)
+						this._hideColHeaders = true;
+					if (options.hideRowHeaders == true)
+						this._hideRowHeaders = true;
 					if (options.useRowLabels != null && options.useRowLabels == false)
 						this._useRowNames = false;
 					else if (options.useRowLabels == true)
@@ -665,6 +673,14 @@ package
 			
 			            }
 			        }
+			        if(this._hideColHeaders)
+					{
+						this._columnLabelHeight=0;
+					}   
+					if(this._hideRowHeaders)
+					{
+						this._rowLabelWidth=0;
+					}   
 			        this._log("done"); 
 			    }
 			
