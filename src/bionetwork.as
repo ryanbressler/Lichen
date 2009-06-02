@@ -169,7 +169,6 @@ package {
 			this.nodeDataTable=null;
 		}
 		
-		
 		if (this.options['attributes']){
 			//already exist
 			if (this.attributesTable!=null){
