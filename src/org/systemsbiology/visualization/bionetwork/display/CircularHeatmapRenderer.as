@@ -64,36 +64,53 @@ package org.systemsbiology.visualization.bionetwork.display{
 			trace(n.props.timecourse_data);
 			var sortedData:Array = n.props.timecourse_data.sortOn("index", Array.NUMERIC).reverse();
 			var numTimepoints:Number = sortedData.length;
-			var maxRadius:Number = 26;
+			var maxRadius:Number = 30;
 			var radius:Number = 0;
-			var stepSize:Number = Math.floor(maxRadius/numTimepoints);
-			trace("step size");
-			trace(stepSize);
-			radius = maxRadius;
-			trace("number time points");
-			trace(numTimepoints);
 			
-			for (var i:Number = 0; i<sortedData.length; i++){
+			var binning:String = 'even';
+			if (binning == 'even'){
+				trace("step size");
+				trace(stepSize);
+				radius = maxRadius;	
+				var stepSize:Number = Math.floor(maxRadius/numTimepoints);
+				for (var i:Number = 0; i<sortedData.length; i++){
+					trace(sortedData[i]);
+					trace(sortedData[i]['index']);
+					var fillColor:String = this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
+					g.beginFill(parseInt(fillColor,16));
+					g.drawCircle(0,0,radius);
+					radius-=stepSize;
+				}
+			}
+			
+			else if (binning = 'proportional'){
+				var prevTime:Number = 0;
+				var currTime:Number = 0;		
+				var totalTime:Number = 0; 
+				for (var i: Number = 0; i<sortedData.length; i++){
+					totalTime += int(sortedData[i]['index']);
+				}
 				
-				trace(sortedData[i]);
-				trace(sortedData[i]['index']);
-				var fillColor:String =this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
-				g.beginFill(parseInt(fillColor,16));
-				g.drawCircle(0,0,radius);
-				radius-=stepSize;
+				totalTime=int(sortedData[0]['index'])-int(sortedData[sortedData.length-1]['index']);
+				for (var i:Number = 0; i<sortedData.length; i++){
+					currTime = sortedData[i]['index'];
+					trace(sortedData[i]);
+					trace(sortedData[i]['index']);
+					var fillColor:String = this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
+					g.beginFill(parseInt(fillColor,16));
+					stepSize = ((int(prevTime)-int(currTime)) * maxRadius)/totalTime;
+					radius -= stepSize;
+					trace("prevTime" + prevTime.toString());
+					trace("currTime" + currTime.toString());
+					trace("time diff" + (int(prevTime)-int(currTime)).toString());
+					trace("totalTime"+totalTime);
+					trace("radius" + radius);
+					g.drawCircle(0,0,radius);
+					prevTime = currTime;
+				}
 			}
 			
 			var name:String = d.data.name;
-//			g.drawCircle(0,0,8);
-//			g.drawCircle(0,0,12);
-//			g.drawCircle(0,0,15);
-//			g.drawCircle(0,0,20);
-//			g.beginFill(0xffcc00);
-//			g.drawCircle(0,0,15);
-//			g.beginFill(0xff9900);
-//			g.drawCircle(0,0,10);
-//			g.beginFill(0xff00ff);
-//			g.drawCircle(0,0,5);
  
 		}
 	}
