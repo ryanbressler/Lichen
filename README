@@ -92,6 +92,8 @@ Table of Contents
 	Options:
 
 		Additional Data Options:
+			center:
+				name of root/center node used by some layouts
 			layout_data
 				-shape->Circle, Square, Diamond, TriangleDown, TriangleUp, TriangleRight, TriangleLeft, Cross
 				-color->hex string
@@ -147,6 +149,12 @@ Table of Contents
 			padding
 			width
 			height
+			node_fillColor = 0xff0055cc || 0xAARRGGBB
+			node_lineWidth = 0.5		
+			node_fillAlpha = 0.5
+			edge_lineWidth = 2,
+			edge_lineColor = 0x77000000
+			edge_lineAlpha = .4
 			selection_display = "all" || "none" || "edges" || "nodes"
 			selection_persistDisplay = false
 			selection_lineColor = default is no change specified as 0x...

@@ -36,6 +36,8 @@ package org.systemsbiology.visualization.bionetwork.display
 		public static function get instance():MultiEdgeRenderer { return _instance; }	
 		public function render(d:DataSprite):void
 		{
+			if(d.lineWidth)
+				lineWidth = d.lineWidth;
 			var delta_x1:Number = 0;
 			var delta_x2:Number = 0;
 			var delta_y1:Number = 0;
