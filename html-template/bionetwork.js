@@ -181,9 +181,12 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 
     // set's the current selected rows, cols or cells
 
-    setSelection: function(selection) {
-    	this._selectedNodes=new Array();
-    	this._selected = new Array();
+    setSelection: function(selection, append) {
+    	if(append!=true)
+    	{
+    		this._selectedNodes=new Array();
+    		this._selected = new Array();
+    	}
     	for (var rowi=0;rowi<selection.length;rowi++) 
 		{
 			if(selection[rowi].node)
@@ -196,7 +199,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 			}
 		}
         var swf =this.getSWF(this.SWFid);
-        swf.selectionSetViaJS(Object.toJSON(selection));
+        swf.selectionSetViaJS(Object.toJSON(this._selected.concat(this._selectedNodes)));
 
     },
    

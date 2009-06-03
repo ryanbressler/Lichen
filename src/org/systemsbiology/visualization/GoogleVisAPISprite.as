@@ -23,7 +23,7 @@ package org.systemsbiology.visualization
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
-	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
 
 	public class GoogleVisAPISprite extends Sprite
@@ -95,28 +95,29 @@ package org.systemsbiology.visualization
 	    }
 		
 		//interprets events as selections the sends the appropriate notification to the js side
-	    protected function _selectionHandeler(eventObject: Event): void {
+	    protected function _selectionHandeler(eventObject: MouseEvent): void {
+	    	var append : Boolean = eventObject.ctrlKey || eventObject.shiftKey;
 	    	
 	    	if(eventObject.currentTarget.hasOwnProperty("props") && eventObject.currentTarget.props.hasOwnProperty("selection") )
 	    	{
-	    		this._bubbleSelection(eventObject.currentTarget.props.selection);
+	    		this._bubbleSelection(eventObject.currentTarget.props.selection,append);
 	    		return;
 	    	}
 	    	if(eventObject.currentTarget.hasOwnProperty("row") && eventObject.currentTarget.hasOwnProperty("col"))
 	    	{
-	    		this._bubbleSelection([{row: eventObject.currentTarget.row, col: eventObject.currentTarget.col}]);
+	    		this._bubbleSelection([{row: eventObject.currentTarget.row, col: eventObject.currentTarget.col}],append);
 	    		return;	
 	    	}
 	    	
 	    	if( eventObject.currentTarget.hasOwnProperty("col"))
 	    	{
-	    		this._bubbleSelection([{row: "null",col: eventObject.currentTarget.col}]);
+	    		this._bubbleSelection([{row: "null",col: eventObject.currentTarget.col}],append);
 	    		return;	
 	    	}
 	    	
 	    	if( eventObject.currentTarget.hasOwnProperty("row"))
 	    	{
-	    		this._bubbleSelection([{row: eventObject.currentTarget.row, col: "null"}]);
+	    		this._bubbleSelection([{row: eventObject.currentTarget.row, col: "null"}],append);
 	    		return;	
 	    	}
 	    	
@@ -131,9 +132,9 @@ package org.systemsbiology.visualization
 		}
 		
 	    //sends the selection to the js side and makes it available to other visualizations
-		private function _bubbleSelection(selection:Object) : void {
+		private function _bubbleSelection(selection:Object, append : Boolean = false) : void {
 			var jsstring : String = "function(){"
-			jsstring += "isbSWFvisualizations."+this.visindex+".setSelection("+JSON.encode(selection)+");";
+			jsstring += "isbSWFvisualizations."+this.visindex+".setSelection("+JSON.encode(selection)+(append ? ",true":"")+");";
 			jsstring += "google.visualization.events.trigger(isbSWFvisualizations."+this.visindex+", 'select', null);"
 			jsstring +="}"
 			ExternalInterface.call(jsstring);// .setSelection('test');}");// google.visualization.events.trigger(isbSWFvisualizations."+this.visindex+", 'select', null);}");

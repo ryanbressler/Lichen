@@ -383,7 +383,7 @@ package {
 	
 	//over ride functions to add node selection capabilities
 	
-	protected override function _selectionHandeler(eventObject: Event): void {
+	protected override function _selectionHandeler(eventObject: MouseEvent): void {
 		if(eventObject.currentTarget is NodeSprite)
 		{
 			var ns : NodeSprite = eventObject.currentTarget as NodeSprite;
