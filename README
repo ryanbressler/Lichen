@@ -82,6 +82,11 @@ Table of Contents
 	padding
 	width
 	height
+	selection_display = "all" || "none" || "edges" || "nodes"
+	selection_persistDisplay = false
+	selection_lineColor = no change
+	selection_lineWidth = 3
+	selection_lineAlpha = 1
 3. BioHeatmap Parmaters
 	data:
 		A google api datatable with numeric or string values, Column names and a row lable column in column 0.
@@ -100,7 +105,8 @@ Table of Contents
 		numberOfColors
 		passThroughBlack
 		lockHeaders
-		useRowLabels
+			No longer used
+		useRowLabels=true
 			Indicates col 0 in the data is row lables and not data. Redundent with use noRowNames.
 		useCellLabels
 		rowBaseUrl
@@ -112,7 +118,9 @@ Table of Contents
 		mapHeight
 			Specifying mapWidth and mapHeight will cause cellWidht and cellHeight to be calculated dynamically.
 		fontHeight
-		horizontalPadding
+		horizontalPadding=10
+		verticalPadding=10
+		verticle
 		cellBorder
 		drawBorder
 		selectionDisplay: {mode :  "flash" || "highlight" || "none", 

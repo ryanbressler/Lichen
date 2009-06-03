@@ -351,12 +351,12 @@ package
 					super.selectionSetViaJS(selection);
 					
 					//if flash clear selection display in 500 ms
-					if (this._selectionDisplay.mode == "flash") setTimeout(_clearSelection, 500);
+					if (this._selectionDisplay.mode == "flash") setTimeout(_clearSelectionDisplay, 500);
 					
 				}
 				
 				//clears the selection in the AS context
-				protected override function _clearSelection() : void {
+				protected override function _clearSelectionDisplay() : void {
 					while(this._selectionSprite.numChildren > 0){
   						this._selectionSprite.removeChildAt(0);
 					}

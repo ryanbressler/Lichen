@@ -43,6 +43,7 @@ package {
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
+	import flash.utils.*;
 	
 	import org.systemsbiology.visualization.GoogleVisAPISprite;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
@@ -441,6 +442,7 @@ package {
 	//handle nodes in the incoming selection from js
 	public override function selectionSetViaJS(selection : String) : void 
 		{
+			//TODO: clear selections
 	    	super.selectionSetViaJS(selection);
 	    	//decode
 	    	var selectionArray : Array = JSON.decode(selection) as Array;
@@ -453,16 +455,56 @@ package {
 		    		this._setSelectionNode(selectionObj.node);
 		    		continue;	
 		    	}
-	    	}    		
+	    	}
+	    	if (!options.selection_persistDisplay) setTimeout(_clearSelectionDisplay, 500);  		
 	    }
 	    
+	protected override function _clearSelectionDisplay() : void{
+			this.network.data.visit(
+				function(ds:DataSprite):void{ 
+					if(ds.props.hasOwnProperty("deselect")) {
+						ds.props.deselect();
+						delete(ds.props.deselect);
+						}
+					}
+				);
+		}
+	    
 	protected override function _setSelectionRow(row : *) : void {
-			//implement display of selected edges here
+			var name1 : String = dataTable.getFormattedValue(row as int,1) || dataTable.getValue(row as int,1);
+			var name2 : String = dataTable.getFormattedValue(row as int,2) || dataTable.getValue(row as int,2);
+			var es : EdgeSprite = network.findEdgeByNodes(name1,name2);
+		    
+			if(!options.selection_display || (options.selection_display != "none" || options.selection_display != "nodes"))
+			_doSelectionDisplay(es as DataSprite);
+			
 	    }
 	
 	protected function _setSelectionNode(nodeName : *) : void {
-			//implement display of selected nodes here
-	    }
+			var ns : NodeSprite = this.network.findNodeByName(nodeName);
+			if(!options.selection_display || (options.selection_display != "none" || options.selection_display != "edges"))
+			_doSelectionDisplay(ns as DataSprite);
+			
+			}
+	    
+	protected function _doSelectionDisplay(ds : DataSprite) : void
+		{
+			//var fillColor : uint = ds.fillColor;
+			//var fillAlpha ds.fillAlpha;
+			var lineColor : Number = ds.lineColor;
+			var lineWidth : Number = ds.lineWidth;
+			var lineAlpha : Number = ds.lineAlpha;
+			
+			
+			ds.props.deselect = function():void{
+				ds.lineColor = lineColor;
+				ds.lineWidth = lineWidth;
+				ds.lineAlpha = lineAlpha;
+			};
+			ds.lineColor = options.selection_lineColor || lineColor;
+			ds.lineWidth = options.selection_lineWidth || 3;
+			ds.lineAlpha = options.selection_lineAlpha || 1;
+		}
 
 	private function setLayout():void{
 		//set defaults

@@ -24,6 +24,7 @@ package org.systemsbiology.visualization.bionetwork.data
 	import flare.vis.data.Data;
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
+	import flare.vis.data.DataList;
 		
 	public class Network extends Visualization
 	{
@@ -165,17 +166,18 @@ package org.systemsbiology.visualization.bionetwork.data
 		}
 		
 		public function findEdgeByNodes(source_name:String, target_name:String):EdgeSprite{
+			//TODO : optimize this to get source node and check only outgoing edges
 			var edge_index:int = -1;
-			var targets:Array = this.getTargets();
-			var sources:Array = this.getSources();
-			for (var i:Number = 0; i<targets.length; i++){
-				var source:NodeSprite = targets[i];
-				var target:NodeSprite = targets[i];
-				if (eq(source.name,source_name) && (eq(target.name,target_name))){
+			var edges:DataList = this.data.edges;
+			
+			for (var i:Number = 0; i<edges.length; i++){
+				var edge:EdgeSprite = edges[i];
+				//var target:NodeSprite = targets[i];
+				if (edge.source.data.name==source_name && edge.target.data.name ==target_name){
 					edge_index = i;
 					break;
 				}
-				else if (eq(source.name,source_name) && (eq(source.name,target_name))){
+				else if (edge.source.data.name==source_name && edge.source.data.name==target_name){
 					edge_index = i;
 					break;
 				} 

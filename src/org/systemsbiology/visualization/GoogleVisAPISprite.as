@@ -43,7 +43,7 @@ package org.systemsbiology.visualization
 		}
 		
 		//clears the selection in the AS context
-		protected function _clearSelection() : void {
+		protected function _clearSelectionDisplay() : void {
 
 		}	
 			    
@@ -148,7 +148,7 @@ package org.systemsbiology.visualization
 	    	var selectionArray : Array = JSON.decode(selection) as Array;
 
 	    	//draw
-	    	this._clearSelection();
+	    	this._clearSelectionDisplay();
 	    	
 	    	
 	    	for each (var selectionObj : Object in selectionArray)
