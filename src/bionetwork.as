@@ -456,7 +456,7 @@ package {
 		    		continue;	
 		    	}
 	    	}
-	    	if (!options.selection_persistDisplay) setTimeout(_clearSelectionDisplay, 500);  		
+	    	if (options.hasOwnProperty("selection_persistDisplay") && !options.selection_persistDisplay) setTimeout(_clearSelectionDisplay, 500);  		
 	    }
 	    
 	protected override function _clearSelectionDisplay() : void{
