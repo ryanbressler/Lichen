@@ -203,8 +203,13 @@ public class ClickDragControl extends Control
 		_clicks = 0;
 		_event = null;
 		_clear = false;
-		
-		_cur.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onDrag);
+		try
+		{
+			_cur.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onDrag);
+		}
+		catch (error:Error) {
+
+		}
 	}
 	
 } // end of class ClickDragControl
