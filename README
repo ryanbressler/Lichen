@@ -79,6 +79,66 @@ Table of Contents
 	You may need to change the font family being embeded if your system does not have helvetica installed
 
 2. BioNetwork Parameters
+
+
+Data
+
+	data (first three columns are fixed, the rest are based on column names)
+		-[0]->edge_id
+		-[1]->(v->interactor_value1, f->interactor_name1)
+		-[2]->(v->interactor_value2, f->interactor_name2)
+		-sources->comma separated list
+		-directed->boolean
+		
+	layout_data
+		-shape->Circle, Square, Diamond, TriangleDown, TriangleUp, TriangleRight, TriangleLeft, Cross
+		-color->hex string
+		-size (integer)
+ 
+	attributes 
+		-Currently specific to GO
+
+	node_data 
+		-anything with "t_(*)" gets interpreted as a timepoint. example: t_0, t_1, etc
+
+Control 
+
+	clickdrag [true|false (default)] 
+		-Allows nodes to be dragged around and relocated
+	sproutable
+		-(Alpha) lets node expanded to add neigbhoring nodes
+		
+Layout 
+	Circular
+	Random
+	ForceDirected
+		defaultParticleMass
+		defaultSpringLength
+		defaultSpringTension
+		defaultSpringDamping
+		3DForceDirectedLayout
+		RadialTreeLayout
+		GoogleDataTableDriven 
+		BundledEdges  
+		CircularWCenter
+			-center 
+		SVDLayout
+
+Node renderers
+	CircularHeatmap
+		maxValue
+		minValue	
+		maxColor
+		minColor
+		maxColors (number of colors)
+
+Edge renderers
+	MultiEdge
+
+Legend
+	visible
+	need to have a way to spec out layout
+
 	Options:
 		padding
 		width
@@ -92,6 +152,13 @@ Table of Contents
 		select
 		nodeclick {node:{name:ns.data.name}}
 		edgeclick {edge:{}} //TODO: put something in here
+
+
+Everything other than the data (graph data) is nested in the options hash per Google's Visualization API
+
+Example: layout:{layout_type: 'ForceDirected', defaultParticleMass: '1', defaultSpringLength: '30', defaultSpringTension: '0.3', defaultSpringDamping:'0.1'}
+
+
 3. BioHeatmap Parmaters
 	data:
 		A google api datatable with numeric or string values, Column names and a row lable column in column 0.

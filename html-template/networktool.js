@@ -50,12 +50,19 @@
 			if (i==='dataurl'){
 				func = processData;
 				query_url = url+'?tqx=reqId:'+reqId+';&format=google';
+				log(query_url);
 				number_urls+=1;
 				funcs.push(func);
 				queries.push(new google.visualization.Query(query_url));
 			}
-			else if (i==='attributeurl'){
+			else if (i==='annotationurl'){
 				func=processAttributes;
+				query_url = url+'&tqx=reqId:'+reqId+';&format=google';
+				log(query_url);
+				number_urls+=1;
+				funcs.push(func);
+				queries.push(new google.visualization.Query(query_url));
+				
 			}
 			else if (i==='layouturl'){
 				func=processLayout;
@@ -65,10 +72,21 @@
 				funcs.push(func);
 				queries.push(new google.visualization.Query(query_url));
 			}
+			else if (i=='nodedataurl'){
+				log("URL:" + url);
+				func=processNodeData;
+				query_url = url+'&tqx=reqId:'+reqId+';&format=google';
+				log(query_url);
+				number_urls+=1;
+				funcs.push(func);
+				queries.push(new google.visualization.Query(query_url));
+			}
+			
 			//everything else goes in the options object to be passed via draw_vis()
 			else{
 				options[i] = urls[i];
 			}
+			reqId+=1;
 			//if (i in {'dataurl':'', 'attributeurl':'', 'layouturl':''}){
 				//log("url " + query_url);	
 				//query=new google.visualization.Query(query_url);
@@ -81,6 +99,7 @@
 		for (i=0; i<queries.length; i++){
 			log("sending query # " + i);
 			queries[i].send(funcs[i]);
+			queries[i].setTimeout(300);
 		} 	
       }
 
@@ -97,8 +116,34 @@
        		log("redraw");
        		network.redraw(data, options);
        	}
-       	//networkvis.draw(data, {center:center, data_format:"google"});
+   
 	}
+	 
+	 	 function processNodeData(response){
+	 	log("processNodeData");
+	 	if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+		}
+		log("nodedata response:");
+		log(response);
+		node_data = null;
+		node_data = response.getDataTable();
+		
+		while(true){
+			if (!(node_data===null)){
+				options['node_data']=node_data;
+				log("break3");
+				cnt+=1;
+				break;
+			}
+		}
+		
+		log("count: "+ cnt);
+		if (cnt===number_urls){
+			draw_vis();
+		}
+	 } 	
+	 
 	  	
 	 function processLayout(response){
 	 	//layout_data='';
@@ -148,12 +193,24 @@
 	 }
 	 
 	 function processAttributes(response){
-	 	log("processAttributes");
+		log("processAttributes");
 	 	if (response.isError()) {
-			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());	
+			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
 		}
-	 	attribute_data = response.getDataTable();
-	 	cnt+=1;
+		options['annotation_data'] = null;
+		options['annotation_data'] = response.getDataTable();
+		while(true){
+			if (!(options['annotation_data']===null)){
+				log("break1");
+				cnt+=1;
+				break;
+			} 
+		 }
+	
+		log("count: " + cnt);
+		if (cnt===number_urls){
+			draw_vis();
+		}
 	 }
 	  	
 // function processDataAndLayout(response){

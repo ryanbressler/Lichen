@@ -125,11 +125,6 @@ package
 		        private var _colorStep:Object = { r: null, g: null, b: null, a: null };
 				private var _discreteColorRange:discretecolorrange;
 				
-
-				
-                
-               
-                
                 //constructor
                 public function bioheatmap(){
             		super();
