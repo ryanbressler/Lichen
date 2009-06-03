@@ -149,10 +149,20 @@ org.systemsbiology.visualization.FlexVisTemplate = Class.create({
     // set's the current selected rows, cols or cells
     // called by other visualizations and by the swf object
 
-    setSelection: function(selection) {
-        this._selected = selection;
+    setSelection: function(selection, append) {
+    	//console.log("set selection called");
+        //console.log("selection is"+ selection.toString());
+        if(append)
+        {
+        	this._selected =this._selected.concat(selection)
+        }
+        else
+        {
+        	this._selected = selection;
+        }
+        //console.log(this.SWFid);
         var swf =this.getSWF(this.SWFid);
-        swf.selectionSetViaJS(Object.toJSON(selection));
+        swf.selectionSetViaJS(Object.toJSON(this._selected));
 
     },
     
