@@ -81,7 +81,7 @@ package
 		        private var _cellBorder:Boolean = false;		
 		        private var _drawHeatmapBorder:Boolean = true;	
 		        private var _fixedSpriteSize:Boolean = false;
-				private var _verticalPadding:int = 40;		
+				private var _verticalPadding:int = 10;		
 		        private var _horizontalPadding:int = 10;		
 		        private var _columnLabelBottomPadding:int = 5;		
 		        private var _rowLabelRightPadding:int = 10;
@@ -173,22 +173,22 @@ package
 
 					this._log("Creating Sprites"); 
                 	this._colSprite = new Sprite();
-                	this._colSprite.y=0;
+                	this._colSprite.y=this._verticalPadding;
                 	this._colSprite.x=this._rowLabelWidth + this._rowLabelRightPadding + this._horizontalPadding;
 
 					this._rowSprite = new Sprite();
-                	this._rowSprite.y=this._columnLabelHeight*.85+this._columnLabelBottomPadding;// + this._verticalPadding;
+                	this._rowSprite.y=this._columnLabelHeight*.85+this._columnLabelBottomPadding + this._verticalPadding;
                 	this._rowSprite.x=this._horizontalPadding;
 
                 	
                 	this._mapSprite = new Sprite();
                     
-                	this._mapSprite.y=this._columnLabelHeight*.85+this._columnLabelBottomPadding;//+ this._verticalPadding;
+                	this._mapSprite.y=this._columnLabelHeight*.85+this._columnLabelBottomPadding + this._verticalPadding;
                 	this._mapSprite.x=this._rowLabelWidth + this._rowLabelRightPadding+this._horizontalPadding;
                 	
                 	this._selectionSprite = new Sprite();
                     
-                	this._selectionSprite.y=this._columnLabelHeight*.85+this._columnLabelBottomPadding;//+ this._verticalPadding;
+                	this._selectionSprite.y=this._columnLabelHeight*.85+this._columnLabelBottomPadding + this._verticalPadding;
                 	this._selectionSprite.x=this._rowLabelWidth + this._rowLabelRightPadding+this._horizontalPadding;
 					
                     this._log("adding kids"); 
@@ -485,8 +485,8 @@ package
 			
 					if (options.horizontalPadding)
 						this._horizontalPadding = options.horizontalPadding;
-					if (options.horizontalPadding)
-						this._verticalPadding = options.horizontalPadding;
+					if (options.verticalPadding)
+						this._verticalPadding = options.verticalPadding;
 					if (options.cellBorder)
 						this._cellBorder = options.cellBorder;
 			
@@ -541,7 +541,7 @@ package
 			
 			        // calculate the Sprite's width/height			
 			        this._SpriteWidth = this._rowLabelWidth + this._heatMapWidth + (2 * this._horizontalPadding);			
-			        this._SpriteHeight = this._columnLabelHeight*.85 + this._heatMapHeight + (2*this._columnLabelBottomPadding);			
+			        this._SpriteHeight = this._columnLabelHeight*.85 + this._heatMapHeight + this._columnLabelBottomPadding+(2*this._verticalPadding);			
 			        this._checkCellAndFontSizes();
 			
 			    }
@@ -563,7 +563,7 @@ package
 			
 			        // calculate the width of the heatmap
 			
-			        this._heatMapHeight = this._SpriteHeight - this._columnLabelHeight*.85;// - (2 * this._verticalPadding);			
+			        this._heatMapHeight = this._SpriteHeight - this._columnLabelHeight*.85 - this._columnLabelBottomPadding-(2*this._verticalPadding);// - (2 * this._verticalPadding);			
 			        this._heatMapWidth = this._SpriteWidth - this._rowLabelWidth - (2 * this._horizontalPadding);
 			
 			
@@ -632,6 +632,8 @@ package
 			    	this._log("calc label lengths"); 
 					if(this._hideHeaders)
 					{
+						this._columnLabelBottomPadding=0;
+						this._rowLabelRightPadding=0;
 						this._rowLabelWidth=0;
 						this._columnLabelHeight=0;
 						return;
@@ -681,113 +683,15 @@ package
 			        }
 			        if(this._hideColHeaders)
 					{
+						this._columnLabelBottomPadding=0;
 						this._columnLabelHeight=0;
 					}   
 					if(this._hideRowHeaders)
 					{
+						this._rowLabelRightPadding=0;
 						this._rowLabelWidth=0;
 					}   
 			        this._log("done"); 
-			    }
-			
-			
-			
-			    // returns which col contains this point
-			
-			    private function _getColFromXY(point : Object) : int {
-			
-			        // calc col
-			
-			        var xDist : Number = point.x; // - this._heatMapTopLeftPoint.x;
-			
-			        if (xDist >= 0) {
-			
-			            
-			
-			            var xCol : int = Math.floor(xDist / this._cellWidth);
-			
-			            if (xDist % this._cellWidth > 0)
-			
-			                xCol++;
-			
-			            if (!this._useRowNames) xCol--; // for zero indexing
-			
-			            if (xCol < this._numColumns)
-			
-			                return xCol;
-			
-			        }
-			        
-			        return -1
-			
-			    }
-			
-			
-			
-			    // returns which row contains this point. returns -1 for column header selection
-			
-			    private function _getRowFromXY(point:Object) : int{
-			
-			        // calc row
-			
-			        var yDist : Number = point.y - this._heatMapTopLeftPoint.y;
-			
-			        if (yDist >= 0) {
-			
-			            if (false && yDist - this._columnLabelHeight < 0) {
-			
-			                // user selected column header.
-			
-			                return -1;
-			
-			            } else {
-			
-			                //yDist -= this._columnLabelHeight;
-			
-			                var yRow : int = Math.floor(yDist / this._cellHeight);
-			
-			                if (yDist % this._cellHeight > 0)
-			
-			                    yRow++;
-			
-			                yRow--; // for zero indexing
-			
-			                if (yRow < this._numRows)
-			
-			                    return yRow;
-			
-			            }
-			
-			        }
-			        
-			        return -1;
-			
-			    }
-			
-			
-			
-			    // returns which cell(row/col) contains this point
-			
-			    private function _getCellFromXY(point : Object) : Object {
-			
-			        // if within heatmap
-			
-			        var row : int= this._getRowFromXY(point);
-			
-			        var col : int = this._getColFromXY(point);
-			
-			        var cell : Object= { row: row, col: col };
-			
-			
-			
-			        
-			        if ((cell.row >= 0 || cell.row == -1) && cell.col >= 0)
-			
-			            return cell;
-			            
-			            
-			        return null;
-			
 			    }
 			
 			
