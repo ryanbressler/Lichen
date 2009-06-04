@@ -159,6 +159,7 @@ Table of Contents
 			node_fillColor = 0xff0055cc || 0xAARRGGBB
 			node_lineWidth = 0.5		
 			node_fillAlpha = 0.5
+			node_tooltips = false
 			edge_lineWidth = 2,
 			edge_lineColor = 0x77000000
 			edge_lineAlpha = .4

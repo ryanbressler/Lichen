@@ -20,7 +20,6 @@ package {
 	import com.adobe.serialization.json.JSON;
 	
 	import flare.animate.Transitioner;
-	import flare.display.RectSprite;
 	import flare.display.TextSprite;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
@@ -30,8 +29,6 @@ package {
 	import flare.vis.legend.Legend;
 	import flare.vis.operator.label.Labeler;
 	
-	import flash.display.LoaderInfo;
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.external.*;
 	import flash.geom.Rectangle;
@@ -39,12 +36,13 @@ package {
 	import flash.utils.*;
 	
 	import org.systemsbiology.visualization.GoogleVisAPISprite;
-	import org.systemsbiology.visualization.bioheatmap.discretecolorrange;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
+	import org.systemsbiology.visualization.bionetwork.display.tooltip;
 	import org.systemsbiology.visualization.bionetwork.layout.*;
 	import org.systemsbiology.visualization.bionetwork.layoutControler;
 	import org.systemsbiology.visualization.control.ClickDragControl;
 	import org.systemsbiology.visualization.data.DataView;
+	import org.systemsbiology.visualization.bionetwork.display.tooltip;
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
 	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
 	//the network object persists the data
@@ -162,9 +160,9 @@ package {
 		if (this.nodeDataTable!=null){
 			this.importTimeCourseData(this.nodeDataTable);
 		}
-			
-		var lc : layoutControler = new layoutControler();
-		lc.performLayout(network,options);
+		if(options.node_tooltips)
+			tooltip.addNodeTooltips(network);	
+		layoutControler.performLayout(network,options);
 		
 		if (options['clickdrag']!=false){
 			var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);

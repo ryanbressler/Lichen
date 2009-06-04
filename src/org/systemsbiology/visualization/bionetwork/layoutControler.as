@@ -55,7 +55,7 @@ package org.systemsbiology.visualization.bionetwork
 		{
 		}
 		
-		public function performLayout(network : Network, options : *):void{
+		public static function performLayout(network : Network, options : *):void{
 		//set some defaults
 
 		network.data.nodes.setProperties({fillColor:options.node_fillColor || 0xff0055cc, lineWidth: options.node_lineWidth || 0.5});
