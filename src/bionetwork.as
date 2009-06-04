@@ -240,7 +240,7 @@ package {
 			for each(var name : * in [interactor_name1 ,interactor_name2])
 			{	
 				if(!name)
-					break;
+					continue;//is an orphan
 				if (!network.checkNode(name)){
 					trace("create");
 					var interactor : NodeSprite = network.addNode({name:name});
@@ -255,7 +255,7 @@ package {
 				
 			}
 			
-			
+			//not an orphan or self interactor
 			if(interactors.length==2 && interactor_name1!=interactor_name2)
 			{	
 				interactor1 = interactors[0];
