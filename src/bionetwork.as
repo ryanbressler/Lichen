@@ -78,16 +78,6 @@ package {
 		private var info2:TextSprite;
 		private var legend:Legend;
 		
-		//private var _discreteColorRange:discretecolorrange;
-			        // color defaults	
-		//private var _maxColors:int = 64; // number of colors		
-		//private var _backgroundColor:Object = { r: 0, g: 0, b: 0, a: 1 };		
-		//private var _maxColor:Object = { r: 255, g: 0, b: 0, a: 1 };		
-		//private var _minColor:Object = { r: 0, g: 255, b: 0, a: 1 };		
-		//private var _emptyDataColor:Object = { r: 100, g: 100, b: 100, a: 1 };	
-		///private var _specialValueColors:Array = [];	
-		//private var _passThroughBlack:Boolean = true;
-		//private var _dataRange:Object = { min: null, max: null };	
 		
 		//font
         // We must embed a font so that we can rotate text and do other special effects
@@ -193,7 +183,7 @@ package {
 }	
 	private function createLegend():void {
 		var legend_fmt:TextFormat = new TextFormat("Verdana",14);
-		legend = Legend.fromValues(null, [
+		legend = Legend.fromValues(null, options.legend_values || [
 				{color: 0x3366CC, size: 0.75, label: "HPRD"},
 				{color: 0x339900, size: 0.75, label: "MINT"},
 				{color: 0xA2627A, size: 0.75, label: "IntAct"},
@@ -252,10 +242,8 @@ package {
 			//i needed to be able to do things to nodes once on creation for selection stuff
 			//
 			//
-			interactor_name1 = interactor_name1 ? interactor_name1 : interactor_value1;
-			interactor_name2 = interactor_name2 ? interactor_name2 : interactor_value2;
 			var interactors : Array = new Array();
-			for each(var name : * in [interactor_name1,interactor_name2])
+			for each(var name : * in [interactor_name1 || interactor_value1,interactor_name2 || interactor_value2])
 			{	
 				if (!network.checkNode(name)){
 					trace("create");
@@ -356,6 +344,7 @@ package {
 	// selection functions
 	
 	//over ride functions to add node selection capabilities
+	//fired by mouse click
 	
 	protected override function _selectionHandeler(eventObject: MouseEvent): void {
 		if(eventObject.currentTarget is NodeSprite)
@@ -375,16 +364,9 @@ package {
 	
 	private function _addSelectionCapabilities(edge:EdgeSprite, interactor1 :NodeSprite, interactor2:NodeSprite, i:int) : void
 	{
-//		interactor1.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-//		interactor2.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
 		edge.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-//		_appendSelectionInfo(interactor1,{node:interactor1.name});
-//		_appendSelectionInfo(interactor2,{node:interactor2.name});
 		_appendSelectionInfo(edge,{row:i});
-		_appendSelectionInfo(interactor1,{row:i,col:1});
-		_appendSelectionInfo(interactor2,{row:i,col:2});
-			
-		
+	
 	}
 	
 	private function _appendSelectionInfo(ds:DataSprite,selection : Object) : void
@@ -490,6 +472,7 @@ package {
 		labeller.xOffset=5;
 		this.network.operators.add(labeller);
 	}
+	
 	private function getTransitioner(taskname:String,duration:Number=1,easing:Function=null,optimize: Boolean = false):Transitioner {
                 
 		if (_trans[taskname] != null) {    //here we could also check for running but disposing never harms ...        
@@ -514,41 +497,6 @@ package {
 
 	}
 		
-	private function updateRoot(n:NodeSprite):void {	
-		vis.data.root = n; // needed for RootInCenterCircleLayout 
-		var t1:Transitioner = getTransitioner("rootUpdate",2);
-		setNodeColor(lastRoot,t1,regularColor);
-		setNodeColor(n,t1,rootColor);
-		lastRoot = n;	
-		vis.update(t1).play();
-	}
-		
-	private function setNodeColor(ns:NodeSprite,t:Transitioner,color:int):void {
-		if (ns != null) {
-			var rs:RectSprite = ns.getChildAt(0) as RectSprite;
-			t.$(rs).fillColor = color; 
-			t.$(rs).lineColor = color; 
-		}	
-	}
-		
-	//methods for ClickDragControl
-	private function onComplete(evt:Event):void {
-			var li:LoaderInfo = evt.target as LoaderInfo;
-			var ns:NodeSprite = li.loader.parent as NodeSprite;	
-			li.loader.x = -li.width / 2;
-			li.loader.y = -li.height / 2;
-			var t:Transitioner = new Transitioner(4);
-			t.$(ns).alpha = 1;
-			var es:EdgeSprite;
-			ns.visitEdges(function(es:EdgeSprite):void {
-				if ((es.target != ns && es.target.parent.alpha > 0) || (es.source != ns && es.source.parent.alpha > 0)) {
-					t.$(es).alpha = 1;
-				}
-			});
-			
-			t.play();
-		}
-		
-		
+	
 	}
 }
