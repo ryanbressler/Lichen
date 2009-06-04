@@ -39,10 +39,9 @@ package {
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.display.tooltip;
 	import org.systemsbiology.visualization.bionetwork.layout.*;
-	import org.systemsbiology.visualization.bionetwork.layoutControler;
+	import org.systemsbiology.visualization.bionetwork.*;
 	import org.systemsbiology.visualization.control.ClickDragControl;
 	import org.systemsbiology.visualization.data.DataView;
-	import org.systemsbiology.visualization.bionetwork.display.tooltip;
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
 	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
 	//the network object persists the data
@@ -88,6 +87,12 @@ package {
         private var _font1:Class;
         private var _fontHeight:int = 14;                
         private var  _labelTextFormat : TextFormat = new TextFormat('myHelveticaFont',14);
+        
+        private var optionsListObject : Object = {
+        	layout_data:{parseAs:"dataTable"},
+        	node_data:{parseAs:"dataTable"},
+        	attributes:{parseAs:"dataTable"}
+        };
 
 	//for basic network	
 	public function bionetwork() {
@@ -95,15 +100,11 @@ package {
 		super();	
 	}
 
-			
-		//de-serialize
-	private function importFromJSON(dataJSON:String, optionsJSON:String) :void {						
-		this.options = JSON.decode(optionsJSON);
-		this.layoutType = this.options['layout'];	
-		this.centerNode=this.options['center'];	
+
+		// draw!
+	public override function draw(dataJSON:String, optionsJSON:String) :void {            			
 		
-		//data tables
-		//import data JSON
+		//import data
 		if (this.dataTable!=null){
 			//loop through datatable and add rows; does the table need to be updated?
 			this.tempTable = new DataView(dataJSON, "");
@@ -113,45 +114,25 @@ package {
 			this.dataTable = new DataView(dataJSON, "");
 		}
 		
-		if (this.options['layout_data']){				
-			this.layoutTable = new DataView(JSON.encode(this.options['layout_data']),"");
-		}
-		else{
-			this.layoutTable=null;
-		}
+		//import options using base class 
+		this.options = this.parseOptions(optionsJSON,optionsListObject);
 		
-		if (this.options['node_data']){				
-			this.nodeDataTable = new DataView(JSON.encode(this.options['node_data']),"");
-		}
-		else{
-			this.nodeDataTable=null;
-		}
+		//set member varaibles from options (can we eliminate these?)
+		this.layoutType = this.options['layout'];	
+		this.centerNode=this.options['center'];	
+		this.attributesTable=this.attributesTable||(this.options.attributes||null);
+		this.nodeDataTable=options.node_data||null;
+		this.layoutTable=options.layout_data||null;
 		
-		if (this.options['attributes']){
-			//already exist
-			if (this.attributesTable!=null){
-				
-			}
-			else {
-				this.attributesTable = new DataView(JSON.encode(this.options['attributes']), "");
-			}	
-		}
-		else{
-			this.attributesTable=null;
-		}
-        this.resizeStage(visindex, dataTable, options);
-               
-	}
-
-
-
-		// draw!
-	public override function draw(dataJSON:String, optionsJSON:String) :void {            			
-		this.importFromJSON(dataJSON, optionsJSON);
+		
 		this.resizeStage(visindex, this.dataTable, options);
+		
+		//import graph data into this.network
 		this.constructGraph(this.dataTable);
 
+		//import additional optional data
 		trace("LAYOUT DATA");
+		
 		//layout from layoutTable
 		if (this.layoutTable!=null){
 			this.importLayout(this.layoutTable);
@@ -160,21 +141,30 @@ package {
 		if (this.nodeDataTable!=null){
 			this.importTimeCourseData(this.nodeDataTable);
 		}
-		if(options.node_tooltips)
-			tooltip.addNodeTooltips(network);	
-		layoutControler.performLayout(network,options);
 		
+		//position the nodes	
+		layoutController.performLayout(network,options);
+		//determine the edge appearance (this has to be after the layout or the bundled edge thing will crash)
+		edgeController.styleEdges(network,options);
+		//determine the node appearance
+		nodeController.styleNodes(network,options);
+		
+		
+		//add optional controls and legend
+		if(options.node_tooltips)
+			tooltip.addNodeTooltips(network);
 		if (options['clickdrag']!=false){
 			var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);
 			this.network.controls.add(cdc);
 		}
-		this.setLabels();
-        this.network.x = 0;
-        this.network.y = 0;
-		
 		if (this.options['legend'] && this.options['legend']!='false' ){
 			this.createLegend();
 		}
+
+        //this.network.x = 0;
+        //this.network.y = 0;
+		
+
 		addChild(this.network);
 		trace("update network sprite");
 		this.network.update();
@@ -459,24 +449,17 @@ package {
 
 	
 
-	private function setLabels():void {
-			var labeller:Labeler = new Labeler(function(d:DataSprite):String {
-		return String(d.data.name);
-		});
-		labeller.yOffset=15;
-		labeller.xOffset=5;
-		this.network.operators.add(labeller);
-	}
+
 	
-	private function getTransitioner(taskname:String,duration:Number=1,easing:Function=null,optimize: Boolean = false):Transitioner {
-                
-		if (_trans[taskname] != null) {    //here we could also check for running but disposing never harms ...        
-	        _trans[taskname].stop();
-	        _trans[taskname].dispose();
-	    }               
-		    _trans[taskname] = new Transitioner(duration,easing,optimize);
-		    return _trans[taskname];
-		}
+//	private function getTransitioner(taskname:String,duration:Number=1,easing:Function=null,optimize: Boolean = false):Transitioner {
+//                
+//		if (_trans[taskname] != null) {    //here we could also check for running but disposing never harms ...        
+//	        _trans[taskname].stop();
+//	        _trans[taskname].dispose();
+//	    }               
+//		    _trans[taskname] = new Transitioner(duration,easing,optimize);
+//		    return _trans[taskname];
+//		}
 
 		// calculates the size of the visualization from the data and options
 		// then resizes the container element via javascript

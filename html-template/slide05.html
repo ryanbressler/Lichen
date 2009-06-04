@@ -1563,7 +1563,7 @@ function drawChart() {
 		data.insertColumn(0,"number");
 	 
        networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-       networkvis.draw(data, {layout: "bundledEdges", height: 600, width: 600});	
+       networkvis.draw(data, {layout: "radialTree", edge_router:"bundled", height: 600, width: 600});	
       }
 
 	

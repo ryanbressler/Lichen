@@ -25,6 +25,7 @@ package org.systemsbiology.visualization
 	import flash.display.StageScaleMode;
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
+	import org.systemsbiology.visualization.data.DataView;
 
 	public class GoogleVisAPISprite extends Sprite
 	{
@@ -76,6 +77,34 @@ package org.systemsbiology.visualization
 			var callJas:String = "isbSWFvisualizations."+this.visindex+".flashReady";
 			ExternalInterface.call(callJas);
 			super();
+		}
+		
+		//function for imorting and parseing options	
+		protected function parseOptions(optionsJSON:String, optionsListObject : Object) : Object {						
+			var options : Object = JSON.decode(optionsJSON);
+			
+			
+			//data tables
+			//import data JSON
+			for( var optionName : String in optionsListObject)
+			{
+				//TODO: dependencies internal names?
+				
+				if (options[optionName]){
+					if(optionsListObject[optionName].parseAs=="dataTable")
+					{			
+						options[optionName] = new DataView(JSON.encode(options[optionName]),"");
+					}
+					else if (optionsListObject[optionName].parseAs=="color")
+					{
+						
+					}
+				}
+	
+			}
+	
+	        return options;
+	               
 		}
 		
 		//out puts a message to either the debugger player log file or flexbuilder consol	
