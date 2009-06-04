@@ -198,42 +198,38 @@ package {
 
 	private function constructGraph(dataTable:DataView):void {
 		trace("construct graph");
-		var interactor_name1:String;
-		var interactor_value1:String;
+		var interactor_name1:String;		
 		var interactor_name2:String;
-		var interactor_value2:String;
 		var interactor1:NodeSprite;
 		var interactor2:NodeSprite;
 		var ixnsources:Array;
 		var edge:EdgeSprite;
 		var directed:Boolean=false;	
 		for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
-			interactor_name1=dataTable.getFormattedValue(i,1);
-			trace("formatted_name1" + interactor_name1);
-			interactor_value1=dataTable.getValue(i,1);
-			trace("value1" + interactor_value1);
-			interactor_name2=dataTable.getFormattedValue(i,2);
-			interactor_value2=dataTable.getValue(i,2);
+			interactor_name1=dataTable.getFormattedValue(i,1)||dataTable.getValue(i,1);
+			interactor_name2=dataTable.getFormattedValue(i,2) || dataTable.getValue(i,2);
 			
-		if (interactor_value1==interactor_value2){
-			continue;
-		}
+
 			//for other columns
 			trace(dataTable.getNumberOfColumns());
-//			if (dataTable.getNumberOfColumns()>2){
+
 				for(var j:Number=3; j<dataTable.getNumberOfColumns(); j++){
 					var cellValue:String = dataTable.getValue(i,j);
-					trace("Cell" + cellValue);
-					var columnName:String = dataTable.getColumnLabel(j);
-					if (columnName=='sources'){
-						trace("SOURCES");
-						ixnsources=cellValue.split(", ");
+					if(cellValue)
+					{
+						trace("Cell" + cellValue);
+						var columnName:String = dataTable.getColumnLabel(j);
+						
+						if (columnName=='sources'){
+							trace("SOURCES");
+							ixnsources=cellValue.split(", ");
+						}
+						else if (columnName=='directed'){
+							directed = Boolean(cellValue=='true');
+							trace("dir:" + directed);
+						}
 					}
-					else if (columnName=='directed'){
-						directed = Boolean(cellValue=='true');
-						trace("dir:" + directed);
-					}
-				//}
+
 			}
 			
 			//this section replace network.addnodeifnotexsistant calls
@@ -241,8 +237,10 @@ package {
 			//
 			//
 			var interactors : Array = new Array();
-			for each(var name : * in [interactor_name1 || interactor_value1,interactor_name2 || interactor_value2])
+			for each(var name : * in [interactor_name1 ,interactor_name2])
 			{	
+				if(!name)
+					break;
 				if (!network.checkNode(name)){
 					trace("create");
 					var interactor : NodeSprite = network.addNode({name:name});
@@ -256,16 +254,21 @@ package {
 				}
 				
 			}
-			interactor1 = interactors[0];
-			interactor2 = interactors[1];
 			
-					
-			edge=this.network.addEdgeIfNotExist(interactor1, interactor2, directed);
-			_addSelectionCapabilities(edge,interactor1,interactor2,i);
-			//loop through ixn sources
-			if (ixnsources){
-				for (var k:Number=0; k<ixnsources.length; k++){
-					this.network.addEdgeSource(edge, ixnsources[k]);
+			
+			if(interactors.length==2 && interactor_name1!=interactor_name2)
+			{	
+				interactor1 = interactors[0];
+				interactor2 = interactors[1];	
+				edge=this.network.addEdgeIfNotExist(interactor1, interactor2, directed);
+				edge.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+				_appendSelectionInfo(edge,{row:i});
+			
+				//loop through ixn sources
+				if (ixnsources){
+					for (var k:Number=0; k<ixnsources.length; k++){
+						this.network.addEdgeSource(edge, ixnsources[k]);
+					}
 				}
 			}
 			
@@ -360,12 +363,6 @@ package {
 		super._selectionHandeler(eventObject);
 	}
 	
-	private function _addSelectionCapabilities(edge:EdgeSprite, interactor1 :NodeSprite, interactor2:NodeSprite, i:int) : void
-	{
-		edge.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-		_appendSelectionInfo(edge,{row:i});
-	
-	}
 	
 	private function _appendSelectionInfo(ds:DataSprite,selection : Object) : void
 	{
