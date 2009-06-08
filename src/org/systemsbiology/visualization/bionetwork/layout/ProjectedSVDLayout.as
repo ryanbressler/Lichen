@@ -100,7 +100,7 @@ package org.systemsbiology.visualization.bionetwork.layout
 			{
 				var dn : NodeSprite = items[dragedNode];
 				var rawPos : Array = _3dValArray[dragedNode];
-				var scale : Number = (4-rawPos[2])/2;
+				var scale : Number = 3;
 				var dx : Number =scale*worldWind[0] * (dn.x- dn.props.oldx)/layoutBounds.width;
 				var dy : Number =scale*worldWind[1] * (dn.y- dn.props.oldy)/layoutBounds.height;
 				

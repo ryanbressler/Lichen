@@ -53,20 +53,29 @@ package org.systemsbiology.visualization.bionetwork.layout
 			
 			var rotationMat : RealMatrix = RealMatrix.identity(3,3);
 			var rotValArray : Array = rotationMat.getArray();
+
 			rotValArray[0][0] = Math.cos(rotateBy);
 			rotValArray[0][2] = -Math.sin(rotateBy);
 			rotValArray[2][2] = Math.cos(rotateBy);
 			rotValArray[2][0] = Math.sin(rotateBy);
 			
+			dataMat = rotationMat.times(dataMat.transpose()).transpose();
+			
 			if(rotateByAboutWidth!=0)
 			{
+				
+				rotationMat = RealMatrix.identity(3,3);
+				rotValArray = rotationMat.getArray();
+			
 				rotValArray[1][1] = Math.cos(rotateByAboutWidth);
 				rotValArray[1][2] = -Math.sin(rotateByAboutWidth);
 				rotValArray[2][2] = Math.cos(rotateByAboutWidth);
 				rotValArray[2][1] = Math.sin(rotateByAboutWidth);
+				
+				dataMat = rotationMat.times(dataMat.transpose()).transpose();
 			}
 			
-			dataMat = rotationMat.times(dataMat.transpose()).transpose();
+
 			return dataMat.getArrayCopy();
 					
 			
