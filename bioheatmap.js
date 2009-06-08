@@ -146,13 +146,20 @@ org.systemsbiology.visualization.BioHeatMap = Class.create({
 
     // set's the current selected rows, cols or cells
 
-    setSelection: function(selection) {
+    setSelection: function(selection, append) {
     	//console.log("set selection called");
         //console.log("selection is"+ selection.toString());
-        this._selected = selection;
+        if(append)
+        {
+        	this._selected =this._selected.concat(selection)
+        }
+        else
+        {
+        	this._selected = selection;
+        }
         //console.log(this.SWFid);
         var swf =this.getSWF(this.SWFid);
-        swf.selectionSetViaJS(Object.toJSON(selection));
+        swf.selectionSetViaJS(Object.toJSON(this._selected));
 
     },
     
