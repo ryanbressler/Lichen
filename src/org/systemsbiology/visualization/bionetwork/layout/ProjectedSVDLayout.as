@@ -23,12 +23,15 @@ package org.systemsbiology.visualization.bionetwork.layout
 	
 	import flare.vis.data.Data;
 	import flare.vis.data.NodeSprite;
+	
+	import flash.events.MouseEvent;
 
 	public class ProjectedSVDLayout extends Layout3d
 	{
 		private var _padding:Number = .05;
 		private var _3dValArray:Array;
-		private var _rotateBy : int = 0;
+		private var _2dValArray:Array;
+		private var rotate : Boolean = true;
 		
 		public function ProjectedSVDLayout()
 		{
@@ -44,12 +47,18 @@ package org.systemsbiology.visualization.bionetwork.layout
 			//nn X nn RealMatrix for svd
 			var adjMat : RealMatrix = new RealMatrix(nn,nn,0.0); 
 			var adjArrayRef : Array = adjMat.getArray();
-			
+			var dragedNode : int=-1;
 			
 			var items:Array = new Array();
 	        for (var i:int = 0; i<nn; i++)
 	        {
 	        	var node : NodeSprite = d.nodes[i];
+	        	if(this._2dValArray && node.stage.hasEventListener(MouseEvent.MOUSE_MOVE) && (this._2dValArray[i][0]!= node.x || this._2dValArray[i][1]!=node.y) )
+	        	{
+	        		dragedNode=i;
+	        		node.props.oldx=node.x;
+	        		node.props.oldy=node.y;
+	        	}
 	        	//populate adjMatrix
 	        	for (var j:int = 0; j<nn; j++)
 	        	{
@@ -82,12 +91,35 @@ package org.systemsbiology.visualization.bionetwork.layout
 			}
 			
 
+
 			//render
-			this.render(_t,items,this._3dValArray,layoutBounds,.01*this._rotateBy,.6,.6,2,4,true,0,.6);
+			var worldWind:Array = [.6,.6];
+			this._2dValArray = this.render(_t,items,this._3dValArray,layoutBounds,.6,.6,2,4,true,0,.6);
 			
+			if(dragedNode!=-1)
+			{
+				var dn : NodeSprite = items[dragedNode];
+				var rawPos : Array = _3dValArray[dragedNode];
+				var scale : Number = (4-rawPos[2])/2;
+				var dx : Number =scale*worldWind[0] * (dn.x- dn.props.oldx)/layoutBounds.width;
+				var dy : Number =scale*worldWind[1] * (dn.y- dn.props.oldy)/layoutBounds.height;
+				
+				if(dx!=0 || dy!=0)
+				{
+					var xrot : Number = Math.atan(dx/rawPos[2]);
+					var yrot : Number = Math.atan(dy/rawPos[2]);
+					_3dValArray  = this.performRotation(_3dValArray,xrot,yrot);
+				}
+				
+				//rotate=false;
+				
+			}
+			else if (rotate)
+			{
+				this._3dValArray = this.performRotation(this._3dValArray,.01);
+			}
 			
-			this._rotateBy++;
-			
+						
 	    	
 			updateEdgePoints(_t);
 		}

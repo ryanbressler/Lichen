@@ -21,8 +21,8 @@ package org.systemsbiology.visualization.bionetwork.layout
 	import com.clevr.matrixalgebra.RealMatrix;
 	
 	import flare.animate.Transitioner;
+	import flare.vis.data.NodeSprite;
 	import flare.vis.operator.layout.Layout;
-	import flash.geom.Matrix;
 	
 	import flash.geom.Rectangle;
 	
@@ -35,7 +35,7 @@ package org.systemsbiology.visualization.bionetwork.layout
 
 		//TODO: cache objects, upgrade to use fo 10 matrix thingies
 		
-		public function performRotation(VArray : Array,rotateBy:Number):Array
+		public function performRotation(VArray : Array,rotateBy:Number,rotateByAboutWidth:Number=0):Array
 		{
 			var dataMat : RealMatrix = new RealMatrix(VArray.length, 3,0);
 			var valArray : Array = dataMat.getArray();
@@ -57,6 +57,14 @@ package org.systemsbiology.visualization.bionetwork.layout
 			rotValArray[0][2] = -Math.sin(rotateBy);
 			rotValArray[2][2] = Math.cos(rotateBy);
 			rotValArray[2][0] = Math.sin(rotateBy);
+			
+			if(rotateByAboutWidth!=0)
+			{
+				rotValArray[1][1] = Math.cos(rotateByAboutWidth);
+				rotValArray[1][2] = -Math.sin(rotateByAboutWidth);
+				rotValArray[2][2] = Math.cos(rotateByAboutWidth);
+				rotValArray[2][1] = Math.sin(rotateByAboutWidth);
+			}
 			
 			dataMat = rotationMat.times(dataMat.transpose()).transpose();
 			return dataMat.getArrayCopy();
@@ -142,7 +150,7 @@ package org.systemsbiology.visualization.bionetwork.layout
 			return valArray;
 		}
 		
-		public function render(_t : Transitioner, items : Array, coordinates : Array, layoutBounds : Rectangle, rotateBy : Number = 0, worldWindowWidth : Number = 10, worldWindowHeight : Number = 10, viewerWindowDist : Number = 0.6, viewerOrigDist : Number = 0.7, zSort : Boolean = true, resizeNodes : Number = 1, alphaFade: Number = 0):void
+		public function render(_t : Transitioner, items : Array, coordinates : Array, layoutBounds : Rectangle, worldWindowWidth : Number = 10, worldWindowHeight : Number = 10, viewerWindowDist : Number = 0.6, viewerOrigDist : Number = 0.7, zSort : Boolean = true, resizeNodes : Number = 1, alphaFade: Number = 0):Array 
 		{
 			var n : int = items.length;
 			
@@ -155,11 +163,10 @@ package org.systemsbiology.visualization.bionetwork.layout
 			//TODO: dynamical ajust world window size?
 			var normalizer : Number = Math.max(worldWindowWidth,worldWindowHeight);
 			 
-			//create our own copy and rotate
-			var valArray : Array = this.performRotation(coordinates,rotateBy);
+			
 			
 			//render
-			valArray  = this.projectDown(valArray, 3, 2,viewerWindowDist,viewerOrigDist);
+			var valArray : Array  = this.projectDown(coordinates, 3, 2,viewerWindowDist,viewerOrigDist);
 			
 			var zMax : Number = valArray[0][2], zMin : Number = valArray[0][2];
 			for (var i : int = 0; i<n; i++) {
@@ -185,8 +192,8 @@ package org.systemsbiology.visualization.bionetwork.layout
 						zMax = valArray[i][2];
 					}
 				}
-				_t.$(node).x=cx+rx*x;
-				_t.$(node).y=cy+ry*y;
+				valArray[i][0]=_t.$(node).x=Math.floor(cx+rx*x);
+				valArray[i][1]=_t.$(node).y=Math.floor(cy+ry*y);
 			}
 			var zDepth : Number = zMax-zMin;
 			var zBase : int = items[0].parent.numChildren-n-1;
@@ -194,6 +201,8 @@ package org.systemsbiology.visualization.bionetwork.layout
 				//larger numbers closer 
 				items[i].parent.setChildIndex(items[i],zBase+Math.floor(n*((valArray[i][2]-zMin)/zDepth)));
 			}
+			
+			return valArray;
 		}
 
 	}
