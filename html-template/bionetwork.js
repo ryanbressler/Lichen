@@ -84,20 +84,30 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
     	var embedString = "<div></div><object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0\" id=\""+this.SWFid+"\" width=\"100%\" height=\"100%\"><param name=\"movie\" value=\"bionetwork.swf\" /><param name=\"quality\" value=\"high\" /><param name=\"flashvars\" value=\"flashvarsId="+this.SWFid+"\" /><param name=\"bgcolor\" value=\"#FFFFFF\" /> <param name=\"allowScriptAccess\" value=\"sameDomain\" /><embed src=\"bionetwork.swf\" quality=\"high\" bgcolor=\"#FFFFFF\" width=\"100%\" height=\"100%\" name=\""+this.SWFid+"\" flashvars=\"flashvarsId="+this.SWFid+"\" align=\"middle\" play=\"true\" loop=\"false\" quality=\"high\" allowScriptAccess=\"sameDomain\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\"></embed></object>";
 		this.containerElement.innerHTML=embedString;
 		//this.containerElement.innerHTML ="<object id=\"bioheatmap\" codebase=\"http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab\"> <param name=\"movie\" value=\"bioheatmap.swf\" /> <param name=\"quality\" value=\"high\" /> <param name=\"bgcolor\" value=\"#FFFFFF\" /> <param name=\"allowScriptAccess\" value=\"sameDomain\" /> <embed src=\"bioheatmap.swf\" quality=\"high\" bgcolor=\"#FFFFFF\" name=\"bioheatmap\" align=\"middle\" play=\"true\" loop=\"false\" quality=\"high\" allowScriptAccess=\"sameDomain\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\"> </embed> </object>"
-		
+		log(options);
 		//wait for swf to be ready...is this necesairy?
-		//log("dataparam");
 		var dataparam = this.buildDataParam(data);
-		//var optionsparam = this.buildDataParam(options);
 		var optionsparam = {};
 		for (key in options){
 			if (typeof(options[key])=='object'){
-				optionsparam[key] = this.buildDataParam(options[key]);
+				//inner loop for checking table
+				//if (options[key]['tqx']){
+					optionsparam[key] = this.buildDataParam(options[key]);
+					log("test");
+					if (options[key]['getNumberOfRows']){
+						log("data table!");
+					} 
+				//}
+				//else{
+					//optionsparam[key]=options[key];
+				//}	
 			}
 			else{
 				optionsparam[key] = options[key];
 			}
 		}
+		
+
 		
     myPe = new PeriodicalExecuter(this.swfPoll.bind(this,dataparam,optionsparam), .01);
 	//myPe = new PeriodicalExecuter(this.swfPoll.bind(this,dataparam,optionsparam),.01);
