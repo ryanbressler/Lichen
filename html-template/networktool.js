@@ -40,7 +40,6 @@
 		}
 	    	
 		//set config
-		center='23645';
 		queries=[];
 		funcs=[];
 		reqId=0;
@@ -87,14 +86,6 @@
 				options[i] = urls[i];
 			}
 			reqId+=1;
-			//if (i in {'dataurl':'', 'attributeurl':'', 'layouturl':''}){
-				//log("url " + query_url);	
-				//query=new google.visualization.Query(query_url);
-				//query.send(func);
-				//query.setTimeout(300);
-				//reqId+=1;
-			//}
-		
 		}
 		for (i=0; i<queries.length; i++){
 			log("sending query # " + i);
@@ -106,7 +97,6 @@
 	function draw_vis(){
 		log("draw_visualization");
 		networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-		//(data, options)
        	//networkvis.draw(data, {layout:layout_data, center:center, data_format:"google"});
        	if (update==false){
        		log("draw");
@@ -114,7 +104,7 @@
        	}
        	else {
        		log("redraw");
-       		network.redraw(data, options);
+       		networkvis.redraw(data, options);
        	}
    
 	}
@@ -212,45 +202,11 @@
 			draw_vis();
 		}
 	 }
-	  	
-// function processDataAndLayout(response){
-// 	  // alert("processResponse");
-// 		if (response.isError()) {
-// 			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-// 			return;
-// 		}
-// 		data = response.getDataTable();
-// 		//query2 = new google.visualization.Query('http://sdee.hdbase.org/networkviz/Attribute/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/'+center+'/&tqx=reqId:1;');
-// 		query2 = new google.visualization.Query('http://sdee.hdbase.org/networkviz/layout/random/?NET_DATA_URI=http://sdee.hdbase.org/networkviz/NearestNeighbors/'+23645+'/&tqx=reqId:1;');
-// 		query2.setTimeout(300);
-// 		query2.send(processLayoutData);	
-// 		//networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-// 		//log("vis: " + networkvis.toString());
-// }
-// 
-// function processLayoutData(response){
-// 	
-// 	log("process layout data");
-//    log("response");
-//    log(response);
-//  	if (response.isError()) {
-// 		alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-// 		return;
-// 	}
-// 	
-//   log("layout response");
-//   layout_data=response.getDataTable();
-//   //attribute_data=Object.toJSON(response.getDataTable());
-//   //attribute_data =  buildDataParam(response.getDataTable());
-//   log("serialized attribute data" + layout_data);
-//   networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-//   networkvis.draw(data, {layout: layout_data, center:center, data_format:"google"});
-// }
 	 
 	   function buildDataParam(dataTable){
  		log("buildDataParam");
  		log(dataTable);
-		//log(!this.isEmpty(dataTable));
+
 		if (!this.isEmpty(dataTable)){
 		//if (true){
     	var dataParam = {cols:[], rows:[]};
