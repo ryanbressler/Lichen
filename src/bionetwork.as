@@ -19,7 +19,6 @@
 package {
 	import com.adobe.serialization.json.JSON;
 	
-	import flare.animate.Transitioner;
 	import flare.display.TextSprite;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
@@ -27,7 +26,6 @@ package {
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.legend.Legend;
-	import flare.vis.operator.label.Labeler;
 	
 	import flash.events.MouseEvent;
 	import flash.external.*;
@@ -36,10 +34,10 @@ package {
 	import flash.utils.*;
 	
 	import org.systemsbiology.visualization.GoogleVisAPISprite;
+	import org.systemsbiology.visualization.bionetwork.*;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.display.tooltip;
 	import org.systemsbiology.visualization.bionetwork.layout.*;
-	import org.systemsbiology.visualization.bionetwork.*;
 	import org.systemsbiology.visualization.control.ClickDragControl;
 	import org.systemsbiology.visualization.data.DataView;
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
@@ -74,6 +72,8 @@ package {
 		private var info1:TextSprite;
 		private var info2:TextSprite;
 		private var legend:Legend;
+		private var update:Boolean;
+		private var newOptions:Object;
 		
 		
 		//font
@@ -116,6 +116,14 @@ package {
 		
 		//import options using base class 
 		this.options = this.parseOptions(optionsJSON,optionsListObject);
+		
+//		this.update = options.update||=null;
+//		if (this.update!=null){
+//			var changed:Object = this.parseUpdatedOptions(this.newOptions, this.optionsListObject, this.options);
+//		}
+//		else{
+//			this.options = this.newOptions;
+//		}
 		
 		//set member varaibles from options (can we eliminate these?)
 		this.layoutType = this.options['layout'];	
