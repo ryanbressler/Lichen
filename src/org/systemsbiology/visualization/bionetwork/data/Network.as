@@ -22,10 +22,13 @@ package org.systemsbiology.visualization.bionetwork.data
 	import flare.util.Shapes;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
+	import flare.vis.data.DataList;
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
-	import flare.vis.data.DataList;
-		
+	
+	import org.systemsbiology.visualization.data.LayoutDataView;
+	
+	//wrapper for Flare's network classes-data, edgeSprite, nodeSprite	
 	public class Network extends Visualization
 	{
 		private var changed:Boolean = false;	
@@ -34,6 +37,59 @@ package org.systemsbiology.visualization.bionetwork.data
 			super(data);
 			this.data.addGroup("Annotations");
 		}
+		
+		
+		
+		//functions for placing data in correct parts of network
+		public function bind_data(data : *) : void{
+			if (data is LayoutDataView){
+				bind_layout(data);
+			}
+//		
+		}
+		
+		
+		//		  private function importLayout(layoutTable:LayoutDataView):void {
+//    	var layoutValues:Array = new Array();
+//    	var layoutAttributeValue:String;
+//    	var params:Object = {};
+//   		for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
+//			//first column name
+//			var interactor_name:String = layoutTable.getValue(i,0);
+//			//rest of columns layout attributes (first two are x,y)
+//			for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
+//				var columnName:String = layoutTable.getColumnLabel(j);
+//				layoutAttributeValue = layoutTable.getValue(i,j);
+//				//branch to set main nodesprite properties
+//				
+//				if (columnName=='shape'){
+//					this.network.setNodeShape(interactor_name, layoutAttributeValue);
+//				}
+//				else if (columnName == 'color'){
+//					this.network.setNodeColor(interactor_name, layoutAttributeValue);
+//				}
+//				else if (columnName == 'size'){
+//					this.network.setNodeSize(interactor_name, int(layoutAttributeValue));
+//				}
+//				else {
+//					params[columnName]=int(layoutAttributeValue);
+//					this.network.updateNodeParams(interactor_name,params);
+//				}
+//			}	
+//		}
+//    }
+
+		
+		public function bind_layout(layoutTable:LayoutDataView):void{
+			for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
+				var interactor_name:String = layoutTable.getValue(i,0);
+				this.setNodeColor(interactor_name, layoutTable.getColor(i));
+				this.setNodeSize(interactor_name, layoutTable.getSize(i));
+				this.setNodeShape(interactor_name, layoutTable.getShape(i));			
+			}
+		}		
+		
+		
 		
 		//function from data class tweaked to make it easier to add nodes with type
 		public function addNode(n:Object, groupName:String=null):NodeSprite
