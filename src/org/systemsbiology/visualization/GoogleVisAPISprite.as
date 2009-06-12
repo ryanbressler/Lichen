@@ -25,6 +25,7 @@ package org.systemsbiology.visualization
 	import flash.display.StageScaleMode;
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
+	
 	import org.systemsbiology.visualization.data.DataView;
 
 	public class GoogleVisAPISprite extends Sprite
@@ -82,14 +83,11 @@ package org.systemsbiology.visualization
 		//function for imorting and parseing options	
 		protected function parseOptions(optionsJSON:String, optionsListObject : Object) : Object {						
 			var options : Object = JSON.decode(optionsJSON);
-			
-			
 			//data tables
 			//import data JSON
 			for( var optionName : String in optionsListObject)
 			{
 				//TODO: dependencies internal names?
-				
 				if (options[optionName]){
 					if(optionsListObject[optionName].parseAs=="dataTable")
 					{			
@@ -100,12 +98,39 @@ package org.systemsbiology.visualization
 						
 					}
 				}
-	
 			}
-	
 	        return options;
-	               
 		}
+		
+		//return 
+		protected function parseUpdatedOptions(newOptions:Object, optionsListObject:Object, currentOptions:Object) : Object {
+			var changed = new Object();
+			for(var optionName : String in optionsListObject){
+				if (newOptions[optionName]){
+					if(optionsListObject[optionName].parseAs=="dataTable"){			
+						//want to check if data table is same or just go ahead and mark as changed?		
+						changed[optionName] = true;			
+					}
+					else if (optionsListObject[optionName].parseAs=="bundle"){
+						for(var optionParam:String in newOptions[optionName]){
+							if (newOptions[optionName][optionParam]!=currentOptions[optionName][optionParam]){
+								changed[optionName]=true;
+								break;
+							}
+						}	
+					}
+					else {
+						if (newOptions[optionName]!=currentOptions[optionName]){
+							changed[optionName]=true;
+						}
+						else{
+							changed[optionName]=false;
+						}
+					}
+				}
+			}
+			return changed;
+		}	
 		
 		//out puts a message to either the debugger player log file or flexbuilder consol	
         protected function _log (msg : String) : void {
@@ -201,9 +226,7 @@ package org.systemsbiology.visualization
 		    		this._setSelectionRow(selectionObj.row);
 		    		continue;	
 		    	}
-	    	}
-	    	
-	    		
+	    	}		
 	    }
 	    
 	    protected function checkObjProp(selectionObj:Object, propname : String) : Boolean
