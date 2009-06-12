@@ -40,6 +40,7 @@ package {
 	import org.systemsbiology.visualization.bionetwork.layout.*;
 	import org.systemsbiology.visualization.control.ClickDragControl;
 	import org.systemsbiology.visualization.data.DataView;
+	import org.systemsbiology.visualization.data.LayoutDataView;
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
 	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
 	//the network object persists the data
@@ -50,7 +51,7 @@ package {
 		//config variables
 		private var options:Object; 
 		private var centerNode:int;
-		private var layoutTable:DataView;
+		private var layoutTable:LayoutDataView;
 		private var nodeDataTable:DataView;
 		private var tempTable:DataView;
 		private var layoutType:String;
@@ -88,7 +89,7 @@ package {
         private var  _labelTextFormat : TextFormat = new TextFormat('myHelveticaFont',14);
         
         private var optionsListObject : Object = {
-        	layout_data:{parseAs:"dataTable"},
+        	layout_data:{parseAs:"layoutTable"},
         	node_data:{parseAs:"dataTable"},
         	attributes:{parseAs:"dataTable"}
         };
@@ -136,8 +137,10 @@ package {
 		
 		//layout from layoutTable
 		if (this.layoutTable!=null){
-			this.importLayout(this.layoutTable);
+//			this.importLayout(this.layoutTable);
+			this.network.bind_data(this.layoutTable);
 		}		
+		
 		if (this.nodeDataTable!=null){
 			this.importTimeCourseData(this.nodeDataTable);
 		}
@@ -217,7 +220,7 @@ package {
 				if (!network.checkNode(name)){
 					trace("create");
 					var interactor : NodeSprite = network.addNode({name:name});
-					//things that need to be done to each node once
+					//things that need to be done to each node once->move to nodeController
 					interactor.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
 					_appendSelectionInfo(interactor,{node:name});					
 					interactors.push(interactor);
@@ -248,35 +251,35 @@ package {
 		}
 	}
 
-    private function importLayout(layoutTable:DataView):void {
-    	var layoutValues:Array = new Array();
-    	var layoutAttributeValue:String;
-    	var params:Object = {};
-   		for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
-			//first column name
-			var interactor_name:String = layoutTable.getValue(i,0);
-			//rest of columns layout attributes (first two are x,y)
-			for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
-				var columnName:String = layoutTable.getColumnLabel(j);
-				layoutAttributeValue = layoutTable.getValue(i,j);
-				//branch to set main nodesprite properties
-				
-				if (columnName=='shape'){
-					this.network.setNodeShape(interactor_name, layoutAttributeValue);
-				}
-				else if (columnName == 'color'){
-					this.network.setNodeColor(interactor_name, layoutAttributeValue);
-				}
-				else if (columnName == 'size'){
-					this.network.setNodeSize(interactor_name, int(layoutAttributeValue));
-				}
-				else {
-					params[columnName]=int(layoutAttributeValue);
-					this.network.updateNodeParams(interactor_name,params);
-				}
-			}	
-		}
-    }
+//    private function importLayout(layoutTable:LayoutDataView):void {
+//    	var layoutValues:Array = new Array();
+//    	var layoutAttributeValue:String;
+//    	var params:Object = {};
+//   		for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
+//			//first column name
+//			var interactor_name:String = layoutTable.getValue(i,0);
+//			//rest of columns layout attributes (first two are x,y)
+//			for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
+//				var columnName:String = layoutTable.getColumnLabel(j);
+//				layoutAttributeValue = layoutTable.getValue(i,j);
+//				//branch to set main nodesprite properties
+//				
+//				if (columnName=='shape'){
+//					this.network.setNodeShape(interactor_name, layoutAttributeValue);
+//				}
+//				else if (columnName == 'color'){
+//					this.network.setNodeColor(interactor_name, layoutAttributeValue);
+//				}
+//				else if (columnName == 'size'){
+//					this.network.setNodeSize(interactor_name, int(layoutAttributeValue));
+//				}
+//				else {
+//					params[columnName]=int(layoutAttributeValue);
+//					this.network.updateNodeParams(interactor_name,params);
+//				}
+//			}	
+//		}
+//    }
 	
 	private function importTimeCourseData(nodeDataTable:DataView):void{
 		//var data = {};
@@ -406,7 +409,6 @@ package {
 			var lineColor : Number = ds.lineColor;
 			var lineWidth : Number = ds.lineWidth;
 			var lineAlpha : Number = ds.lineAlpha;
-			
 			
 			ds.props.deselect = function():void{
 				ds.lineColor = lineColor;
