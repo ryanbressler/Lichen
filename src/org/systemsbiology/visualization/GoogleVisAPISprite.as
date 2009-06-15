@@ -27,12 +27,11 @@ package org.systemsbiology.visualization
 	import flash.external.ExternalInterface;
 	
 	import org.systemsbiology.visualization.data.DataView;
+	import org.systemsbiology.visualization.data.LayoutDataView;
 
 	public class GoogleVisAPISprite extends Sprite
 	{
 		public var visindex : String;
-		
-		
 
 		////////////////////////////////////////////////////////////////////////
 		//functions to be implemented as overrides by the child class
@@ -79,20 +78,29 @@ package org.systemsbiology.visualization
 			ExternalInterface.call(callJas);
 			super();
 		}
+	
 		
 		//function for imorting and parseing options	
 		protected function parseOptions(optionsJSON:String, optionsListObject : Object) : Object {						
 			var options : Object = JSON.decode(optionsJSON);
+			var parseAs:String;
 			//data tables
 			//import data JSON
 			for( var optionName : String in optionsListObject)
 			{
-				//TODO: dependencies internal names?
+				parseAs = optionsListObject[optionName].parseAs;
+				trace(parseAs);
 				if (options[optionName]){
-					if(optionsListObject[optionName].parseAs=="dataTable")
+					if(parseAs=="dataTable")
 					{			
 						options[optionName] = new DataView(JSON.encode(options[optionName]),"");
 					}
+					else if (parseAs=="layoutTable"){
+						options[optionName] = new LayoutDataView(JSON.encode(options[optionName]),"");
+					}
+//					else if (parseAs=="nodeDataTable"){
+//						
+//					}
 					else if (optionsListObject[optionName].parseAs=="color")
 					{
 						
