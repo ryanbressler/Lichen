@@ -26,13 +26,11 @@ package {
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.legend.Legend;
-	
 	import flash.events.MouseEvent;
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
 	import flash.utils.*;
-	
 	import org.systemsbiology.visualization.GoogleVisAPISprite;
 	import org.systemsbiology.visualization.bionetwork.*;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
@@ -88,8 +86,7 @@ package {
         // the compiler will link in the font.
         private var _font1:Class;
         private var _fontHeight:int = 14;                
-        private var  _labelTextFormat : TextFormat = new TextFormat('myHelveticaFont',14);
-        
+        private var  _labelTextFormat : TextFormat = new TextFormat('myHelveticaFont',14);      
         private var optionsListObject : Object = {
         	layout_data:{parseAs:"layoutTable"},
         	node_data:{parseAs:"dataTable"},
@@ -120,8 +117,10 @@ package {
 		this.newOptions = this.parseOptions(optionsJSON,optionsListObject);
 		this.update = this.newOptions.update||=null;
 		if (this.update!=null){
+			if (this.options!=null){
 			//it's an update
-			var changed:Object = this.parseUpdatedOptions(this.newOptions, this.optionsListObject, this.options);
+				var changed:Object = this.parseUpdatedOptions(this.newOptions, this.optionsListObject, this.options);
+			}
 		}
 		this.options = this.newOptions;
 		//set member varaibles from options (can we eliminate these?)
@@ -178,7 +177,6 @@ package {
 	}
 
 	//DATA IMPORT FUNCTIONS
-
 	
 	private function importTimeCourseData(nodeDataTable:DataView):void{
 		//var data = {};
@@ -278,10 +276,8 @@ package {
 	    	super.selectionSetViaJS(selection);
 	    	//decode
 	    	var selectionArray : Array = JSON.decode(selection) as Array;
-	    	
 	    	for each (var selectionObj : Object in selectionArray)
-	    	{
-		    	
+	    	{	
 		    	if( selectionObj.hasOwnProperty("node"))
 		    	{
 		    		this._setSelectionNode(selectionObj.node);
@@ -309,15 +305,13 @@ package {
 		    
 			if(!options.selection_display || (options.selection_display != "none" || options.selection_display != "nodes"))
 			_doSelectionDisplay(es as DataSprite);
-			
 	    }
 	
 	protected function _setSelectionNode(nodeName : *) : void {
 			var ns : NodeSprite = this.network.findNodeByName(nodeName);
 			if(!options.selection_display || (options.selection_display != "none" || options.selection_display != "edges"))
 			_doSelectionDisplay(ns as DataSprite);
-			
-			}
+		}
 	    
 	protected function _doSelectionDisplay(ds : DataSprite) : void
 		{
@@ -355,10 +349,8 @@ package {
      	var width:int = options.width || 630;
      	var height:int = options.height || 630;
      	var padding:int = options.padding || 5;
-     	
      	this.resizeContainer(width,height);         	
 		this.network.bounds = new Rectangle(padding, padding, width-2*padding, height-2*padding);
-
 	}
 		
 	
