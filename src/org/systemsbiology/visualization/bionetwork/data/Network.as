@@ -26,6 +26,7 @@ package org.systemsbiology.visualization.bionetwork.data
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	
+	import org.systemsbiology.visualization.data.GraphDataView;
 	import org.systemsbiology.visualization.data.LayoutDataView;
 	
 	//wrapper for Flare's network classes-data, edgeSprite, nodeSprite	
@@ -38,47 +39,38 @@ package org.systemsbiology.visualization.bionetwork.data
 			this.data.addGroup("Annotations");
 		}
 		
-		
-		
 		//functions for placing data in correct parts of network
 		public function bind_data(data : *) : void{
-			if (data is LayoutDataView){
+			if (data is GraphDataView){
+				bind_graph(data);
+			}
+			else if (data is LayoutDataView){
 				bind_layout(data);
 			}
-//		
+				
 		}
 		
-		
-		//		  private function importLayout(layoutTable:LayoutDataView):void {
-//    	var layoutValues:Array = new Array();
-//    	var layoutAttributeValue:String;
-//    	var params:Object = {};
-//   		for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
-//			//first column name
-//			var interactor_name:String = layoutTable.getValue(i,0);
-//			//rest of columns layout attributes (first two are x,y)
-//			for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
-//				var columnName:String = layoutTable.getColumnLabel(j);
-//				layoutAttributeValue = layoutTable.getValue(i,j);
-//				//branch to set main nodesprite properties
-//				
-//				if (columnName=='shape'){
-//					this.network.setNodeShape(interactor_name, layoutAttributeValue);
-//				}
-//				else if (columnName == 'color'){
-//					this.network.setNodeColor(interactor_name, layoutAttributeValue);
-//				}
-//				else if (columnName == 'size'){
-//					this.network.setNodeSize(interactor_name, int(layoutAttributeValue));
-//				}
-//				else {
-//					params[columnName]=int(layoutAttributeValue);
-//					this.network.updateNodeParams(interactor_name,params);
-//				}
-//			}	
-//		}
-//    }
-
+		public function bind_graph(graphDataTable:GraphDataView):void{
+			var interactor1_name:String;
+			var interactor2_name:String;
+			var interactor1:NodeSprite;
+			var interactor2:NodeSprite;
+			var edge:EdgeSprite;
+			var sources:Array;
+			for (var i:Number = 0; i<graphDataTable.getNumberOfRows();i++) {
+				interactor1_name=graphDataTable.getInteractor1Name(i);
+				interactor2_name=graphDataTable.getInteractor2Name(i);
+				interactor1 =  this.addNodeIfNotExist(interactor1_name);
+				interactor2 = this.addNodeIfNotExist(interactor2_name);
+				edge = this.addEdgeIfNotExist(interactor1, interactor2);
+				sources=graphDataTable.getSources(i);
+				if (sources){
+					for (var k:Number=0; k<sources.length; k++){
+						this.addEdgeSource(edge, sources[k]);
+					}
+				}
+			}
+		}
 		
 		public function bind_layout(layoutTable:LayoutDataView):void{
 			for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
@@ -88,8 +80,6 @@ package org.systemsbiology.visualization.bionetwork.data
 				this.setNodeShape(interactor_name, layoutTable.getShape(i));			
 			}
 		}		
-		
-		
 		
 		//function from data class tweaked to make it easier to add nodes with type
 		public function addNode(n:Object, groupName:String=null):NodeSprite
@@ -133,6 +123,33 @@ package org.systemsbiology.visualization.bionetwork.data
 			return edge.props.ixsources;
 		}
 		
+		//warning: findEdgesByNode causes you to loop through network edges each time
+		public function isOrphan(nodeName:String):Boolean{
+			var edges:Array;
+			edges = this.findEdgesByNode(nodeName);
+			trace("EDGES" + edges);
+			//do self-interactors qualify as orphans?
+			if (edges.length>0){
+				return false;
+			}
+			else {
+				return true;
+			}		
+		}
+		
+		public function isSelfInteractor(nodeName:String):Boolean{
+			var edges:Array;
+			var node:NodeSprite;
+			edges = this.findEdgesByNode(nodeName);
+			for (var i:Number=0; i < edges.length; i++){
+				var edge:EdgeSprite=edges[i];
+				if (edge.source.data.name!=nodeName || edge.target.data.name!=nodeName){
+					return false;
+				}
+			}
+			return true;
+		}
+		
 		public function checkNode(name:String):Boolean
 		{
 			trace("check node: " + name);
@@ -145,7 +162,7 @@ package org.systemsbiology.visualization.bionetwork.data
 			return -1!=names.indexOf(name);
 		}
 		
-		//for none built-in param
+		//for not built-in param
 		public function updateNodeParams(name:String, params:Object):void{
 			trace("updateNodeParams");
 			var node:NodeSprite=this.findNodeByName(name);
@@ -221,6 +238,19 @@ package org.systemsbiology.visualization.bionetwork.data
 				return null;
 		}
 		
+		public function findEdgesByNode(nodeName:String):Array{
+			var edges:DataList = this.data.edges;
+			var edgesWNode:Array = [];
+			var edge:EdgeSprite;
+			for (var i:Number = 0; i<edges.length; i++){
+				edge = edges[i];
+				if (edge.source.data.name==nodeName || edge.target.data.name==nodeName){
+					edgesWNode.push(edge);
+				}
+			}
+			return edgesWNode;
+		}
+		
 		public function findEdgeByNodes(source_name:String, target_name:String):EdgeSprite{
 			//TODO : optimize this to get source node and check only outgoing edges
 			var edge_index:int = -1;
@@ -244,8 +274,7 @@ package org.systemsbiology.visualization.bionetwork.data
 			}
 			else {
 				return null;
-			}
-				
+			}		
 		}
 			
 		//helper functions
