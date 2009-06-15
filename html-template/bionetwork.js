@@ -92,15 +92,14 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 			if (typeof(options[key])=='object'){
 				//inner loop for checking table
 				//if (options[key]['tqx']){
-					optionsparam[key] = this.buildDataParam(options[key]);
 					log("test");
 					if (options[key]['getNumberOfRows']){
 						log("data table!");
+						optionsparam[key] = this.buildDataParam(options[key]);
 					} 
-				//}
-				//else{
-					//optionsparam[key]=options[key];
-				//}	
+				else{
+					optionsparam[key]=options[key];
+				}	
 			}
 			else{
 				optionsparam[key] = options[key];
@@ -140,15 +139,11 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 	},
     
    buildDataParam : function(dataTable){
- 
     	var dataParam = {cols:[], rows:[]};
-    	
     	for (var coli=0;coli<dataTable.getNumberOfColumns();coli++) 
 		{
-			dataParam.cols[coli]={id: dataTable.getColumnId(coli), label: dataTable.getColumnLabel(coli), type: 'string'};
-			
+			dataParam.cols[coli]={id: dataTable.getColumnId(coli), label: dataTable.getColumnLabel(coli), type: 'string'};	
 		}
-		
 		for (var rowi=0;rowi<dataTable.getNumberOfRows();rowi++) 
 		{
 			dataParam.rows[rowi]={};
@@ -159,10 +154,8 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 			dataParam.rows[rowi].c[coli]={v:dataTable.getValue(rowi,coli)};
 			if(dataTable.getFormattedValue(rowi,coli))
 				dataParam.rows[rowi].c[coli].f=dataTable.getFormattedValue(rowi,coli);
-			
 			}
-		}
-    	
+		} 	
     	return dataParam;
     },
       
