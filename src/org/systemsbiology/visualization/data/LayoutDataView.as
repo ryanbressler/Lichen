@@ -15,13 +15,13 @@ package org.systemsbiology.visualization.data
 			for (var i:Number = 0; i<this.getNumberOfColumns(); i++){
 				 columnName = this.getColumnLabel(i);	
 				 if (columnName=='shape'){
-				 	shapeIndex = i;
+				 	this.shapeIndex = i;
 				 }
 				 else if (columnName == 'color'){
-				 	colorIndex = i;
+				 	this.colorIndex = i;
 				 }
 				 else if (columnName == 'size'){
-				 	sizeIndex = i;
+				 	this.sizeIndex = i;
 				 }
 			}
 		}
@@ -30,7 +30,9 @@ package org.systemsbiology.visualization.data
         	if (shapeIndex){
         		return this.getValue(rowIndex, shapeIndex);
         	}
-        	else return 'CIRCLE';
+        	else {
+        		return 'CIRCLE';
+        	}
     	}
     	
     	public function getSize (rowIndex:int):int {
