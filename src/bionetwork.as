@@ -40,6 +40,7 @@ package {
 	import org.systemsbiology.visualization.bionetwork.layout.*;
 	import org.systemsbiology.visualization.control.ClickDragControl;
 	import org.systemsbiology.visualization.data.DataView;
+	import org.systemsbiology.visualization.data.GraphDataView;
 	import org.systemsbiology.visualization.data.LayoutDataView;
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
 	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
@@ -56,6 +57,7 @@ package {
 		private var tempTable:DataView;
 		private var layoutType:String;
 		private var dataTable:DataView;
+		private var graphTable:GraphDataView;
 		private var attributesTable:DataView;
 		private var visWidth:int = stage.stageWidth;
 		private var visHeight:int = stage.stageHeight;
@@ -91,7 +93,9 @@ package {
         private var optionsListObject : Object = {
         	layout_data:{parseAs:"layoutTable"},
         	node_data:{parseAs:"dataTable"},
-        	attributes:{parseAs:"dataTable"}
+        	attributes:{parseAs:"dataTable"},
+        	clickdrag:{parseAs:"param"},
+        	legend:{parseAs:"bundle"}
         };
 
 	//for basic network	
@@ -100,17 +104,17 @@ package {
 		super();	
 	}
 
-		// draw!
+	// draw!
 	public override function draw(dataJSON:String, optionsJSON:String) :void {            			
 		//import data
-		if (this.dataTable!=null){
-			//loop through datatable and add rows; does the table need to be updated?
-			this.tempTable = new DataView(dataJSON, "");
-			this.constructGraph(this.tempTable);
-		}
-		else {
+		if (dataJSON!='{}'){
 			this.dataTable = new DataView(dataJSON, "");
+			this.graphTable = new GraphDataView(dataJSON, "");
 		}
+			
+		this.network.bind_data(this.graphTable);
+		
+		_setSelectionListeners();
 		
 		//import options using base class 
 		this.newOptions = this.parseOptions(optionsJSON,optionsListObject);
@@ -120,30 +124,22 @@ package {
 			var changed:Object = this.parseUpdatedOptions(this.newOptions, this.optionsListObject, this.options);
 		}
 		this.options = this.newOptions;
-		
 		//set member varaibles from options (can we eliminate these?)
 		this.layoutType = this.options['layout'];	
 		this.centerNode=this.options['center'];	
 		this.attributesTable=this.attributesTable||(this.options.attributes||null);
 		this.nodeDataTable=this.options.node_data||null;
 		this.layoutTable=this.options.layout_data||null;
-		this.resizeStage(visindex, this.dataTable, options);
-		
-		//import graph data into this.network
-		this.constructGraph(this.dataTable);
-
-		//import additional optional data
-		trace("LAYOUT DATA");
-		
+		this.resizeStage(visindex, options);
 		//layout from layoutTable
 		if (this.layoutTable!=null){
-//			this.importLayout(this.layoutTable);
 			this.network.bind_data(this.layoutTable);
 		}		
 		
 		if (this.nodeDataTable!=null){
 			this.importTimeCourseData(this.nodeDataTable);
 		}
+		
 		//position the nodes	
 		layoutController.performLayout(network,options);
 		//determine the edge appearance (this has to be after the layout or the bundled edge thing will crash)
@@ -151,8 +147,9 @@ package {
 		//determine the node appearance
 		nodeController.styleNodes(network,options);
 		//add optional controls and legend
-		if(options.node_tooltips)
+		if (options.node_tooltips){
 			tooltip.addNodeTooltips(network);
+		}
 		if (options['clickdrag']!=false){
 			var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);
 			this.network.controls.add(cdc);
@@ -160,8 +157,7 @@ package {
 		if (this.options['legend'] && this.options['legend']!='false' ){
 			this.createLegend();
 		}
-        //this.network.x = 0;
-        //this.network.y = 0;
+
 		addChild(this.network);
 		trace("update network sprite");
 		this.network.update();
@@ -182,104 +178,7 @@ package {
 	}
 
 	//DATA IMPORT FUNCTIONS
-	private function constructGraph(dataTable:DataView):void {
-		trace("construct graph");
-		var interactor_name1:String;		
-		var interactor_name2:String;
-		var interactor1:NodeSprite;
-		var interactor2:NodeSprite;
-		var ixnsources:Array;
-		var edge:EdgeSprite;
-		var directed:Boolean=false;	
-		for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
-			interactor_name1=dataTable.getFormattedValue(i,1)||dataTable.getValue(i,1);
-			interactor_name2=dataTable.getFormattedValue(i,2) || dataTable.getValue(i,2);
-			//for other columns
-			trace(dataTable.getNumberOfColumns());
-			for(var j:Number=3; j<dataTable.getNumberOfColumns(); j++){
-				var cellValue:String = dataTable.getValue(i,j);
-				if(cellValue){
-					var columnName:String = dataTable.getColumnLabel(j);
-					if (columnName=='sources'){
-						trace("SOURCES");
-						ixnsources=cellValue.split(", ");
-					}
-					else if (columnName=='directed'){
-						directed = Boolean(cellValue=='true');
-						trace("dir:" + directed);
-					}
-				}
-			}
-			//this section replace network.addnodeifnotexsistant calls
-			//i needed to be able to do things to nodes once on creation for selection stuff
-			var interactors : Array = new Array();
-			for each(var name : * in [interactor_name1 ,interactor_name2])
-			{	
-				if(!name)
-					continue;//is an orphan
-				if (!network.checkNode(name)){
-					trace("create");
-					var interactor : NodeSprite = network.addNode({name:name});
-					//things that need to be done to each node once->move to nodeController
-					interactor.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-					_appendSelectionInfo(interactor,{node:name});					
-					interactors.push(interactor);
-				}
-				else{
-					interactors.push(network.findNodeByName(name));
-				}	
-			}
-			//not an orphan or self interactor
-			if(interactors.length==2 && interactor_name1!=interactor_name2)
-			{	
-				interactor1 = interactors[0];
-				interactor2 = interactors[1];	
-				edge=this.network.addEdgeIfNotExist(interactor1, interactor2, directed);
-				edge.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-				_appendSelectionInfo(edge,{row:i});
-			
-				//loop through ixn sources
-				if (ixnsources){
-					for (var k:Number=0; k<ixnsources.length; k++){
-						this.network.addEdgeSource(edge, ixnsources[k]);
-					}
-				}
-			}
-		}
-		if(options.center){
-			this.data.root = network.findNodeByName(options.center);
-		}
-	}
 
-//    private function importLayout(layoutTable:LayoutDataView):void {
-//    	var layoutValues:Array = new Array();
-//    	var layoutAttributeValue:String;
-//    	var params:Object = {};
-//   		for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
-//			//first column name
-//			var interactor_name:String = layoutTable.getValue(i,0);
-//			//rest of columns layout attributes (first two are x,y)
-//			for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
-//				var columnName:String = layoutTable.getColumnLabel(j);
-//				layoutAttributeValue = layoutTable.getValue(i,j);
-//				//branch to set main nodesprite properties
-//				
-//				if (columnName=='shape'){
-//					this.network.setNodeShape(interactor_name, layoutAttributeValue);
-//				}
-//				else if (columnName == 'color'){
-//					this.network.setNodeColor(interactor_name, layoutAttributeValue);
-//				}
-//				else if (columnName == 'size'){
-//					this.network.setNodeSize(interactor_name, int(layoutAttributeValue));
-//				}
-//				else {
-//					params[columnName]=int(layoutAttributeValue);
-//					this.network.updateNodeParams(interactor_name,params);
-//				}
-//			}	
-//		}
-//    }
 	
 	private function importTimeCourseData(nodeDataTable:DataView):void{
 		//var data = {};
@@ -314,6 +213,24 @@ package {
 	
 	//over ride functions to add node selection capabilities
 	//fired by mouse click
+	function _setSelectionListeners() :void{
+		for (var i:Number = 0; i<this.network.data.nodes.length; i++){
+			var node:NodeSprite = this.network.data.nodes[i];
+			if(this.network.isOrphan(node.data.name)){
+				continue;
+			}
+			else{			
+				node.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+				_appendSelectionInfo(node,{node:node.data.name});					
+			}	
+		}
+		
+		for (var i:Number=0; i<this.network.data.edges.length; i++){
+			var edge:EdgeSprite = this.network.data.edges[i];
+			edge.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+			_appendSelectionInfo(edge,{row:i});
+		}
+	}
 	
 	protected override function _selectionHandeler(eventObject: MouseEvent): void {
 		if(eventObject.currentTarget is NodeSprite)
@@ -433,7 +350,7 @@ package {
 		// calculates the size of the visualization from the data and options
 		// then resizes the container element via javascript
 		
-	private function resizeStage(visindex:String, dataTable:DataView, options:Object) :void {
+	private function resizeStage(visindex:String, options:Object) :void {
      	//calculate width and height ...			
      	var width:int = options.width || 630;
      	var height:int = options.height || 630;
