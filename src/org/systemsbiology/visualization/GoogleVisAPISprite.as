@@ -80,7 +80,7 @@ package org.systemsbiology.visualization
 		}
 	
 		
-		//function for imorting and parseing options	
+		//function for imorting and parsing options	
 		protected function parseOptions(optionsJSON:String, optionsListObject : Object) : Object {		
 			trace(optionsJSON);				
 			var options : Object = JSON.decode(optionsJSON);
