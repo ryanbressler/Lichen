@@ -19,7 +19,6 @@
 package {
 	import com.adobe.serialization.json.JSON;
 	
-	import flare.animate.Transitioner;
 	import flare.display.TextSprite;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
@@ -27,21 +26,20 @@ package {
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.legend.Legend;
-	import flare.vis.operator.label.Labeler;
-	
 	import flash.events.MouseEvent;
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
 	import flash.utils.*;
-	
 	import org.systemsbiology.visualization.GoogleVisAPISprite;
+	import org.systemsbiology.visualization.bionetwork.*;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.display.tooltip;
 	import org.systemsbiology.visualization.bionetwork.layout.*;
-	import org.systemsbiology.visualization.bionetwork.*;
 	import org.systemsbiology.visualization.control.ClickDragControl;
 	import org.systemsbiology.visualization.data.DataView;
+	import org.systemsbiology.visualization.data.GraphDataView;
+	import org.systemsbiology.visualization.data.LayoutDataView;
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
 	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
 	//the network object persists the data
@@ -52,11 +50,12 @@ package {
 		//config variables
 		private var options:Object; 
 		private var centerNode:int;
-		private var layoutTable:DataView;
+		private var layoutTable:LayoutDataView;
 		private var nodeDataTable:DataView;
 		private var tempTable:DataView;
 		private var layoutType:String;
 		private var dataTable:DataView;
+		private var graphTable:GraphDataView;
 		private var attributesTable:DataView;
 		private var visWidth:int = stage.stageWidth;
 		private var visHeight:int = stage.stageHeight;
@@ -74,7 +73,8 @@ package {
 		private var info1:TextSprite;
 		private var info2:TextSprite;
 		private var legend:Legend;
-		
+		private var update:Boolean;
+		private var newOptions:Object;
 		
 		//font
         // We must embed a font so that we can rotate text and do other special effects
@@ -86,12 +86,35 @@ package {
         // the compiler will link in the font.
         private var _font1:Class;
         private var _fontHeight:int = 14;                
-        private var  _labelTextFormat : TextFormat = new TextFormat('myHelveticaFont',14);
-        
+        private var  _labelTextFormat : TextFormat = new TextFormat('myHelveticaFont',14);      
+       //obj holding configuration options
+       //maybe this object should store defaults too?
         private var optionsListObject : Object = {
-        	layout_data:{parseAs:"dataTable"},
-        	node_data:{parseAs:"dataTable"},
-        	attributes:{parseAs:"dataTable"}
+        	layout_data:{parseAs:"layoutTable", affects:["layout"]},
+        	node_data:{parseAs:"dataTable", affects: ["nodes"]},
+        	attributes:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
+        	clickdrag:{parseAs:"param", affects: ["nodes"]},
+        	sproutable:{parseAs:"param", affects: ["nodes"]},
+        	legend:{parseAs:"bundle", affects:[]},
+        	layout_type: {parseAs:"param", affects:["layout"]},
+        	CircularHeatmap:{parseAs:"bundle", affects:["nodes"]},
+        	MultiEdge:{parseAs:"bundle", affects:["edges"]}, //needs to be bundle so you can assign colors to sourcenames?
+        	padding:{parseAs:"param", affects:["workspace"]},
+        	width:{parseAs:"param", affects:["workspace"]},
+        	height:{parseAs:"param", affects:["workspace"]},
+        	legend:{parseAs:"bundle", affects: []},
+        	node_fillColor:{parseAs:"color", affects:["nodes"]},
+        	node_lineWidth:{parseAs:"param", affects:["nodes"]},
+        	node_tooltips:{parseAs:"param", affects:["nodes"]},
+        	edge_lineWidth:{parseAs:"param", affects:["edges"]},
+        	edge_lineColor:{parseAs:"param", affects:["edges"]},
+        	edge_router:{parseAs:"param", affects:["edges"]},
+        	selection_display:{parseAs:"param", affects:["all"]}, //this is tricky b/c the value determines what if affects
+        	selection_persistDisplay:{parseAs:"param", affects:[]},
+        	selection_lineColor:{parseAs:"param", affects: []},
+        	selection_lineWdith:{parseAs:"param", affects:[]},
+        	selection_lineAlpha:{parseAs:"param", affects:[]},
+       		events: {parseAs:"bundle", affects:[]}
         };
 
 	//for basic network	
@@ -100,42 +123,38 @@ package {
 		super();	
 	}
 
-
-		// draw!
+	// draw!
 	public override function draw(dataJSON:String, optionsJSON:String) :void {            			
-		
 		//import data
-		if (this.dataTable!=null){
-			//loop through datatable and add rows; does the table need to be updated?
-			this.tempTable = new DataView(dataJSON, "");
-			this.constructGraph(this.tempTable);
-		}
-		else {
+		if (dataJSON!='{}'){
 			this.dataTable = new DataView(dataJSON, "");
+			this.graphTable = new GraphDataView(dataJSON, "");
 		}
+			
+		this.network.bind_data(this.graphTable);
+		
+		_setSelectionListeners();
 		
 		//import options using base class 
-		this.options = this.parseOptions(optionsJSON,optionsListObject);
-		
+		this.newOptions = this.parseOptions(optionsJSON,optionsListObject);
+		this.update = this.newOptions.update||=null;
+		if (this.update!=null){
+			if (this.options!=null){
+			//it's an update
+				var changed:Object = this.parseUpdatedOptions(this.newOptions, this.optionsListObject, this.options);
+			}
+		}
+		this.options = this.newOptions;
 		//set member varaibles from options (can we eliminate these?)
 		this.layoutType = this.options['layout'];	
 		this.centerNode=this.options['center'];	
 		this.attributesTable=this.attributesTable||(this.options.attributes||null);
-		this.nodeDataTable=options.node_data||null;
-		this.layoutTable=options.layout_data||null;
-		
-		
-		this.resizeStage(visindex, this.dataTable, options);
-		
-		//import graph data into this.network
-		this.constructGraph(this.dataTable);
-
-		//import additional optional data
-		trace("LAYOUT DATA");
-		
+		this.nodeDataTable=this.options.node_data||null;
+		this.layoutTable=this.options.layout_data||null;
+		this.resizeStage(visindex, options);
 		//layout from layoutTable
 		if (this.layoutTable!=null){
-			this.importLayout(this.layoutTable);
+			this.network.bind_data(this.layoutTable);
 		}		
 		
 		if (this.nodeDataTable!=null){
@@ -148,11 +167,10 @@ package {
 		edgeController.styleEdges(network,options);
 		//determine the node appearance
 		nodeController.styleNodes(network,options);
-		
-		
 		//add optional controls and legend
-		if(options.node_tooltips)
+		if (options.node_tooltips){
 			tooltip.addNodeTooltips(network);
+		}
 		if (options['clickdrag']!=false){
 			var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);
 			this.network.controls.add(cdc);
@@ -161,14 +179,10 @@ package {
 			this.createLegend();
 		}
 
-        //this.network.x = 0;
-        //this.network.y = 0;
-		
-
 		addChild(this.network);
 		trace("update network sprite");
 		this.network.update();
-}	
+	}	
 	private function createLegend():void {
 		var legend_fmt:TextFormat = new TextFormat("Verdana",14);
 		legend = Legend.fromValues(null, options.legend_values || [
@@ -185,131 +199,14 @@ package {
 	}
 
 	//DATA IMPORT FUNCTIONS
-
-	private function constructGraph(dataTable:DataView):void {
-		trace("construct graph");
-		var interactor_name1:String;		
-		var interactor_name2:String;
-		var interactor1:NodeSprite;
-		var interactor2:NodeSprite;
-		var ixnsources:Array;
-		var edge:EdgeSprite;
-		var directed:Boolean=false;	
-		for (var i:Number = 0; i<dataTable.getNumberOfRows(); i++) {
-			interactor_name1=dataTable.getFormattedValue(i,1)||dataTable.getValue(i,1);
-			interactor_name2=dataTable.getFormattedValue(i,2) || dataTable.getValue(i,2);
-			
-
-			//for other columns
-			trace(dataTable.getNumberOfColumns());
-
-				for(var j:Number=3; j<dataTable.getNumberOfColumns(); j++){
-					var cellValue:String = dataTable.getValue(i,j);
-					if(cellValue)
-					{
-						trace("Cell" + cellValue);
-						var columnName:String = dataTable.getColumnLabel(j);
-						
-						if (columnName=='sources'){
-							trace("SOURCES");
-							ixnsources=cellValue.split(", ");
-						}
-						else if (columnName=='directed'){
-							directed = Boolean(cellValue=='true');
-							trace("dir:" + directed);
-						}
-					}
-
-			}
-			
-			//this section replace network.addnodeifnotexsistant calls
-			//i needed to be able to do things to nodes once on creation for selection stuff
-			//
-			//
-			var interactors : Array = new Array();
-			for each(var name : * in [interactor_name1 ,interactor_name2])
-			{	
-				if(!name)
-					continue;//is an orphan
-				if (!network.checkNode(name)){
-					trace("create");
-					var interactor : NodeSprite = network.addNode({name:name});
-					//things that need to be done to each node once
-					interactor.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-					_appendSelectionInfo(interactor,{node:name});					
-					interactors.push(interactor);
-				}
-				else{
-					interactors.push(network.findNodeByName(name));
-				}
-				
-			}
-			
-			//not an orphan or self interactor
-			if(interactors.length==2 && interactor_name1!=interactor_name2)
-			{	
-				interactor1 = interactors[0];
-				interactor2 = interactors[1];	
-				edge=this.network.addEdgeIfNotExist(interactor1, interactor2, directed);
-				edge.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-				_appendSelectionInfo(edge,{row:i});
-			
-				//loop through ixn sources
-				if (ixnsources){
-					for (var k:Number=0; k<ixnsources.length; k++){
-						this.network.addEdgeSource(edge, ixnsources[k]);
-					}
-				}
-			}
-			
-		
-		}
-		if(options.center)
-		{
-			this.data.root = network.findNodeByName(options.center);
-		}
-	}
-
-    private function importLayout(layoutTable:DataView):void {
-    	var layoutValues:Array = new Array();
-    	var layoutAttributeValue:String;
-    	var params:Object = {};
-   		for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
-			//first column name
-			var interactor_name:String = layoutTable.getValue(i,0);
-			//rest of columns layout attributes (first two are x,y)
-			for (var j:Number = 1; j < layoutTable.getNumberOfColumns(); j++){
-				var columnName:String = layoutTable.getColumnLabel(j);
-				layoutAttributeValue = layoutTable.getValue(i,j);
-				//branch to set main nodesprite properties
-				if (columnName=='shape'){
-					this.network.setNodeShape(interactor_name, layoutAttributeValue);
-				}
-				else if (columnName == 'color'){
-					this.network.setNodeColor(interactor_name, layoutAttributeValue);
-				}
-				else if (columnName == 'size'){
-					this.network.setNodeSize(interactor_name, int(layoutAttributeValue));
-				}
-				else {
-					params[columnName]=int(layoutAttributeValue);
-					this.network.updateNodeParams(interactor_name,params);
-				}
-			}	
-		}
-    }
 	
 	private function importTimeCourseData(nodeDataTable:DataView):void{
-		trace("IMPORT_TIME_COURSE_DATA");
 		//var data = {};
 		var data:Array = new Array();
 		for (var i:Number = 0; i<nodeDataTable.getNumberOfRows();i++) {
 			//first column name
 			var interactor_name:String = nodeDataTable.getValue(i,0);
 			for (var j:Number = 1; j < nodeDataTable.getNumberOfColumns(); j++){
-				trace(nodeDataTable.getColumnLabel(j));
-				//data[nodeDataTable.getColumnLabel(j)]=nodeDataTable.getValue(i,j);
-				//data[nodeDataTable.getColumnLabel(j).match(/t_(\d*)/)[1]]=nodeDataTable.getValue(i,j);
 				data.push({index: nodeDataTable.getColumnLabel(j).match(/t_(\d*)/)[1], value: nodeDataTable.getValue(i,j)});
 			}
 			this.network.setTimecourseData(interactor_name, data);
@@ -336,12 +233,29 @@ package {
 	
 	//over ride functions to add node selection capabilities
 	//fired by mouse click
+	function _setSelectionListeners() :void{
+		for (var i:Number = 0; i<this.network.data.nodes.length; i++){
+			var node:NodeSprite = this.network.data.nodes[i];
+			if(this.network.isOrphan(node.data.name)){
+				continue;
+			}
+			else{			
+				node.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+				_appendSelectionInfo(node,{node:node.data.name});					
+			}	
+		}
+		
+		for (var i:Number=0; i<this.network.data.edges.length; i++){
+			var edge:EdgeSprite = this.network.data.edges[i];
+			edge.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+			_appendSelectionInfo(edge,{row:i});
+		}
+	}
 	
 	protected override function _selectionHandeler(eventObject: MouseEvent): void {
 		if(eventObject.currentTarget is NodeSprite)
 		{
 			var ns : NodeSprite = eventObject.currentTarget as NodeSprite;
-			
 			this._bubbleEvent("nodeclick",{node:{name:ns.data.name}});
 		}
 		if(eventObject.currentTarget is EdgeSprite)
@@ -349,10 +263,8 @@ package {
 			var es : EdgeSprite = eventObject.currentTarget as EdgeSprite;
 			this._bubbleEvent("edgeclick",{edge:{}}); //TODO: put something in here
 		}
-		
 		super._selectionHandeler(eventObject);
 	}
-	
 	
 	private function _appendSelectionInfo(ds:DataSprite,selection : Object) : void
 	{
@@ -375,8 +287,7 @@ package {
 		ds.addEventListener(MouseEvent.CLICK,this._selectionHandeler); 
 		return true;
 		}
-	
-			
+		
 	///////////////////////////////////////////////////////
 	//Selection display functions
 	
@@ -387,10 +298,8 @@ package {
 	    	super.selectionSetViaJS(selection);
 	    	//decode
 	    	var selectionArray : Array = JSON.decode(selection) as Array;
-	    	
 	    	for each (var selectionObj : Object in selectionArray)
-	    	{
-		    	
+	    	{	
 		    	if( selectionObj.hasOwnProperty("node"))
 		    	{
 		    		this._setSelectionNode(selectionObj.node);
@@ -418,15 +327,13 @@ package {
 		    
 			if(!options.selection_display || (options.selection_display != "none" || options.selection_display != "nodes"))
 			_doSelectionDisplay(es as DataSprite);
-			
 	    }
 	
 	protected function _setSelectionNode(nodeName : *) : void {
 			var ns : NodeSprite = this.network.findNodeByName(nodeName);
 			if(!options.selection_display || (options.selection_display != "none" || options.selection_display != "edges"))
 			_doSelectionDisplay(ns as DataSprite);
-			
-			}
+		}
 	    
 	protected function _doSelectionDisplay(ds : DataSprite) : void
 		{
@@ -435,7 +342,6 @@ package {
 			var lineColor : Number = ds.lineColor;
 			var lineWidth : Number = ds.lineWidth;
 			var lineAlpha : Number = ds.lineAlpha;
-			
 			
 			ds.props.deselect = function():void{
 				ds.lineColor = lineColor;
@@ -447,10 +353,6 @@ package {
 			ds.lineAlpha = options.selection_lineAlpha || 1;
 		}
 
-	
-
-
-	
 //	private function getTransitioner(taskname:String,duration:Number=1,easing:Function=null,optimize: Boolean = false):Transitioner {
 //                
 //		if (_trans[taskname] != null) {    //here we could also check for running but disposing never harms ...        
@@ -464,15 +366,13 @@ package {
 		// calculates the size of the visualization from the data and options
 		// then resizes the container element via javascript
 		
-	private function resizeStage(visindex:String, dataTable:DataView, options:Object) :void {
+	private function resizeStage(visindex:String, options:Object) :void {
      	//calculate width and height ...			
      	var width:int = options.width || 630;
      	var height:int = options.height || 630;
      	var padding:int = options.padding || 5;
-     	
      	this.resizeContainer(width,height);         	
 		this.network.bounds = new Rectangle(padding, padding, width-2*padding, height-2*padding);
-
 	}
 		
 	

@@ -3,7 +3,6 @@ package org.systemsbiology.visualization.bionetwork
 	import flare.vis.data.DataSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.operator.label.Labeler;
-	
 	import org.systemsbiology.visualization.bioheatmap.discretecolorrange;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.display.CircularHeatmapRenderer;
@@ -15,6 +14,7 @@ package org.systemsbiology.visualization.bionetwork
 		}
 		
 		public static function styleNodes(network : Network, options : Object):void{
+			//usual use network style handlers?
 			network.data.nodes.setProperties({
 				fillColor:options.node_fillColor || 0x880055cc, 
 				lineWidth: options.node_lineWidth || 0.5,
