@@ -81,7 +81,8 @@ package org.systemsbiology.visualization
 	
 		
 		//function for imorting and parseing options	
-		protected function parseOptions(optionsJSON:String, optionsListObject : Object) : Object {						
+		protected function parseOptions(optionsJSON:String, optionsListObject : Object) : Object {		
+			trace(optionsJSON);				
 			var options : Object = JSON.decode(optionsJSON);
 			var parseAs:String;
 			//data tables
@@ -110,7 +111,6 @@ package org.systemsbiology.visualization
 	        return options;
 		}
 		
-		//return 
 		protected function parseUpdatedOptions(newOptions:Object, optionsListObject:Object, currentOptions:Object) : Object {
 			var changed = new Object();
 			for(var optionName : String in optionsListObject){
@@ -128,6 +128,9 @@ package org.systemsbiology.visualization
 						}	
 					}
 					else {
+						trace(optionName);
+						trace(newOptions[optionName]);
+						trace(currentOptions[optionName]);
 						if (newOptions[optionName]!=currentOptions[optionName]){
 							changed[optionName]=true;
 						}
