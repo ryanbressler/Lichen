@@ -128,7 +128,6 @@ package org.systemsbiology.visualization.bionetwork.data
 			var edges:Array;
 			edges = this.findEdgesByNode(nodeName);
 			trace("EDGES" + edges);
-			//do self-interactors qualify as orphans?
 			if (edges.length>0){
 				return false;
 			}
@@ -150,6 +149,7 @@ package org.systemsbiology.visualization.bionetwork.data
 			return true;
 		}
 		
+		//checks to see if a node already exist
 		public function checkNode(name:String):Boolean
 		{
 			trace("check node: " + name);
@@ -157,12 +157,10 @@ package org.systemsbiology.visualization.bionetwork.data
 			nodes = select("data")
 				.eval(this.data.nodes);
 			var names:Array = nodes.map(extractNames);
-			trace("there?");
-			trace(-1!=names.indexOf(name));
 			return -1!=names.indexOf(name);
 		}
 		
-		//for not built-in param
+		//for parameters that aren't build into the network. they go in a catch all attributes called "props"
 		public function updateNodeParams(name:String, params:Object):void{
 			trace("updateNodeParams");
 			var node:NodeSprite=this.findNodeByName(name);
@@ -172,7 +170,7 @@ package org.systemsbiology.visualization.bionetwork.data
 			}
 		}	
 		
-		//set time course data
+		//creates a attributes under "props" to store timecourse data for a node
 		public function setTimecourseData(name:String, timecourse_data:Object) :void{
 			trace("setTimecourseData");
 			trace(name);
