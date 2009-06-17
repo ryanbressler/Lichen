@@ -109,7 +109,7 @@ package org.systemsbiology.visualization.bionetwork.data
 		}
 		
 		//tie a source to an edge
-		public function addEdgeSource(edge:EdgeSprite, source:String){
+		public function addEdgeSource(edge:EdgeSprite, source:String):void{
 			if (edge.props.ixnsources==null){
 				edge.props.ixnsources = [source];
 			}
@@ -164,7 +164,7 @@ package org.systemsbiology.visualization.bionetwork.data
 		public function updateNodeParams(name:String, params:Object):void{
 			trace("updateNodeParams");
 			var node:NodeSprite=this.findNodeByName(name);
-			for(var param in params){
+			for(var param:String in params){
 				trace("PARAMS " + param);
 				this.data.nodes.setProperty("props."+param, params[param], null, function(n:NodeSprite):Boolean{return n.data.name==name;});				
 			}
@@ -178,7 +178,7 @@ package org.systemsbiology.visualization.bionetwork.data
 		}
 		
 		//need to work in backword direction too or just accept edge
-		public function setEdgeColor(source:NodeSprite, target:NodeSprite, color:String){
+		public function setEdgeColor(source:NodeSprite, target:NodeSprite, color:String):void{
 			
 		}
 		
@@ -331,7 +331,7 @@ package org.systemsbiology.visualization.bionetwork.data
 //			
 //		}
 //	
-		public function toggleChanged()
+		public function toggleChanged():void
 		{
 			this.changed = !this.changed;
 		}	
