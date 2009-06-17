@@ -60,6 +60,7 @@ package org.systemsbiology.visualization.bionetwork.display{
 //loop through values and map to color
 //draw circle and color
 
+			var fillColor:String;
       		trace(d.props.timecourse_data);
 			trace(n.props.timecourse_data);
 			var sortedData:Array = n.props.timecourse_data.sortOn("index", Array.NUMERIC).reverse();
@@ -83,20 +84,19 @@ package org.systemsbiology.visualization.bionetwork.display{
 				}
 			}
 			
-			else if (binning = 'proportional'){
+			else if (binning == 'proportional'){
 				var prevTime:Number = 0;
 				var currTime:Number = 0;		
 				var totalTime:Number = 0; 
 				for (var i: Number = 0; i<sortedData.length; i++){
 					totalTime += int(sortedData[i]['index']);
 				}
-				
 				totalTime=int(sortedData[0]['index'])-int(sortedData[sortedData.length-1]['index']);
+				
 				for (var i:Number = 0; i<sortedData.length; i++){
 					currTime = sortedData[i]['index'];
 					trace(sortedData[i]);
-					trace(sortedData[i]['index']);
-					var fillColor:String = this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
+					fillColor = this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
 					g.beginFill(parseInt(fillColor,16));
 					stepSize = ((int(prevTime)-int(currTime)) * maxRadius)/totalTime;
 					radius -= stepSize;
