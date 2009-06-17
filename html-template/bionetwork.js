@@ -83,7 +83,6 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
     	var embedString = "<div></div><object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0\" id=\""+this.SWFid+"\" width=\"100%\" height=\"100%\"><param name=\"movie\" value=\"bionetwork.swf\" /><param name=\"quality\" value=\"high\" /><param name=\"flashvars\" value=\"flashvarsId="+this.SWFid+"\" /><param name=\"bgcolor\" value=\"#FFFFFF\" /> <param name=\"allowScriptAccess\" value=\"sameDomain\" /><embed src=\"bionetwork.swf\" quality=\"high\" bgcolor=\"#FFFFFF\" width=\"100%\" height=\"100%\" name=\""+this.SWFid+"\" flashvars=\"flashvarsId="+this.SWFid+"\" align=\"middle\" play=\"true\" loop=\"false\" quality=\"high\" allowScriptAccess=\"sameDomain\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\"></embed></object>";
 		this.containerElement.innerHTML=embedString;
 		//this.containerElement.innerHTML ="<object id=\"bioheatmap\" codebase=\"http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab\"> <param name=\"movie\" value=\"bioheatmap.swf\" /> <param name=\"quality\" value=\"high\" /> <param name=\"bgcolor\" value=\"#FFFFFF\" /> <param name=\"allowScriptAccess\" value=\"sameDomain\" /> <embed src=\"bioheatmap.swf\" quality=\"high\" bgcolor=\"#FFFFFF\" name=\"bioheatmap\" align=\"middle\" play=\"true\" loop=\"false\" quality=\"high\" allowScriptAccess=\"sameDomain\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\"> </embed> </object>"
-		log(options);
 		//wait for swf to be ready...is this necesairy?
 		var dataparam = this.buildDataParam(data);
 		var optionsparam = {};
@@ -91,9 +90,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 			if (typeof(options[key])=='object'){
 				//inner loop for checking table
 				//if (options[key]['tqx']){
-					log("test");
 					if (options[key]['getNumberOfRows']){
-						log("data table!");
 						optionsparam[key] = this.buildDataParam(options[key]);
 					} 
 				else{
@@ -115,10 +112,6 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
         if (!this.flashLoading) {
            //swf.update_data("hello");
            //this.swfPoll.bind(this,data,options);
-           //log("viz_id"+ this.SWFid);
-           //log(data);
-           //log(options);
-           //log(swf);
            var dataparam = this.buildDataParam(data);
            var optionsparam = this.buildDataParam(options['attributes']);
            //this.swf.draw(data,options);
@@ -126,7 +119,6 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
           
            //this.swfPoll.bind(this,dataparam, {attributes: optionsparam, center: '3630', data_format: "static"});
            // myPe = new PeriodicalExecuter(this.swfPoll.bind(this,data,options), .01);
-		   //log("js update_data");
 		}
     },
     
