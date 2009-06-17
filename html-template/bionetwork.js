@@ -70,7 +70,6 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 
     // Parameter options is a name/value map of options.
 
-
     draw: function(data, options) {
 
     	this.flashLoading = true;
@@ -105,8 +104,6 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 				optionsparam[key] = options[key];
 			}
 		}
-		
-
 		
     myPe = new PeriodicalExecuter(this.swfPoll.bind(this,dataparam,optionsparam), .01);
 	//myPe = new PeriodicalExecuter(this.swfPoll.bind(this,dataparam,optionsparam),.01);
