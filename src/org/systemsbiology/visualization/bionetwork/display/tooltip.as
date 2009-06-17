@@ -16,7 +16,7 @@ package org.systemsbiology.visualization.bionetwork.display
 			
 		}
 		
-		public static function addNodeTooltips(network:Network)
+		public static function addNodeTooltips(network:Network):void
 		{
 			var fmt:TextFormat = new TextFormat();
 
