@@ -24,6 +24,7 @@ package org.systemsbiology.visualization.data
 					this.sourcesIndex = i;
 				}
 			}
+			
 		}
 		
 		public function getInteractor1Name(rowIndex:int):String{
@@ -48,7 +49,10 @@ package org.systemsbiology.visualization.data
 		public function getSources(rowIndex:int):Array{
 			if (sourcesIndex) {
 				var sourcesString:String = this.getValue(rowIndex, sourcesIndex);
-				return sourcesString.split(", ")
+			}
+			if (sourcesString!=null)
+			{
+				return sourcesString.split(", ");
 			}
 			else{
 				return [];
