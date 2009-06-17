@@ -112,7 +112,7 @@ package org.systemsbiology.visualization
 		}
 		
 		protected function parseUpdatedOptions(newOptions:Object, optionsListObject:Object, currentOptions:Object) : Object {
-			var changed = new Object();
+			var changed:Object = new Object();
 			for(var optionName : String in optionsListObject){
 				if (newOptions[optionName]){
 					if(optionsListObject[optionName].parseAs=="dataTable"){			
