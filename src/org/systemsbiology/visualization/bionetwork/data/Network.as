@@ -47,7 +47,6 @@ package org.systemsbiology.visualization.bionetwork.data
 			else if (data is LayoutDataView){
 				bind_layout(data);
 			}
-				
 		}
 		
 		public function bind_graph(graphDataTable:GraphDataView):void{
@@ -75,6 +74,7 @@ package org.systemsbiology.visualization.bionetwork.data
 		public function bind_layout(layoutTable:LayoutDataView):void{
 			for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
 				var interactor_name:String = layoutTable.getValue(i,0);
+				this.updateNodeParams(interactor_name, {x: layoutTable.getX(i), y: layoutTable.getY(i)});
 				this.setNodeColor(interactor_name, layoutTable.getColor(i));
 				this.setNodeSize(interactor_name, layoutTable.getSize(i));
 				this.setNodeShape(interactor_name, layoutTable.getShape(i));			
@@ -183,25 +183,19 @@ package org.systemsbiology.visualization.bionetwork.data
 		}
 		
 		public function setNodeColor(name:String, color:String):void{
-			trace("setNodeColor");
 			this.data.nodes.setProperty("fillColor", color, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
 		}	
 		
 		public function setNodeShape(name:String, shape:String):void{
-			trace("setNodeShape");
-			trace(shape);
 			this.data.nodes.setProperty("shape", Shapes[shape], null,  function(n:NodeSprite):Boolean{return n.data.name==name;});
-//			this.data.nodes.setProperty("size", 10); 
 		}		
 		
 		public function setNodeSize(name:String, size:Number):void{
-			trace("setNodeSize");
 			this.data.nodes.setProperty("size", size, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
 		}	
 		
 		public function checkEdge(name1:String, name2:String, directed:Object = null):Boolean 
 		{
-			trace("check edge");
 			var targets:Array = [];
 			var sources:Array = [];	
 			targets=getTargets();
@@ -253,7 +247,6 @@ package org.systemsbiology.visualization.bionetwork.data
 			//TODO : optimize this to get source node and check only outgoing edges
 			var edge_index:int = -1;
 			var edges:DataList = this.data.edges;
-			
 			for (var i:Number = 0; i<edges.length; i++){
 				var edge:EdgeSprite = edges[i];
 				//var target:NodeSprite = targets[i];
@@ -265,8 +258,7 @@ package org.systemsbiology.visualization.bionetwork.data
 					edge_index = i;
 					break;
 				} 
-			}	
-			
+			}			
 			if (neq(edge_index,-1)){
 				return this.data.edges[edge_index];
 			}
@@ -281,7 +273,6 @@ package org.systemsbiology.visualization.bionetwork.data
 			trace("adding" + name);
 			var interactor:NodeSprite;
 			if (!this.checkNode(name)){
-					trace("create");
 					interactor=this.addNode({name:name});
 				}
 			else{
@@ -335,7 +326,6 @@ package org.systemsbiology.visualization.bionetwork.data
 		{
 			this.changed = !this.changed;
 		}	
-
 //		
 	}
 }
