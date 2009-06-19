@@ -1,4 +1,4 @@
-    DEBUG=0;
+    DEBUG=1;
     function log(message){
     	
     	if (DEBUG){
@@ -61,7 +61,6 @@
 				number_urls+=1;
 				funcs.push(func);
 				queries.push(new google.visualization.Query(query_url));
-				
 			}
 			else if (i==='layouturl'){
 				func=processLayout;
