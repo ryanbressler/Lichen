@@ -96,16 +96,6 @@ package org.systemsbiology.visualization
 					{			
 						options[optionName] = new DataView(JSON.encode(options[optionName]),"");
 					}
-					else if (parseAs=="layoutTable"){
-						options[optionName] = new LayoutDataView(JSON.encode(options[optionName]),"");
-					}
-//					else if (parseAs=="nodeDataTable"){
-//						
-//					}
-					else if (optionsListObject[optionName].parseAs=="color")
-					{
-						
-					}
 				}
 			}
 	        return options;
