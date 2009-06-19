@@ -121,55 +121,58 @@ package {
 
 	//for basic network	
 	public function bionetwork() {
-		
 		super();	
 	}
 
 	// draw!
 	public override function draw(dataJSON:String, optionsJSON:String) :void {            			
 		//import data
+		this.newOptions = this.parseOptions(optionsJSON,optionsListObject);
+		this.update = this.newOptions.update||=null;
+		this.options = this.newOptions;
+		this.decodedOptionsJSON = JSON.decode(optionsJSON);
+				//set member varaibles from options (can we eliminate these?)
+		this.layoutType = this.options['layout'];	
+		this.centerNode=this.options['center'];	
+		this.attributesTable=this.attributesTable||(this.options.attributes||null);
+		this.nodeDataTable=this.options.node_data||null;
+		
+//		this.layoutTable=this.options.layout_data||null;
+		
 		if (dataJSON!='{}'){
-			this.dataTable = new DataView(dataJSON, "");
 			this.graphTable = new GraphDataView(dataJSON, "");
+			this.network.bind_data(this.graphTable);
+		}
+		
+		if (this.decodedOptionsJSON['layout_data']){
+			this.layoutTable = new LayoutDataView(JSON.encode(this.decodedOptionsJSON['layout_data']), "")||null;
+		}
+		
+		//layout from layoutTable
+		if (this.layoutTable!=null){
+			this.network.bind_data(this.layoutTable);
+		}		
+		if (this.nodeDataTable!=null){
+			trace("importTimeCourseData");
+			this.importTimeCourseData(this.nodeDataTable);
 		}
 			
-		this.network.bind_data(this.graphTable);
-		
+
 		_setSelectionListeners();
 		
 		//import options using base class 
-		this.newOptions = this.parseOptions(optionsJSON,optionsListObject);
-		this.update = this.newOptions.update||=null;
+
 		if (!this.update){
 			if (this.options!=null){
 			//it's an update
 				var changed:Object = this.parseUpdatedOptions(this.newOptions, this.optionsListObject, this.options);
 			}
 		}
-		this.options = this.newOptions;
-		this.decodedOptionsJSON = JSON.decode(optionsJSON);
-		//set member varaibles from options (can we eliminate these?)
-		this.layoutType = this.options['layout'];	
-		this.centerNode=this.options['center'];	
-		this.attributesTable=this.attributesTable||(this.options.attributes||null);
-		this.nodeDataTable=this.options.node_data||null;
-		//this.layoutTable=this.options.layout_data||null;
-		//new LayoutDataView(JSON.encode(options[optionName]),"")
-		trace(this.decodedOptionsJSON);
-		if (this.decodedOptionsJSON['layout_data']){
-			//(JSON.encode(options[optionName]),""
-			this.layoutTable = new LayoutDataView(JSON.encode(this.decodedOptionsJSON['layout_data']), "")||null;
-		}
+		
 		this.resizeStage(visindex, options);
-		//layout from layoutTable
-		if (this.layoutTable!=null){
-			this.network.bind_data(this.layoutTable);
-		}		
-		if (this.nodeDataTable!=null){
-			this.importTimeCourseData(this.nodeDataTable);
-		}
+
 		//position the nodes	
-		layoutController.performLayout(network,options);
+		layoutController.performLayout(network, options);
 		//determine the edge appearance (this has to be after the layout or the bundled edge thing will crash)
 		edgeController.styleEdges(network,options);
 		//determine the node appearance
@@ -216,6 +219,10 @@ package {
 			for (var j:Number = 1; j < nodeDataTable.getNumberOfColumns(); j++){
 				data.push({index: nodeDataTable.getColumnLabel(j).match(/t_(\d*)/)[1], value: nodeDataTable.getValue(i,j)});
 			}
+			trace("interactor name");
+			trace(interactor_name);
+			trace("time course data");
+			trace(data);
 			this.network.setTimecourseData(interactor_name, data);
 			data=[]
 		}
@@ -372,7 +379,6 @@ package {
 
 		// calculates the size of the visualization from the data and options
 		// then resizes the container element via javascript
-		
 	private function resizeStage(visindex:String, options:Object) :void {
      	//calculate width and height ...			
      	var width:int = options.width || 630;
