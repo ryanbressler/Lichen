@@ -24,7 +24,6 @@ package org.systemsbiology.visualization.data
 					this.sourcesIndex = i;
 				}
 			}
-			
 		}
 		
 		public function getInteractor1Name(rowIndex:int):String{
