@@ -105,7 +105,6 @@ package org.systemsbiology.visualization.bionetwork
 		public static function GoogleDataTableDriven(network : Network, options : Object):void{
 			var gddlay: GoogleDataTableDrivenLayout = new GoogleDataTableDrivenLayout();
 			network.operators.add(gddlay);
-				
 			//shape: flare.util.Shapes.SQUARE,
 		}
 		
