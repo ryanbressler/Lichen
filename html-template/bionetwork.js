@@ -86,19 +86,20 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 		//wait for swf to be ready...is this necesairy?
 		var dataparam = this.buildDataParam(data);
 		var optionsparam = {};
-		for (key in options){
-			if (typeof(options[key])=='object'){
+		for (opt in options){
+			if (typeof(options[opt])=='object'){
 				//inner loop for checking table
 				//if (options[key]['tqx']){
-					if (options[key]['getNumberOfRows']){
-						optionsparam[key] = this.buildDataParam(options[key]);
+					if (options[opt]['getNumberOfRows']){
+						log("buildDataParam on " + opt);
+						optionsparam[opt] = this.buildDataParam(options[opt]);
 					} 
 				else{
-					optionsparam[key]=options[key];
+					optionsparam[opt]=options[opt];
 				}	
 			}
 			else{
-				optionsparam[key] = options[key];
+				optionsparam[opt] = options[opt];
 			}
 		}
 		
