@@ -9,9 +9,9 @@ package org.systemsbiology.visualization.data
 		private var directedIndex:Number;
 		private var columnName:String;
 		//this breaks the interface; abstract out
-		var sourcesIndex:Number;
+		private var sourcesIndex:Number;
 		
-		public function GraphDataView(dataJSON, isGoogle)
+		public function GraphDataView(dataJSON:String, isGoogle:String)
 		{
 			super(dataJSON, isGoogle);	
 			//look for optional parameters
@@ -45,10 +45,16 @@ package org.systemsbiology.visualization.data
         	}
 		}
 		
-		public function getSources(rowIndex:int){
+		public function getSources(rowIndex:int):Array{
 			if (sourcesIndex) {
 				var sourcesString:String = this.getValue(rowIndex, sourcesIndex);
-				return sourcesString.split(", ")
+			}
+			if (sourcesString!=null)
+			{
+				return sourcesString.split(", ");
+			}
+			else{
+				return [];
 			}
 		}
 			

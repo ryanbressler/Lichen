@@ -55,48 +55,45 @@ package org.systemsbiology.visualization.bionetwork.display{
 									[ 0,96, 128, 180 ],
 									new Matrix()
 								);					
-//get values in time series
-//order values
-//loop through values and map to color
-//draw circle and color
+		//get values in time series
+		//order values
+	//loop through values and map to color
+	//draw circle and color
 
-      		trace(d.props.timecourse_data);
+			trace(n);
 			trace(n.props.timecourse_data);
 			var sortedData:Array = n.props.timecourse_data.sortOn("index", Array.NUMERIC).reverse();
 			var numTimepoints:Number = sortedData.length;
 			var maxRadius:Number = 30;
-			var radius:Number = 0;
-			
+			var radius:Number = 0;			
 			var binning:String = 'even';
+			var fillColor:String;
 			if (binning == 'even'){
-				trace("step size");
-				trace(stepSize);
 				radius = maxRadius;	
 				var stepSize:Number = Math.floor(maxRadius/numTimepoints);
 				for (var i:Number = 0; i<sortedData.length; i++){
 					trace(sortedData[i]);
 					trace(sortedData[i]['index']);
-					var fillColor:String = this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
+					fillColor = this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
 					g.beginFill(parseInt(fillColor,16));
 					g.drawCircle(0,0,radius);
 					radius-=stepSize;
 				}
 			}
 			
-			else if (binning = 'proportional'){
+			else if (binning == 'proportional'){
 				var prevTime:Number = 0;
 				var currTime:Number = 0;		
 				var totalTime:Number = 0; 
 				for (var i: Number = 0; i<sortedData.length; i++){
 					totalTime += int(sortedData[i]['index']);
 				}
-				
 				totalTime=int(sortedData[0]['index'])-int(sortedData[sortedData.length-1]['index']);
+				
 				for (var i:Number = 0; i<sortedData.length; i++){
 					currTime = sortedData[i]['index'];
 					trace(sortedData[i]);
-					trace(sortedData[i]['index']);
-					var fillColor:String = this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
+					fillColor = this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
 					g.beginFill(parseInt(fillColor,16));
 					stepSize = ((int(prevTime)-int(currTime)) * maxRadius)/totalTime;
 					radius -= stepSize;

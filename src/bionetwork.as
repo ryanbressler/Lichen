@@ -18,7 +18,6 @@
 
 package {
 	import com.adobe.serialization.json.JSON;
-	
 	import flare.display.TextSprite;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
@@ -26,11 +25,13 @@ package {
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.legend.Legend;
+	
 	import flash.events.MouseEvent;
 	import flash.external.*;
 	import flash.geom.Rectangle;
 	import flash.text.*;
 	import flash.utils.*;
+	
 	import org.systemsbiology.visualization.GoogleVisAPISprite;
 	import org.systemsbiology.visualization.bionetwork.*;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
@@ -75,6 +76,7 @@ package {
 		private var legend:Legend;
 		private var update:Boolean;
 		private var newOptions:Object;
+		private var decodedOptionsJSON:Object = '';
 		
 		//font
         // We must embed a font so that we can rotate text and do other special effects
@@ -90,7 +92,7 @@ package {
        //obj holding configuration options
        //maybe this object should store defaults too?
         private var optionsListObject : Object = {
-        	layout_data:{parseAs:"layoutTable", affects:["layout"]},
+        	layout_data:{parseAs:"dataTable", affects:["layout"]},
         	node_data:{parseAs:"dataTable", affects: ["nodes"]},
         	attributes:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
         	clickdrag:{parseAs:"param", affects: ["nodes"]},
@@ -119,50 +121,58 @@ package {
 
 	//for basic network	
 	public function bionetwork() {
-		
 		super();	
 	}
 
 	// draw!
 	public override function draw(dataJSON:String, optionsJSON:String) :void {            			
 		//import data
+		this.newOptions = this.parseOptions(optionsJSON,optionsListObject);
+		this.update = this.newOptions.update||=null;
+		this.options = this.newOptions;
+		this.decodedOptionsJSON = JSON.decode(optionsJSON);
+				//set member varaibles from options (can we eliminate these?)
+		this.layoutType = this.options['layout'];	
+		this.centerNode=this.options['center'];	
+		this.attributesTable=this.attributesTable||(this.options.attributes||null);
+		this.nodeDataTable=this.options.node_data||null;
+		
+//		this.layoutTable=this.options.layout_data||null;
+		
 		if (dataJSON!='{}'){
-			this.dataTable = new DataView(dataJSON, "");
 			this.graphTable = new GraphDataView(dataJSON, "");
+			this.network.bind_data(this.graphTable);
+		}
+		
+		if (this.decodedOptionsJSON['layout_data']){
+			this.layoutTable = new LayoutDataView(JSON.encode(this.decodedOptionsJSON['layout_data']), "")||null;
+		}
+		
+		//layout from layoutTable
+		if (this.layoutTable!=null){
+			this.network.bind_data(this.layoutTable);
+		}		
+		if (this.nodeDataTable!=null){
+			trace("importTimeCourseData");
+			this.importTimeCourseData(this.nodeDataTable);
 		}
 			
-		this.network.bind_data(this.graphTable);
-		
+
 		_setSelectionListeners();
 		
 		//import options using base class 
-		this.newOptions = this.parseOptions(optionsJSON,optionsListObject);
-		this.update = this.newOptions.update||=null;
-		if (this.update!=null){
+
+		if (!this.update){
 			if (this.options!=null){
 			//it's an update
 				var changed:Object = this.parseUpdatedOptions(this.newOptions, this.optionsListObject, this.options);
 			}
 		}
-		this.options = this.newOptions;
-		//set member varaibles from options (can we eliminate these?)
-		this.layoutType = this.options['layout'];	
-		this.centerNode=this.options['center'];	
-		this.attributesTable=this.attributesTable||(this.options.attributes||null);
-		this.nodeDataTable=this.options.node_data||null;
-		this.layoutTable=this.options.layout_data||null;
+		
 		this.resizeStage(visindex, options);
-		//layout from layoutTable
-		if (this.layoutTable!=null){
-			this.network.bind_data(this.layoutTable);
-		}		
-		
-		if (this.nodeDataTable!=null){
-			this.importTimeCourseData(this.nodeDataTable);
-		}
-		
+
 		//position the nodes	
-		layoutController.performLayout(network,options);
+		layoutController.performLayout(network, options);
 		//determine the edge appearance (this has to be after the layout or the bundled edge thing will crash)
 		edgeController.styleEdges(network,options);
 		//determine the node appearance
@@ -180,9 +190,9 @@ package {
 		}
 
 		addChild(this.network);
-		trace("update network sprite");
 		this.network.update();
 	}	
+	
 	private function createLegend():void {
 		var legend_fmt:TextFormat = new TextFormat("Verdana",14);
 		legend = Legend.fromValues(null, options.legend_values || [
@@ -209,6 +219,10 @@ package {
 			for (var j:Number = 1; j < nodeDataTable.getNumberOfColumns(); j++){
 				data.push({index: nodeDataTable.getColumnLabel(j).match(/t_(\d*)/)[1], value: nodeDataTable.getValue(i,j)});
 			}
+			trace("interactor name");
+			trace(interactor_name);
+			trace("time course data");
+			trace(data);
 			this.network.setTimecourseData(interactor_name, data);
 			data=[]
 		}
@@ -233,16 +247,16 @@ package {
 	
 	//over ride functions to add node selection capabilities
 	//fired by mouse click
-	function _setSelectionListeners() :void{
+	protected function _setSelectionListeners() :void{
 		for (var i:Number = 0; i<this.network.data.nodes.length; i++){
 			var node:NodeSprite = this.network.data.nodes[i];
-			if(this.network.isOrphan(node.data.name)){
-				continue;
-			}
-			else{			
+//			if(this.network.isOrphan(node.data.name)){
+//				continue;
+//			}
+//			else{			
 				node.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
 				_appendSelectionInfo(node,{node:node.data.name});					
-			}	
+//			}	
 		}
 		
 		for (var i:Number=0; i<this.network.data.edges.length; i++){
@@ -355,7 +369,7 @@ package {
 
 //	private function getTransitioner(taskname:String,duration:Number=1,easing:Function=null,optimize: Boolean = false):Transitioner {
 //                
-//		if (_trans[taskname] != null) {    //here we could also check for running but disposing never harms ...        
+//		if (_trans[taskname] != null) {  //here we could also check for running but disposing never harms ...        
 //	        _trans[taskname].stop();
 //	        _trans[taskname].dispose();
 //	    }               
@@ -365,7 +379,6 @@ package {
 
 		// calculates the size of the visualization from the data and options
 		// then resizes the container element via javascript
-		
 	private function resizeStage(visindex:String, options:Object) :void {
      	//calculate width and height ...			
      	var width:int = options.width || 630;

@@ -7,9 +7,14 @@ package org.systemsbiology.visualization.data
 		private var sizeIndex:Number;
 		private var colorIndex:Number;
 		private var columnName:String;
+		private var xIndex:Number;
+		private var yIndex:Number;
 		
 		public function LayoutDataView(dataJSON:String, isGoogle:String)
 		{
+			trace("LayoutDataView");
+			trace("dataJSON");
+			trace(dataJSON);
 			super(dataJSON, isGoogle);
 			//map expected columns to column indices
 			for (var i:Number = 0; i<this.getNumberOfColumns(); i++){
@@ -23,7 +28,21 @@ package org.systemsbiology.visualization.data
 				 else if (columnName == 'size'){
 				 	this.sizeIndex = i;
 				 }
+				 else if (columnName == 'x'){
+				 	this.xIndex=i;
+				 }
+				 else if (columnName == 'y'){
+				 	this.yIndex=i;
+				 }
 			}
+		}
+		
+		public function getX (rowIndex:int):int {
+			return this.getValue(rowIndex, xIndex);
+		}
+		
+		public function getY(rowIndex:int):String {
+			return this.getValue(rowIndex, yIndex);	
 		}
 		
 		public function getShape (rowIndex:int):String {

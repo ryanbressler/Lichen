@@ -14,12 +14,10 @@ package org.systemsbiology.visualization.bionetwork
 		}
 		
 		public static function styleNodes(network : Network, options : Object):void{
-			//usual use network style handlers?
 			network.data.nodes.setProperties({
 				fillColor:options.node_fillColor || 0x880055cc, 
 				lineWidth: options.node_lineWidth || 0.5,
 				buttonMode: true });
-
 			if (options['nodeRenderer']=="CircularHeatmap"){
 				circularHeatmap(network,options);
 			}
