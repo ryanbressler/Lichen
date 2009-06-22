@@ -60,6 +60,8 @@ package org.systemsbiology.visualization.bionetwork.display{
 	//loop through values and map to color
 	//draw circle and color
 
+			trace(n);
+			trace(n.props.timecourse_data);
 			var sortedData:Array = n.props.timecourse_data.sortOn("index", Array.NUMERIC).reverse();
 			var numTimepoints:Number = sortedData.length;
 			var maxRadius:Number = 30;
