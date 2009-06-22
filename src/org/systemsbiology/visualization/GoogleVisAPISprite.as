@@ -19,13 +19,11 @@
 package org.systemsbiology.visualization
 {
 	import com.adobe.serialization.json.JSON;
-	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
-	
 	import org.systemsbiology.visualization.data.DataView;
 	import org.systemsbiology.visualization.data.LayoutDataView;
 
@@ -71,7 +69,6 @@ package org.systemsbiology.visualization
 			//ensure that coordinate system remians centered at upper left even after resize
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
-			
             ExternalInterface.addCallback("draw", draw);
 			ExternalInterface.addCallback("selectionSetViaJS", selectionSetViaJS);
 			var callJas:String = "isbSWFvisualizations."+this.visindex+".flashReady";
