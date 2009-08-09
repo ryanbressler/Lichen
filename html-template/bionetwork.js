@@ -27,15 +27,6 @@ if(!org) {
 }
 
 
-// ---------------------------------------------------------------------------------------------------------------------
-// - BioNetwork
-// -
-// -   Description: Draws a gene expression style heatmap using Canvas
-// -   Author: dburdick
-// -   Version: 1.0
-// -
-// ---------------------------------------------------------------------------------------------------------------------
-
 org.systemsbiology.visualization.BioNetwork = Class.create({
 
 
