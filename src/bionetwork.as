@@ -94,6 +94,7 @@ package {
         private var optionsListObject : Object = {
         	layout_data:{parseAs:"dataTable", affects:["layout"]},
         	node_data:{parseAs:"dataTable", affects: ["nodes"]},
+        	nodeClusters:{parseAs:"dataTable", affects: ["layout"]},
         	attributes:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
         	clickdrag:{parseAs:"param", affects: ["nodes"]},
         	sproutable:{parseAs:"param", affects: ["nodes"]},
@@ -323,6 +324,7 @@ package {
 	    	if (options.hasOwnProperty("selection_persistDisplay") && !options.selection_persistDisplay) setTimeout(_clearSelectionDisplay, 500);  		
 	    }
 	    
+	//TODO: not getting called when shift is down
 	protected override function _clearSelectionDisplay() : void{
 			this.network.data.visit(
 				function(ds:DataSprite):void{ 
@@ -353,6 +355,8 @@ package {
 		{
 			//var fillColor : uint = ds.fillColor;
 			//var fillAlpha ds.fillAlpha;
+			if(ds.props.hasOwnProperty("deselect"))
+				return;
 			var lineColor : Number = ds.lineColor;
 			var lineWidth : Number = ds.lineWidth;
 			var lineAlpha : Number = ds.lineAlpha;
