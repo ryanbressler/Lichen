@@ -166,6 +166,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
     // set's the current selected rows, cols or cells
 
     setSelection: function(selection, append) {
+    	
     	if(append!=true)
     	{
     		this._selectedNodes=new Array();
@@ -177,7 +178,7 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 			{
 				this._selectedNodes.push(selection[rowi]);
 			}
-			else
+			elsehttp://rbressle.gdxbase.org/images//bullet_red_small.gif
 			{
 				this._selected.push(selection[rowi]);
 			}
