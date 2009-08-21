@@ -24,6 +24,7 @@
 //looks in the option object usually with a snipet like {optionname: options.user_optionname || 2}.
 package org.systemsbiology.visualization.bionetwork
 {
+	import flare.vis.axis.CartesianAxes;
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.operator.layout.CircleLayout;
@@ -124,7 +125,7 @@ package org.systemsbiology.visualization.bionetwork
 	    	var fdlay:ForceDirectedLayout = new ForceDirectedLayout(true,options.continuousUpdates?1:120);
 	    	fdlay.simulation.nbodyForce.gravitation=-1;  
 	        fdlay.defaultParticleMass= 16;
-	        fdlay.defaultSpringLength=20;
+	        fdlay.defaultSpringLength=25;
 //	        fdlay.defaultSpringTension;
 	    	if(options.nodeClusters)
 	    	{
@@ -143,6 +144,19 @@ package org.systemsbiology.visualization.bionetwork
 	    			labelnode.x=x0;
 	    			labelnode.y=y0;
 	    			labelNodes.push(labelnode);
+	    			labelnode.props.selection = [];
+	    			if(options.nodeClusterPositions)
+	    			{
+	    				labelnode.fillColor=0xffff0000;
+	    				labelnode.size=.2;
+	    				labelnode.x=x0=options.nodeClusterPositions[i].x;
+	    				labelnode.y=y0=options.nodeClusterPositions[i].y;
+	    				
+	    				labelnode.fix();
+	    				
+	    				
+	    				
+	    			}
 	    			for (var j:Number = 0; j<nodeClusters.getNumberOfRows();j++)
 	    			{
 	    				
@@ -162,18 +176,19 @@ package org.systemsbiology.visualization.bionetwork
 	    						datanode.x=x0;
 	    						datanode.y=y0;
 	    						nodes.push(datanode);
+	    						labelnode.props.selection.push({node:datanode.data.name});
+	    						
 	    					}
 	    				}
 	    			}
-	    			fdlay.simulation.addForce(new GatheringForce(.05,Math.sqrt(nodes.length)*25,nodes));
-	    			//TODO make forces binding labels to nodes and nodes to each other seperate
-	    			//TODO make cluster forces only for positive displacement...ie restrict nodes to be within r of each other
-	    			//nodes.shift();
-	    			//fdlay.simulation.addForce(new NBodyForce(.005,64,nodes));
+	    			fdlay.simulation.addForce(new GatheringForce(.1,Math.sqrt(nodes.length)*25,nodes));
+	    			
 			
 	    		}
 	    		
-	    		fdlay.simulation.addForce(new NSpringForce(.01,Math.sqrt((network.bounds.width*network.bounds.height)/labelNodes.length),labelNodes));
+	    		var groupDistance : Number = Math.sqrt((network.bounds.width*network.bounds.height)/labelNodes.length);
+	    		
+	    		fdlay.simulation.addForce(new NSpringForce(.001,groupDistance,labelNodes));
 	    		fdlay.simulation.addForce(new SquaredDragForce(1));
 	    		fdlay.simulation.dragForce.drag=.5;
 	    		
@@ -187,11 +202,11 @@ package org.systemsbiology.visualization.bionetwork
 	    				for(var i : int=0; i<es.source.props.clusters.length; i++)
 	    					if(es.target.props.clusters.indexOf(es.source.props.clusters[i])!=-1)
 	    						return fdlay.defaultSpringLength;
-	    				return 16*fdlay.defaultSpringLength;
+	    				return 2*groupDistance;
 	    			}
 	    			else
 	    			{
-	    				return 16*fdlay.defaultSpringLength;
+	    				return 2*groupDistance;
 	    			}
 	    		}
 	    		
@@ -211,14 +226,16 @@ package org.systemsbiology.visualization.bionetwork
 	    				for(var i : int=0; i<es.source.props.clusters.length; i++)
 	    					if(es.target.props.clusters.indexOf(es.source.props.clusters[i])!=-1)
 	    						return fdlay.defaultSpringTension;
-	    				return .0001*fdlay.defaultSpringTension;
+	    				return .00001*fdlay.defaultSpringTension;
 	    			}
 	    			else
 	    			{
-	    				return .0001*fdlay.defaultSpringTension;
+	    				return .00001*fdlay.defaultSpringTension;
 	    			}
 	    			
 	    		}
+	    		
+	 
 	    		
 	    	}
 	    	//force directed layout
