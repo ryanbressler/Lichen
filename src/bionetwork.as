@@ -41,6 +41,7 @@ package {
 	import org.systemsbiology.visualization.data.DataView;
 	import org.systemsbiology.visualization.data.GraphDataView;
 	import org.systemsbiology.visualization.data.LayoutDataView;
+	import org.systemsbiology.visualization.data.NodeDataView;
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
 	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
 	//the network object persists the data
@@ -52,7 +53,7 @@ package {
 		private var options:Object; 
 		private var centerNode:int;
 		private var layoutTable:LayoutDataView;
-		private var nodeDataTable:DataView;
+		private var nodeDataTable:NodeDataView;
 		private var tempTable:DataView;
 		private var layoutType:String;
 		private var dataTable:DataView;
@@ -92,71 +93,87 @@ package {
        //obj holding configuration options
        //maybe this object should store defaults too?
         private var optionsListObject : Object = {
-        	layout_data:{parseAs:"dataTable", affects:["layout"]},
-        	node_data:{parseAs:"dataTable", affects: ["nodes"]},
-        	attributes:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
-        	clickdrag:{parseAs:"param", affects: ["nodes"]},
-        	sproutable:{parseAs:"param", affects: ["nodes"]},
-        	legend:{parseAs:"bundle", affects:[]},
-        	layout_type: {parseAs:"param", affects:["layout"]},
-        	CircularHeatmap:{parseAs:"bundle", affects:["nodes"]},
-        	MultiEdge:{parseAs:"bundle", affects:["edges"]}, //needs to be bundle so you can assign colors to sourcenames?
-        	padding:{parseAs:"param", affects:["workspace"]},
-        	width:{parseAs:"param", affects:["workspace"]},
-        	height:{parseAs:"param", affects:["workspace"]},
-        	legend:{parseAs:"bundle", affects: []},
-        	node_fillColor:{parseAs:"color", affects:["nodes"]},
-        	node_lineWidth:{parseAs:"param", affects:["nodes"]},
-        	node_tooltips:{parseAs:"param", affects:["nodes"]},
-        	edge_lineWidth:{parseAs:"param", affects:["edges"]},
-        	edge_lineColor:{parseAs:"param", affects:["edges"]},
-        	edge_router:{parseAs:"param", affects:["edges"]},
-        	selection_display:{parseAs:"param", affects:["all"]}, //this is tricky b/c the value determines what if affects
-        	selection_persistDisplay:{parseAs:"param", affects:[]},
-        	selection_lineColor:{parseAs:"param", affects: []},
-        	selection_lineWdith:{parseAs:"param", affects:[]},
-        	selection_lineAlpha:{parseAs:"param", affects:[]},
-       		events: {parseAs:"bundle", affects:[]}
+        layout_data:{parseAs:"dataTable", affects:["layout"], classname:"LayoutDataView"},
+        node_data:{parseAs:"dataTable", affects: ["nodes"], classname:"NodeDataView"},
+        graph_data:{parseAs:"dataTable", affects:["layout","edges"],classname:"GraphDataView"},
+        layout_url:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
+        attributes:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
+        clickdrag:{parseAs:"param", affects: ["nodes"]},
+        sproutable:{parseAs:"param", affects: ["nodes"]},
+        //should become bundle
+        legend:{parseAs:"param", affects:[]},
+        layout_type: {parseAs:"param", affects:["layout"]},
+        layout: {parseAs:"param", affects:["layout"]},
+        CircularHeatmap:{parseAs:"bundle", affects:["nodes"]},
+        nodeRenderer:{parseAs:"param", affects:["nodes"]},
+        edgeRenderer:{parseAs:"param", affects:["edges"]},
+        center:{parseAs:"param", affects:["graph"]},
+        MultiEdge:{parseAs:"bundle", affects:["edges"]}, //needs to be bundle so you can assign colors to sourcenames?
+        padding:{parseAs:"param", affects:["workspace"]},
+        width:{parseAs:"param", affects:["workspace"]},
+        height:{parseAs:"param", affects:["workspace"]},
+        node_fillColor:{parseAs:"color", affects:["nodes"]},
+        node_lineWidth:{parseAs:"param", affects:["nodes"]},
+        node_tooltips:{parseAs:"param", affects:["nodes"]},
+        edge_lineWidth:{parseAs:"param", affects:["edges"]},
+        edge_lineColor:{parseAs:"param", affects:["edges"]},
+        edge_router:{parseAs:"param", affects:["edges"]},
+        selection_display:{parseAs:"param", affects:["all"]}, //this is tricky b/c the value determines what if affects
+        selection_persistDisplay:{parseAs:"param", affects:[]},
+        selection_lineColor:{parseAs:"param", affects: []},
+        selection_lineWdith:{parseAs:"param", affects:[]},
+        selection_lineAlpha:{parseAs:"param", affects:[]},
+       events: {parseAs:"bundle", affects:[]},
+       maxval: {parseAs:"param", affects:["nodes"]},
+       minval: {parseAs:"param", affects:["nodes"]}
         };
 
 	//for basic network	
 	public function bionetwork() {
 		super();	
 	}
-
 	// draw!
 	public override function draw(dataJSON:String, optionsJSON:String) :void {            			
 		//import data
 		this.newOptions = this.parseOptions(optionsJSON,optionsListObject);
 		this.update = this.newOptions.update||=null;
 		this.options = this.newOptions;
+		trace("OPTIONS");
+		trace(options);
+		trace(options['node_data']);
 		this.decodedOptionsJSON = JSON.decode(optionsJSON);
-				//set member varaibles from options (can we eliminate these?)
+		//set member varaibles from options (can we eliminate these?)
 		this.layoutType = this.options['layout'];	
 		this.centerNode=this.options['center'];	
-		this.attributesTable=this.attributesTable||(this.options.attributes||null);
-		this.nodeDataTable=this.options.node_data||null;
-		
 //		this.layoutTable=this.options.layout_data||null;
 		
+		//TO DO: Make the way DataViews are created consistent
 		if (dataJSON!='{}'){
 			this.graphTable = new GraphDataView(dataJSON, "");
 			this.network.bind_data(this.graphTable);
 		}
-		
-		if (this.decodedOptionsJSON['layout_data']){
-			this.layoutTable = new LayoutDataView(JSON.encode(this.decodedOptionsJSON['layout_data']), "")||null;
-		}
-		
-		//layout from layoutTable
+
+		this.layoutTable = this.options['layout_data'] as LayoutDataView|| null;
+		//this.attributesTable=this.attributesTable||(this.options['attributes']||null);
+		//this.nodeDataTable = this.options['node_data'] as NodeDataView || null;
+		//this.nodeDataTable = NodeDataView(this.options['node_data']);
+		this.nodeDataTable = this.options['node_data'];
+		trace("NODE DATA TABLE");
+
+		//trace(this.options['node_data']);
+//		this.nodeDataTable = this.options['node_data'];
+		trace("nodeDataTable");
+		trace(this.options['node_data']);
+		trace(this.nodeDataTable);
+
 		if (this.layoutTable!=null){
 			this.network.bind_data(this.layoutTable);
-		}		
-		if (this.nodeDataTable!=null){
-			trace("importTimeCourseData");
-			this.importTimeCourseData(this.nodeDataTable);
 		}
-			
+		if (this.nodeDataTable!=null){
+			trace("calling bind_data");
+			//this.importTimeCourseData(this.nodeDataTable);
+			this.network.bind_data(this.nodeDataTable);
+		}
 
 		_setSelectionListeners();
 		
@@ -165,7 +182,6 @@ package {
 		if (!this.update){
 			if (this.options!=null){
 			//it's an update
-				var changed:Object = this.parseUpdatedOptions(this.newOptions, this.optionsListObject, this.options);
 			}
 		}
 		
@@ -219,10 +235,6 @@ package {
 			for (var j:Number = 1; j < nodeDataTable.getNumberOfColumns(); j++){
 				data.push({index: nodeDataTable.getColumnLabel(j).match(/t_(\d*)/)[1], value: nodeDataTable.getValue(i,j)});
 			}
-			trace("interactor name");
-			trace(interactor_name);
-			trace("time course data");
-			trace(data);
 			this.network.setTimecourseData(interactor_name, data);
 			data=[]
 		}
@@ -250,13 +262,13 @@ package {
 	protected function _setSelectionListeners() :void{
 		for (var i:Number = 0; i<this.network.data.nodes.length; i++){
 			var node:NodeSprite = this.network.data.nodes[i];
-//			if(this.network.isOrphan(node.data.name)){
-//				continue;
-//			}
-//			else{			
+			if(this.network.isOrphan(node.data.name)){
+				continue;
+			}
+			else{
 				node.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-				_appendSelectionInfo(node,{node:node.data.name});					
-//			}	
+				_appendSelectionInfo(node,{node:node.data.name});
+			}
 		}
 		
 		for (var i:Number=0; i<this.network.data.edges.length; i++){
