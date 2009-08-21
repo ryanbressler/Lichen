@@ -29,7 +29,7 @@ package org.systemsbiology.visualization.bionetwork.display{
 	
 	public class CircularHeatmapRenderer  implements IRenderer
 	{
-
+		trace("render");
 // 		private static var _instance:CircularHeatmapRenderer = new CircularHeatmapRenderer();
 		public var _defaultSize:Number;
 //		public static function get instance():CircularHeatmapRenderer { return _instance; }
@@ -47,7 +47,6 @@ package org.systemsbiology.visualization.bionetwork.display{
 			var size:Number = d.size * _defaultSize;
 			var g : Graphics = d.graphics;
 			g.clear();
-			trace(this._discreteColorRange);
 						var _n : Number = Math.random();
 			g.beginGradientFill( 	GradientType.LINEAR,
 									[ 0xffffffff* _n,0xaaaaaaaa* _n, 0x8c8c8cff* _n, 0x000000 ],
@@ -59,21 +58,19 @@ package org.systemsbiology.visualization.bionetwork.display{
 		//order values
 	//loop through values and map to color
 	//draw circle and color
-
-			trace(n);
-			trace(n.props.timecourse_data);
-			var sortedData:Array = n.props.timecourse_data.sortOn("index", Array.NUMERIC).reverse();
+			if (n.props.timecourse_data){
+				var sortedData:Array = n.props.timecourse_data.sortOn("index", Array.NUMERIC).reverse();
 			var numTimepoints:Number = sortedData.length;
 			var maxRadius:Number = 30;
-			var radius:Number = 0;			
+			var radius:Number = 0;
 			var binning:String = 'even';
 			var fillColor:String;
 			if (binning == 'even'){
 				radius = maxRadius;	
 				var stepSize:Number = Math.floor(maxRadius/numTimepoints);
 				for (var i:Number = 0; i<sortedData.length; i++){
-					trace(sortedData[i]);
-					trace(sortedData[i]['index']);
+//					trace(sortedData[i]);
+//					trace(sortedData[i]['index']);
 					fillColor = this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
 					g.beginFill(parseInt(fillColor,16));
 					g.drawCircle(0,0,radius);
@@ -92,16 +89,13 @@ package org.systemsbiology.visualization.bionetwork.display{
 				
 				for (var i:Number = 0; i<sortedData.length; i++){
 					currTime = sortedData[i]['index'];
+					trace("iteration");
+					trace(i);
 					trace(sortedData[i]);
 					fillColor = this._discreteColorRange.getCellColorHex(sortedData[i]['value'].toString());
 					g.beginFill(parseInt(fillColor,16));
 					stepSize = ((int(prevTime)-int(currTime)) * maxRadius)/totalTime;
 					radius -= stepSize;
-					trace("prevTime" + prevTime.toString());
-					trace("currTime" + currTime.toString());
-					trace("time diff" + (int(prevTime)-int(currTime)).toString());
-					trace("totalTime"+totalTime);
-					trace("radius" + radius);
 					g.drawCircle(0,0,radius);
 					prevTime = currTime;
 				}
@@ -111,6 +105,6 @@ package org.systemsbiology.visualization.bionetwork.display{
  
 		}
 	}
-
+	}
 	
 }

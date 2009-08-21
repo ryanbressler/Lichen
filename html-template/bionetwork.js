@@ -91,7 +91,6 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
 				//inner loop for checking table
 				//if (options[key]['tqx']){
 					if (options[opt]['getNumberOfRows']){
-						log("buildDataParam on " + opt);
 						optionsparam[opt] = this.buildDataParam(options[opt]);
 					} 
 				else{
