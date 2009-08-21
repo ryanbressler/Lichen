@@ -95,6 +95,7 @@ package {
         	layout_data:{parseAs:"dataTable", affects:["layout"]},
         	node_data:{parseAs:"dataTable", affects: ["nodes"]},
         	nodeClusters:{parseAs:"dataTable", affects: ["layout"]},
+        	nodeClusterPositions:{parseAs:"param", affects: ["layout"]},
         	attributes:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
         	clickdrag:{parseAs:"param", affects: ["nodes"]},
         	sproutable:{parseAs:"param", affects: ["nodes"]},
@@ -159,7 +160,7 @@ package {
 		}
 			
 
-		_setSelectionListeners();
+		
 		
 		//import options using base class 
 
@@ -178,6 +179,9 @@ package {
 		edgeController.styleEdges(network,options);
 		//determine the node appearance
 		nodeController.styleNodes(network,options);
+		
+		_setSelectionListeners();
+		
 		//add optional controls and legend
 		if (options.node_tooltips){
 			tooltip.addNodeTooltips(network);
@@ -256,7 +260,8 @@ package {
 //			}
 //			else{			
 				node.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-				_appendSelectionInfo(node,{node:node.data.name});					
+				if(!node.props.islabel)
+					_appendSelectionInfo(node,{node:node.data.name});					
 //			}	
 		}
 		
@@ -324,7 +329,7 @@ package {
 	    	if (options.hasOwnProperty("selection_persistDisplay") && !options.selection_persistDisplay) setTimeout(_clearSelectionDisplay, 500);  		
 	    }
 	    
-	//TODO: not getting called when shift is down
+	
 	protected override function _clearSelectionDisplay() : void{
 			this.network.data.visit(
 				function(ds:DataSprite):void{ 
