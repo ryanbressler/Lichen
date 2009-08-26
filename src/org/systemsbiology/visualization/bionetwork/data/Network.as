@@ -28,6 +28,7 @@ package org.systemsbiology.visualization.bionetwork.data
 	
 	import org.systemsbiology.visualization.data.GraphDataView;
 	import org.systemsbiology.visualization.data.LayoutDataView;
+	import org.systemsbiology.visualization.data.NodeDataView;
 	
 	//wrapper for Flare's network classes-data, edgeSprite, nodeSprite	
 	public class Network extends Visualization
@@ -41,11 +42,18 @@ package org.systemsbiology.visualization.bionetwork.data
 		
 		//functions for placing data in correct parts of network
 		public function bind_data(data : *) : void{
+			trace("BIND DATA");
 			if (data is GraphDataView){
+				trace("graph data view");
 				bind_graph(data);
 			}
 			else if (data is LayoutDataView){
+				trace("layout view");
 				bind_layout(data);
+			}
+			else if (data is NodeDataView){
+				trace("node data view");
+				bind_NodeData(data);
 			}
 		}
 		
@@ -72,14 +80,40 @@ package org.systemsbiology.visualization.bionetwork.data
 		}
 		
 		public function bind_layout(layoutTable:LayoutDataView):void{
+			var interactor_name:String;
 			for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
-				var interactor_name:String = layoutTable.getValue(i,0);
+				interactor_name = layoutTable.getValue(i,0);
 				this.updateNodeParams(interactor_name, {x: layoutTable.getX(i), y: layoutTable.getY(i)});
 				this.setNodeColor(interactor_name, layoutTable.getColor(i));
 				this.setNodeSize(interactor_name, layoutTable.getSize(i));
 				this.setNodeShape(interactor_name, layoutTable.getShape(i));			
 			}
-		}		
+		}
+//			private function importTimeCourseData(nodeDataTable:DataView):void{
+//		//var data = {};
+//		var data:Array = new Array();
+//		for (var i:Number = 0; i<nodeDataTable.getNumberOfRows();i++) {
+//			//first column name
+//			var interactor_name:String = nodeDataTable.getValue(i,0);
+//			for (var j:Number = 1; j < nodeDataTable.getNumberOfColumns(); j++){
+//				data.push({index: nodeDataTable.getColumnLabel(j).match(/t_(\d*)/)[1], value: nodeDataTable.getValue(i,j)});
+//			}
+//			this.network.setTimecourseData(interactor_name, data);
+//			data=[]
+//		}
+//	}
+		public function bind_NodeData(nodeDataTable:NodeDataView):void{
+			trace("bind_NodeDataTable");
+			trace("test");
+			var interactor_name:String;
+			trace("NUM ROWS" + nodeDataTable.getNumberOfRows());
+			for (var i:Number=1; i<nodeDataTable.getNumberOfRows(); i++){
+				interactor_name = nodeDataTable.getValue(i,0);
+				trace("node data . . .")
+				trace(nodeDataTable.getTimeSeriesData(i));
+				this.setTimecourseData(interactor_name, nodeDataTable.getTimeSeriesData(i));
+			}
+		}
 		
 		//function from data class tweaked to make it easier to add nodes with type
 		public function addNode(n:Object, groupName:String=null):NodeSprite
@@ -127,7 +161,6 @@ package org.systemsbiology.visualization.bionetwork.data
 		public function isOrphan(nodeName:String):Boolean{
 			var edges:Array;
 			edges = this.findEdgesByNode(nodeName);
-			trace("EDGES" + edges);
 			if (edges.length>0){
 				return false;
 			}
@@ -152,7 +185,6 @@ package org.systemsbiology.visualization.bionetwork.data
 		//checks to see if a node already exist
 		public function checkNode(name:String):Boolean
 		{
-			trace("check node: " + name);
 			var nodes:Array = [];
 			nodes = select("data")
 				.eval(this.data.nodes);
@@ -162,18 +194,15 @@ package org.systemsbiology.visualization.bionetwork.data
 		
 		//for parameters that aren't build into the network. they go in a catch all attributes called "props"
 		public function updateNodeParams(name:String, params:Object):void{
-			trace("updateNodeParams");
 			var node:NodeSprite=this.findNodeByName(name);
 			for(var param:String in params){
-				trace("PARAMS " + param);
 				this.data.nodes.setProperty("props."+param, params[param], null, function(n:NodeSprite):Boolean{return n.data.name==name;});				
 			}
 		}	
 		
 		//creates a attributes under "props" to store timecourse data for a node
 		public function setTimecourseData(name:String, timecourse_data:Object) :void{
-			trace("setTimecourseData");
-			trace(name);
+			trace("time course");
 			this.data.nodes.setProperty("props.timecourse_data", timecourse_data, null, function(n:NodeSprite):Boolean{return n.data.name==name;});			
 		}
 		
@@ -218,7 +247,6 @@ package org.systemsbiology.visualization.bionetwork.data
 //		
 		public function findNodeByName(name:String):NodeSprite
 		{
-			trace("find node: " + name);
 			var nodes:Array = [];
 			nodes = select("data")
 				.eval(this.data.nodes);
@@ -270,13 +298,12 @@ package org.systemsbiology.visualization.bionetwork.data
 		//helper functions
 		public function addNodeIfNotExist(name:String):NodeSprite
 		{
-			trace("adding" + name);
 			var interactor:NodeSprite;
 			if (!this.checkNode(name)){
-					interactor=this.addNode({name:name});
+				interactor=this.addNode({name:name});
 				}
 			else{
-					interactor=this.findNodeByName(name);
+				interactor=this.findNodeByName(name);
 				}
 			return interactor;
 		}

@@ -20,7 +20,6 @@ package
 {
 
         import com.adobe.serialization.json.JSON;
-        
         import flash.display.Shape;
         import flash.display.Sprite;
         import flash.events.MouseEvent;
