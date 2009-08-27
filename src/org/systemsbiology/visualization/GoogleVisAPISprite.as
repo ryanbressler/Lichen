@@ -21,11 +21,11 @@ package org.systemsbiology.visualization
 	import com.adobe.serialization.json.JSON;
 	
 	import flash.display.Sprite;
+	import flash.utils.getDefinitionByName;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
-	import flash.utils.getDefinitionByName;
 	
 	import org.systemsbiology.visualization.data.*;
 
@@ -85,7 +85,8 @@ package org.systemsbiology.visualization
 			var updateObject : Object = newoptions.updateObj || new Object();
 			var parseAs:String;
 			var dependency : String;
-			var newValue:Object;
+			var i : int;
+			
 			for (var optionName:String in newoptions){
 
 
@@ -94,8 +95,8 @@ package org.systemsbiology.visualization
 					
 					parseAs = optionsListObject[optionName].parseAs||"param";
 					
-					for(dependency in optionsListObject[optionName].affects)
-						updateObject[dependency]=true;
+					for(i=0; i < optionsListObject[optionName].affects.length; i++)
+						updateObject[optionsListObject[optionName].affects[i]]=true;
 
 					if(parseAs=="dataTable")
 					{
