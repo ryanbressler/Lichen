@@ -170,6 +170,10 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
         swf.selectionSetViaJS(Object.toJSON(this._selected.concat(this._selectedNodes)));
 
     },
+    
+    add_edge_from_to : function(n1,n2){
+    	this.getSWF(this.SWFid).add_edge_from_to(n1,n2);
+    },
    
     
     	// Gets a reference to the specified SWF file by checking which browser is

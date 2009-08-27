@@ -22,7 +22,7 @@ package org.systemsbiology.visualization.data
 
 
 public class DataView {
-    private var dataTable:DataTable;
+    protected var dataTable:DataTable;
     private var table2ViewColumnIndex:Object;
     private var view2TableColumnIndex:Object;
     private var columnIndicies:Array;

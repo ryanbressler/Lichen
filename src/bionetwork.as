@@ -162,7 +162,9 @@ package {
 
 	//for basic network	
 	public function bionetwork() {
-		super();	
+		ExternalInterface.addCallback("add_edge_from_to", function(e1:String,e2:String) : void { network.add_edge_by_names(e1,e2);this.network.update();});
+		super();
+			
 	}
 	// draw!
 	public override function draw(dataJSON:String, optionsJSON:String) :void {            			
@@ -182,12 +184,6 @@ package {
 			this.options.updateObj.edges = true;
 			this.options.updateObj.stage = true;
 		}
-		
-		//set member varaibles from options (can we eliminate these?)
-		this.layoutType = this.options['layout'];	
-		this.centerNode=this.options['center'];	
-		
-
 
 		this.layoutTable = this.options['layout_data'] as LayoutDataView|| null;
 		this.nodeDataTable = this.options['node_data'] || null;
