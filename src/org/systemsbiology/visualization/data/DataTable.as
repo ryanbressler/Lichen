@@ -283,7 +283,7 @@ public class DataTable {
      * Private Methods
      */
 
- 	private function importData(columns:Array, rowData:Array) :void {	
+ 	public function importData(columns:Array, rowData:Array) :void {	
         // insure symetrical data between rows & cols
         var errorMsg:String = "";
         var numcols:int = columns.length;

@@ -27,14 +27,18 @@ public class DataView {
     private var view2TableColumnIndex:Object;
     private var columnIndicies:Array;
 
-    public function DataView(dataJSON:String, isGoogle:String) {
+    public function DataView(dataJSON:Object, isGoogle:String="") {
     	trace(dataJSON);
     	trace(isGoogle);
         this.dataTable = new DataTable();
-        if(isGoogle) {
-        	this.dataTable.importGoogleDataTableJSON(dataJSON);
+        if(dataJSON.hasOwnProperty("cols") && dataJSON.hasOwnProperty("rows"))
+        {
+        	this.dataTable.importData(dataJSON.cols, dataJSON.rows);
+        }
+        else if(isGoogle) {
+        	this.dataTable.importGoogleDataTableJSON(dataJSON as String);
         } else {
-        	this.dataTable.importDataJSON(dataJSON);
+        	this.dataTable.importDataJSON(dataJSON as String);
         }
         		
         // setup initial mapping
@@ -49,6 +53,7 @@ public class DataView {
             this.view2TableColumnIndex[col] = col;
         }
     }
+    
 
     // THESE ARE DataView SPECIFIC:
     

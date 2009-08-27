@@ -19,13 +19,15 @@
 package org.systemsbiology.visualization
 {
 	import com.adobe.serialization.json.JSON;
+	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
-	import org.systemsbiology.visualization.data.DataView;
-	import org.systemsbiology.visualization.data.LayoutDataView;
+	import flash.utils.getDefinitionByName;
+	
+	import org.systemsbiology.visualization.data.*;
 
 	public class GoogleVisAPISprite extends Sprite
 	{
@@ -77,58 +79,43 @@ package org.systemsbiology.visualization
 		}
 	
 		
-		//function for imorting and parsing options	
-		protected function parseOptions(optionsJSON:String, optionsListObject : Object) : Object {		
-			trace(optionsJSON);				
-			var options : Object = JSON.decode(optionsJSON);
+		//function for importing and parsing options
+		protected function parseOptions(optionsJSON:String, optionsListObject : Object) : Object {
+			var newoptions : Object = JSON.decode(optionsJSON);
+			var updateObject : Object = newoptions.updateObj || new Object();
 			var parseAs:String;
-			//data tables
-			//import data JSON
-			for( var optionName : String in optionsListObject)
-			{
-				parseAs = optionsListObject[optionName].parseAs;
-				trace(parseAs);
-				if (options[optionName]){
+			var dependency : String;
+			var newValue:Object;
+			for (var optionName:String in newoptions){
+
+
+					if(!optionsListObject.hasOwnProperty(optionName))
+						continue;
+					
+					parseAs = optionsListObject[optionName].parseAs||"param";
+					
+					for(dependency in optionsListObject[optionName].affects)
+						updateObject[dependency]=true;
+
 					if(parseAs=="dataTable")
-					{			
-						options[optionName] = new DataView(JSON.encode(options[optionName]),"");
+					{
+
+
+							var jsonString:String = JSON.encode(newoptions[optionName]);
+							newoptions[optionName] = new (getDefinitionByName("org.systemsbiology.visualization.data."+(optionsListObject[optionName].classname || "DataView")) as Class)(newoptions[optionName]);
+							
+							
+
 					}
-				}
+					else{
+						continue;
+					}
+				
 			}
-	        return options;
+			newoptions.updateObj=updateObject;
+			return newoptions;
 		}
 		
-		protected function parseUpdatedOptions(newOptions:Object, optionsListObject:Object, currentOptions:Object) : Object {
-			var changed:Object = new Object();
-			for(var optionName : String in optionsListObject){
-				if (newOptions[optionName]){
-					if(optionsListObject[optionName].parseAs=="dataTable"){			
-						//want to check if data table is same or just go ahead and mark as changed?		
-						changed[optionName] = true;			
-					}
-					else if (optionsListObject[optionName].parseAs=="bundle"){
-						for(var optionParam:String in newOptions[optionName]){
-							if (newOptions[optionName][optionParam]!=currentOptions[optionName][optionParam]){
-								changed[optionName]=true;
-								break;
-							}
-						}	
-					}
-					else {
-						trace(optionName);
-						trace(newOptions[optionName]);
-						trace(currentOptions[optionName]);
-						if (newOptions[optionName]!=currentOptions[optionName]){
-							changed[optionName]=true;
-						}
-						else{
-							changed[optionName]=false;
-						}
-					}
-				}
-			}
-			return changed;
-		}	
 		
 		//out puts a message to either the debugger player log file or flexbuilder consol	
         protected function _log (msg : String) : void {
