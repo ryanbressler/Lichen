@@ -162,7 +162,19 @@ package {
 
 	//for basic network	
 	public function bionetwork() {
-		ExternalInterface.addCallback("add_edge_from_to", function(e1:String,e2:String) : void { network.add_edge_by_names(e1,e2);this.network.update();});
+		var relayout : Function = function () { draw("","{\"updateObj\":{\"layout\" : true, \"nodes\": true,\"edges\": true,\"stage\": true}}"); };
+		ExternalInterface.addCallback("add_edge_from_to", function(n1:String,n2:String) : void { 
+				network.add_edge_by_names(n1,n2);
+				relayout();
+			});
+		ExternalInterface.addCallback("add_edge_from_to", function(n1:String) : void { 
+				network.remove_node(n1);
+				relayout();
+			});
+		ExternalInterface.addCallback("remove_edge_from_to", function(n1:String,n2:String) : void { 
+				network.remove_edge(n1,n2);
+				relayout();
+			});
 		super();
 			
 	}
@@ -171,7 +183,7 @@ package {
 		
 		//import data
 		this.options ||= new Object();
-		var newoptions : Object = this.parseOptions(optionsJSON,optionsListObject);
+		var newoptions : Object = this.parseOptions(optionsJSON as String,optionsListObject);
 		for( var name : String in newoptions)
 			this.options[name] = newoptions[name];
 

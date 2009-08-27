@@ -1596,14 +1596,29 @@ data.insertColumn(0,"number");
       
 function addedge()
 {
-	networkvis.add_edge_from_to($('int1').text,$('int2').text);
+	networkvis.add_edge_from_to($('int1').value,$('int2').value);
+}
+
+function cleartext()
+{
+	$('int1').value="";
+	$('int2').value="";
 }
 
 function changeLayout()
 {
 	networkvis.draw("",{layout:$("layout").value});
 }
-      
+
+clickHandeler(target)
+{
+	var name = target.node.name;
+}
+
+function removeselected()
+{
+
+} 
       
 	  	
 	
@@ -1619,16 +1634,23 @@ body { margin: 0px; overflow:hidden; background-color: #cccccc }
 <body scroll="no">
 	<div id="exampleVisContainer"></div>
 	
-<input type="text" id="int1"/><input type="text" id="int2"/><input type="button" onclick="addedge()">add</input>	
+From: <input type="text" id="int1"/>
+To: <input type="text" id="int2"/>
+<input type="button" onclick="addedge()" value="add edge"/>
+<input type="button" onclick="cleartext()" value="clear"/>
+<br/>	
 layout: <select id="layout" onchange="changeLayout()">
 <option value ="circular">circular</option>
 <option value ="ForceDirected">ForceDirected</option>
 <option value ="extendedForceDirected">extendedForceDirected</option>
 <option value ="3dSVD">3dSVD</option>
 <option value ="radialTree">radialTree</option>
-
-
 </select>
+<br/>
+
+<input type="button" onclick="removeselected()" value="remove selected"/><br/>
+
+
 
 	
 </body>

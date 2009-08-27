@@ -63,7 +63,7 @@ package org.systemsbiology.visualization.bionetwork.data
 			for (var i:Number = 0; i<graphDataTable.getNumberOfRows();i++) {
 				edge = add_edge_by_names(graphDataTable.getInteractor1Name(i),graphDataTable.getInteractor2Name(i));
 				sources=graphDataTable.getSources(i);
-				if (sources){
+				if (sources && edge != null){
 					for (var k:Number=0; k<sources.length; k++){
 						this.addEdgeSource(edge, sources[k]);
 					}
@@ -73,13 +73,27 @@ package org.systemsbiology.visualization.bionetwork.data
 		
 		public function add_edge_by_names(interactor1_name : String, interactor2_name : String) : EdgeSprite
 		{
-			return addEdgeIfNotExist(addNodeIfNotExist(interactor1_name), addNodeIfNotExist(interactor2_name));
+			var interactors : Array = new Array();
+			for each(var interactor : String in [interactor1_name,interactor2_name])
+			{
+				if(interactor != null && interactor != "null" && interactor != "")
+					interactors.push(addNodeIfNotExist(interactor));
+					
+			}
+			return interactors.length==2 ? addEdgeIfNotExist(interactors[0], interactors[1]) : null;
 		}
 		
 		public function remove_node (node_name : String) : void
 		{
 			if(checkNode(node_name))
 				this.data.removeNode(this.findNodeByName(node_name));
+		}
+		
+		public function remove_edge(interactor1_name : String, interactor2_name : String) : void
+		{
+			var edges : EdgeSprite = add_edge_by_names(interactor1_name, interactor2_name);
+			if(edges!=null)
+				this.data.removeEdge(edges);
 		}
 		
 		public function bind_layout(layoutTable:LayoutDataView):void{
