@@ -174,6 +174,15 @@ org.systemsbiology.visualization.BioNetwork = Class.create({
     add_edge_from_to : function(n1,n2){
     	this.getSWF(this.SWFid).add_edge_from_to(n1,n2);
     },
+    
+    remove_node_by_name : function(n1){
+    	this.getSWF(this.SWFid).remove_node_by_name(n1);
+    },
+    
+    remove_edge_from_to : function(n1,n2){
+    	this.getSWF(this.SWFid).remove_edge_from_to(n1,n2);
+    },
+    
    
     
     	// Gets a reference to the specified SWF file by checking which browser is

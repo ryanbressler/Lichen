@@ -162,12 +162,12 @@ package {
 
 	//for basic network	
 	public function bionetwork() {
-		var relayout : Function = function () { draw("","{\"updateObj\":{\"layout\" : true, \"nodes\": true,\"edges\": true,\"stage\": true}}"); };
+		var relayout : Function = function () : void { draw("","{\"updateObj\":{\"layout\" : true, \"nodes\": true,\"edges\": true,\"stage\": true}}"); };
 		ExternalInterface.addCallback("add_edge_from_to", function(n1:String,n2:String) : void { 
 				network.add_edge_by_names(n1,n2);
 				relayout();
 			});
-		ExternalInterface.addCallback("add_edge_from_to", function(n1:String) : void { 
+		ExternalInterface.addCallback("remove_node_by_name", function(n1:String) : void { 
 				network.remove_node(n1);
 				relayout();
 			});
@@ -295,15 +295,12 @@ package {
 	protected function _setSelectionListeners() :void{
 		for (var i:Number = 0; i<this.network.data.nodes.length; i++){
 			var node:NodeSprite = this.network.data.nodes[i];
-			if(this.network.isOrphan(node.data.name)){
-				continue;
-			}
-			else{
-				node.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
 
-				if(!node.props.islabel)
-					_appendSelectionInfo(node,{node:node.data.name});
-			}					
+			node.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
+
+			if(!node.props.islabel)
+				_appendSelectionInfo(node,{node:node.data.name});
+					
 
 		}
 		

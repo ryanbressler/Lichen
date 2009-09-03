@@ -1588,15 +1588,14 @@ data.insertColumn(0,"number");
 	 
        networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
        networkvis.draw(data, {});	
-       //console.log("data test");
-       //console.log(data);
-       //networkvis.draw(data, {attributes: attribute_data, center:center, data_format:"google"});
+       google.visualization.events.addListener(networkvis, "nodeclick", clickHandeler);
 
       }
       
 function addedge()
 {
 	networkvis.add_edge_from_to($('int1').value,$('int2').value);
+	cleartext();
 }
 
 function cleartext()
@@ -1610,14 +1609,30 @@ function changeLayout()
 	networkvis.draw("",{layout:$("layout").value});
 }
 
-clickHandeler(target)
+function clickHandeler(target)
 {
 	var name = target.node.name;
+	
+	if($('int1').value=="")
+	{
+		$('int1').value=name;
+		$('int2').focus();
+	}
+	else
+	{
+		$('int2').value=name;
+		$('add').focus();
+	}
+	
 }
 
 function removeselected()
 {
-
+	var nodes = networkvis.getSelectionNodes();
+	for(i=0; i<nodes.length; i++)
+	{
+  		networkvis.remove_node_by_name(nodes[i].name);
+  	}
 } 
       
 	  	
@@ -1636,8 +1651,8 @@ body { margin: 0px; overflow:hidden; background-color: #cccccc }
 	
 From: <input type="text" id="int1"/>
 To: <input type="text" id="int2"/>
-<input type="button" onclick="addedge()" value="add edge"/>
-<input type="button" onclick="cleartext()" value="clear"/>
+<input type="button" id="add" onclick="addedge()" value="add edge"/>
+<input type="button" id="clear" onclick="cleartext()" value="clear"/>
 <br/>	
 layout: <select id="layout" onchange="changeLayout()">
 <option value ="circular">circular</option>
@@ -1648,7 +1663,7 @@ layout: <select id="layout" onchange="changeLayout()">
 </select>
 <br/>
 
-<input type="button" onclick="removeselected()" value="remove selected"/><br/>
+<input type="button" id="remove" onclick="removeselected()" value="remove selected"/><br/>
 
 
 
