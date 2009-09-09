@@ -5,7 +5,7 @@ package org.systemsbiology.visualization.data
 	{
 		private var interactor_name:String;
 		//public var data:Array = new Array()
-		public function NodeDataView(dataJSON:String, isGoogle:String)
+		public function NodeDataView(dataJSON:Object, isGoogle:String="")
 		{
 			trace("CONSTRUCTOR");
 			trace(dataJSON);

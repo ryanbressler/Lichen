@@ -21,11 +21,11 @@ package org.systemsbiology.visualization
 	import com.adobe.serialization.json.JSON;
 	
 	import flash.display.Sprite;
-	import flash.utils.getDefinitionByName;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
+	import flash.utils.*;
 	
 	import org.systemsbiology.visualization.data.*;
 
@@ -82,10 +82,13 @@ package org.systemsbiology.visualization
 		//function for importing and parsing options
 		protected function parseOptions(optionsJSON:String, optionsListObject : Object) : Object {
 			var newoptions : Object = JSON.decode(optionsJSON);
+			var returnoptions : Object = new Object;
 			var updateObject : Object = newoptions.updateObj || new Object();
 			var parseAs:String;
 			var dependency : String;
 			var i : int;
+			
+			
 			
 			for (var optionName:String in newoptions){
 
@@ -102,19 +105,20 @@ package org.systemsbiology.visualization
 					{
 
 
-							var jsonString:String = JSON.encode(newoptions[optionName]);
-							newoptions[optionName] = new (getDefinitionByName("org.systemsbiology.visualization.data."+(optionsListObject[optionName].classname || "DataView")) as Class)(newoptions[optionName]);
+							var jsonString:String = newoptions[optionName];//JSON.encode(newoptions[optionName]);
+							returnoptions[optionName] = new (getDefinitionByName("org.systemsbiology.visualization.data."+(optionsListObject[optionName].classname || "DataView")) as Class)(newoptions[optionName]);
 							
 							
 
 					}
 					else{
+						returnoptions[optionName] = newoptions[optionName];
 						continue;
 					}
 				
 			}
-			newoptions.updateObj=updateObject;
-			return newoptions;
+			returnoptions.updateObj=updateObject;
+			return returnoptions;
 		}
 		
 		

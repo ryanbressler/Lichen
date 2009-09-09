@@ -10,7 +10,7 @@ package org.systemsbiology.visualization.data
 		private var xIndex:Number;
 		private var yIndex:Number;
 		
-		public function LayoutDataView(dataJSON:String, isGoogle:String)
+		public function LayoutDataView(dataJSON:Object, isGoogle:String="")
 		{
 			trace("LayoutDataView");
 			trace("dataJSON");

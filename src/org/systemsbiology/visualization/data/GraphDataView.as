@@ -11,7 +11,7 @@ package org.systemsbiology.visualization.data
 		//this breaks the interface; abstract out
 		private var sourcesIndex:Number;
 		
-		public function GraphDataView(dataJSON:String, isGoogle:String)
+		public function GraphDataView(dataJSON:Object, isGoogle:String="")
 		{
 			super(dataJSON, isGoogle);	
 			//look for optional parameters
