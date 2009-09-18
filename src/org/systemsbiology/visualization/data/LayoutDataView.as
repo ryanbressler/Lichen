@@ -41,7 +41,7 @@ package org.systemsbiology.visualization.data
 			return this.getValue(rowIndex, xIndex);
 		}
 		
-		public function getY(rowIndex:int):String {
+		public function getY(rowIndex:int):int {
 			return this.getValue(rowIndex, yIndex);	
 		}
 		
@@ -50,7 +50,7 @@ package org.systemsbiology.visualization.data
         		return this.getValue(rowIndex, shapeIndex);
         	}
         	else {
-        		return 'CIRCLE';
+        		return null;
         	}
     	}
     	
@@ -59,7 +59,7 @@ package org.systemsbiology.visualization.data
     			return this.getValue(rowIndex, sizeIndex);
     		}
     		else { 
-    			return 1;
+    			return -1;
     		}
     	}
     	
@@ -68,7 +68,7 @@ package org.systemsbiology.visualization.data
     			return this.getValue(rowIndex, colorIndex);
     		}
     		else {
-    			return '0xff0000ff'
+    			return null
     		}
     	}
     	

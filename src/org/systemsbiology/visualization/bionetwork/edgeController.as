@@ -31,8 +31,8 @@ package org.systemsbiology.visualization.bionetwork
 			//directed edges are special case
 			network.data.edges.setProperties({
 				arrowType: ArrowType.TRIANGLE,
-				arrowWidth: 15,
-				arrowHeight: 15
+				arrowWidth: 8,
+				arrowHeight: 8
 				}, null, function(e:EdgeSprite):Boolean{return e.directed==true;});
 			
 			//delegate to edgeRenderers

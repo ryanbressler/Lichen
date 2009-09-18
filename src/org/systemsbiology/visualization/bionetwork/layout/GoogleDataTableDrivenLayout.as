@@ -54,9 +54,6 @@ public class GoogleDataTableDrivenLayout extends Layout
 	
 		for (i=0; i<items.length; i++) {
 			var n:NodeSprite = items[i];
-			trace("name" + n.data.name);
-			trace("x"+n.props.x);
-			trace("y"+n.props.y);
 			_t.$(n).x = n.props.x;
 			_t.$(n).y = n.props.y;
     	}

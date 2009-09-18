@@ -94,38 +94,10 @@ package {
        //obj holding configuration options
        //maybe this object should store defaults too?
         private var optionsListObject : Object = {
-/*<<<<<<< HEAD:src/bionetwork.as
-        	layout_data:{parseAs:"dataTable", affects:["layout"]},
-        	node_data:{parseAs:"dataTable", affects: ["nodes"]},
-        	nodeClusters:{parseAs:"dataTable", affects: ["layout"]},
-        	nodeClusterPositions:{parseAs:"param", affects: ["layout"]},
-        	attributes:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
-        	clickdrag:{parseAs:"param", affects: ["nodes"]},
-        	sproutable:{parseAs:"param", affects: ["nodes"]},
-        	legend:{parseAs:"bundle", affects:[]},
-        	layout_type: {parseAs:"param", affects:["layout"]},
-        	CircularHeatmap:{parseAs:"bundle", affects:["nodes"]},
-        	MultiEdge:{parseAs:"bundle", affects:["edges"]}, //needs to be bundle so you can assign colors to sourcenames?
-        	padding:{parseAs:"param", affects:["workspace"]},
-        	width:{parseAs:"param", affects:["workspace"]},
-        	height:{parseAs:"param", affects:["workspace"]},
-        	legend:{parseAs:"bundle", affects: []},
-        	node_fillColor:{parseAs:"color", affects:["nodes"]},
-        	node_lineWidth:{parseAs:"param", affects:["nodes"]},
-        	node_tooltips:{parseAs:"param", affects:["nodes"]},
-        	edge_lineWidth:{parseAs:"param", affects:["edges"]},
-        	edge_lineColor:{parseAs:"param", affects:["edges"]},
-        	edge_router:{parseAs:"param", affects:["edges"]},
-        	selection_display:{parseAs:"param", affects:["all"]}, //this is tricky b/c the value determines what if affects
-        	selection_persistDisplay:{parseAs:"param", affects:[]},
-        	selection_lineColor:{parseAs:"param", affects: []},
-        	selection_lineWdith:{parseAs:"param", affects:[]},
-        	selection_lineAlpha:{parseAs:"param", affects:[]},
-       		events: {parseAs:"bundle", affects:[]}
-=======*/
+
 		nodeClusters:{parseAs:"dataTable", affects: ["layout"]},
         nodeClusterPositions:{parseAs:"param", affects: ["layout"]},
-        layout_data:{parseAs:"dataTable", affects:["layout"], classname:"LayoutDataView"},
+        layout_data:{parseAs:"dataTable", affects:["layout","nodes"], classname:"LayoutDataView"},
         node_data:{parseAs:"dataTable", affects: ["nodes"], classname:"NodeDataView"},
         graph_data:{parseAs:"dataTable", affects:["layout","edges"],classname:"GraphDataView"},
         layout_url:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
@@ -197,17 +169,12 @@ package {
 			this.options.updateObj.stage = true;
 		}
 
-		this.layoutTable = this.options['layout_data'] as LayoutDataView|| null;
-		this.nodeDataTable = this.options['node_data'] || null;
-
-
-		if (this.layoutTable!=null){
-			this.network.bind_data(this.layoutTable);
+		if (options['layout_data']){
+			this.network.bind_data(options['layout_data']);
 		}
-		if (this.nodeDataTable!=null){
-			trace("calling bind_data");
+		if (options['node_data']){
 			//this.importTimeCourseData(this.nodeDataTable);
-			this.network.bind_data(this.nodeDataTable);
+			this.network.bind_data(options['node_data']);
 		}
 
 		

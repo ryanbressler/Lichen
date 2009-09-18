@@ -68,6 +68,10 @@ package org.systemsbiology.visualization.bionetwork.data
 						this.addEdgeSource(edge, sources[k]);
 					}
 				}
+				if(graphDataTable.getDirectionality(i))
+				{
+					edge.directed=true;
+				}
 			}
 		}
 		
@@ -80,6 +84,7 @@ package org.systemsbiology.visualization.bionetwork.data
 					interactors.push(addNodeIfNotExist(interactor));
 					
 			}
+			//filter out self interactions till we can display them
 			return interactors.length==2 ? addEdgeIfNotExist(interactors[0], interactors[1]) : null;
 		}
 		
@@ -100,10 +105,8 @@ package org.systemsbiology.visualization.bionetwork.data
 			var interactor_name:String;
 			for (var i:Number = 0; i<layoutTable.getNumberOfRows();i++) {
 				interactor_name = layoutTable.getValue(i,0);
-				this.updateNodeParams(interactor_name, {x: layoutTable.getX(i), y: layoutTable.getY(i)});
-				this.setNodeColor(interactor_name, layoutTable.getColor(i));
-				this.setNodeSize(interactor_name, layoutTable.getSize(i));
-				this.setNodeShape(interactor_name, layoutTable.getShape(i));			
+				//TODO: move this to node controller and make it not run n^2 times
+				this.updateNodeParams(interactor_name, {x: layoutTable.getX(i), y: layoutTable.getY(i)});			
 			}
 		}
 //			private function importTimeCourseData(nodeDataTable:DataView):void{
@@ -213,7 +216,7 @@ package org.systemsbiology.visualization.bionetwork.data
 		public function updateNodeParams(name:String, params:Object):void{
 			var node:NodeSprite=this.findNodeByName(name);
 			for(var param:String in params){
-				this.data.nodes.setProperty("props."+param, params[param], null, function(n:NodeSprite):Boolean{return n.data.name==name;});				
+				node.props[param]=params[param];			
 			}
 		}	
 		
@@ -226,18 +229,6 @@ package org.systemsbiology.visualization.bionetwork.data
 		//need to work in backword direction too or just accept edge
 		public function setEdgeColor(source:NodeSprite, target:NodeSprite, color:String):void{
 			
-		}
-		
-		public function setNodeColor(name:String, color:String):void{
-			this.data.nodes.setProperty("fillColor", color, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
-		}	
-		
-		public function setNodeShape(name:String, shape:String):void{
-			this.data.nodes.setProperty("shape", Shapes[shape], null,  function(n:NodeSprite):Boolean{return n.data.name==name;});
-		}		
-		
-		public function setNodeSize(name:String, size:Number):void{
-			this.data.nodes.setProperty("size", size, null, function(n:NodeSprite):Boolean{return n.data.name==name;}); 
 		}	
 		
 		public function checkEdge(name1:String, name2:String, directed:Object = null):Boolean 
