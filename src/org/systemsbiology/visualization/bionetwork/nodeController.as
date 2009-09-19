@@ -4,6 +4,8 @@ package org.systemsbiology.visualization.bionetwork
 	import flare.vis.data.DataSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.operator.label.Labeler;
+	import flare.vis.operator.label.RadialLabeler;
+	import flare.display.TextSprite;
 	
 	import org.systemsbiology.visualization.bioheatmap.discretecolorrange;
 	import org.systemsbiology.visualization.bionetwork.data.Network;
@@ -70,7 +72,7 @@ package org.systemsbiology.visualization.bionetwork
 			if (options['nodeRenderer']=="CircularHeatmap"){
 				circularHeatmap(network,options);
 			}
-			setLabels(network);
+			setLabels(network, options);
 		}
 		
 		private static function circularHeatmap(network : Network,options:Object):void {
@@ -87,13 +89,27 @@ package org.systemsbiology.visualization.bionetwork
 			}			
 		}
 		
-		private static function setLabels(network : Network):void {
+		private static function setLabels(network : Network, options: Object):void {
+			if(options.radial_labels)
+			{
+			var radLabeler:RadialLabeler = new RadialLabeler(function(d:DataSprite):String {
+			return String(d.data.name);
+			},true,options.fmt);
+			radLabeler.radiusOffset = 5;
+			radLabeler.angleOffset = 20;
+			network.operators.add(radLabeler);
+			network.operators.last.textMode = TextSprite.EMBED;
+			}
+			else
+			{
+			
 			var labeller:Labeler = new Labeler(function(d:DataSprite):String {
 			return String(d.data.name);
 			});
 			labeller.yOffset=15;
 			labeller.xOffset=5;
 			network.operators.add(labeller);
+			}
 		}
 
 	}

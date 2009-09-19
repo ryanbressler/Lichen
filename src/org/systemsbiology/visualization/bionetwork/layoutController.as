@@ -24,7 +24,6 @@
 //looks in the option object usually with a snipet like {optionname: options.user_optionname || 2}.
 package org.systemsbiology.visualization.bionetwork
 {
-	import flare.vis.axis.CartesianAxes;
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.operator.layout.CircleLayout;
@@ -46,6 +45,7 @@ package org.systemsbiology.visualization.bionetwork
 		
 		public static function performLayout(network : Network, options : Object):void{
 
+		
 			if (options['layout']=="ForceDirected"){
 				forceDirected(network,options);
 			}
@@ -60,6 +60,7 @@ package org.systemsbiology.visualization.bionetwork
 			}
 			else if (options['layout']=="radialTree")
 			{
+				
 				radialTree(network,options);			
 			}
 			else {
@@ -74,7 +75,6 @@ package org.systemsbiology.visualization.bionetwork
 			{
 				//network.findNodeByName(options.center);
 				var rootincenterlay:RootInCenterCircleLayout = new RootInCenterCircleLayout();
-				
 				network.operators.add(rootincenterlay);
 			}
 			else
@@ -93,8 +93,12 @@ package org.systemsbiology.visualization.bionetwork
 			
 			// place around circle by tree structure, radius mapped to depth
 			// make a large inner radius so labels are closer to circumference
-			network.operators.add(new CircleLayout("depth", null, true));
-			CircleLayout(network.operators.last).startRadiusFraction = 3/5;
+			var circularTree : CircleLayout= new CircleLayout("depth", null, true);
+			
+			network.operators.add(circularTree);
+			CircleLayout(network.operators.last).startRadiusFraction = options["layout_radialTree_startRadiusFraction"] || 3/5;
+			CircleLayout(network.operators.last).padding = 10;
+
 		}
 		
 		public static function GoogleDataTableDriven(network : Network, options : Object):void{
@@ -122,7 +126,7 @@ package org.systemsbiology.visualization.bionetwork
 			//TODO document this
 			network.data.nodes.setProperties({x:315, y:315});
 	    	network.continuousUpdates = options.continuousUpdates || false;
-	    	var fdlay:ForceDirectedLayout = new ForceDirectedLayout(true,options.continuousUpdates?1:120);
+	    	var fdlay:ForceDirectedLayout = new ForceDirectedLayout(true,options.continuousUpdates?1:256);
 	    	fdlay.simulation.nbodyForce.gravitation=-1;  
 	        fdlay.defaultParticleMass= 16;
 	        fdlay.defaultSpringLength=25;

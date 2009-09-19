@@ -7,6 +7,8 @@ package org.systemsbiology.visualization.data
 		private var interactor_name2:String;
 		private var directed:Boolean;	
 		private var directedIndex:Number;
+		private var colorIndex;
+		private var typeIndex;	
 		private var columnName:String;
 		//this breaks the interface; abstract out
 		private var sourcesIndex:Number;
@@ -22,6 +24,12 @@ package org.systemsbiology.visualization.data
 				}
 				else if (this.columnName == 'sources'){
 					this.sourcesIndex = i;
+				}
+				else if (this.columnName == 'color'){
+					this.colorIndex = i;
+				}
+				else if (this.columnName == 'type'){
+					this.typeIndex = i;
 				}
 			}
 		}
@@ -42,6 +50,24 @@ package org.systemsbiology.visualization.data
         	}
         	else {
         		return false;
+        	}
+		}
+		
+		public function getColor(rowIndex:int):String{
+			if (colorIndex){
+        		return this.getValue(rowIndex, colorIndex);
+        	}
+        	else {
+        		return null;
+        	}
+		}
+		
+		public function getType(rowIndex:int):String{
+			if (typeIndex){
+        		return this.getValue(rowIndex, typeIndex);
+        	}
+        	else {
+        		return null;
         	}
 		}
 		

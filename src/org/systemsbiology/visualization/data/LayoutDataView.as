@@ -54,7 +54,7 @@ package org.systemsbiology.visualization.data
         	}
     	}
     	
-    	public function getSize (rowIndex:int):int {
+    	public function getSize (rowIndex:int):Number {
     		if (sizeIndex){
     			return this.getValue(rowIndex, sizeIndex);
     		}

@@ -19,7 +19,6 @@
 package org.systemsbiology.visualization.bionetwork.data
 {
 	import flare.query.methods.*;
-	import flare.util.Shapes;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
 	import flare.vis.data.DataList;
@@ -71,6 +70,14 @@ package org.systemsbiology.visualization.bionetwork.data
 				if(graphDataTable.getDirectionality(i))
 				{
 					edge.directed=true;
+				}
+				if(graphDataTable.getColor(i))
+				{
+					edge.props.color = graphDataTable.getColor(i);
+				}
+				if(graphDataTable.getType(i))
+				{
+					edge.props.type = graphDataTable.getType(i);
 				}
 			}
 		}

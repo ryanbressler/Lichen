@@ -90,7 +90,7 @@ package {
         // the compiler will link in the font.
         private var _font1:Class;
         private var _fontHeight:int = 14;                
-        private var  _labelTextFormat : TextFormat = new TextFormat('myHelveticaFont',14);      
+        private var  _labelTextFormat : TextFormat = new TextFormat('myHelveticaFont',10);      
        //obj holding configuration options
        //maybe this object should store defaults too?
         private var optionsListObject : Object = {
@@ -108,6 +108,7 @@ package {
         legend:{parseAs:"param", affects:[]},
         layout_type: {parseAs:"param", affects:["layout"]},
         layout: {parseAs:"param", affects:["layout"]},
+        layout_radialTree_startRadiusFraction: {parseAs:"param", affects:["layout"]},
         CircularHeatmap:{parseAs:"bundle", affects:["nodes"]},
         nodeRenderer:{parseAs:"param", affects:["nodes"]},
         edgeRenderer:{parseAs:"param", affects:["edges"]},
@@ -119,6 +120,7 @@ package {
         node_fillColor:{parseAs:"color", affects:["nodes"]},
         node_lineWidth:{parseAs:"param", affects:["nodes"]},
         node_tooltips:{parseAs:"param", affects:["nodes"]},
+        radial_labels:{parseAs:"param", affects:["nodes"]},
         edge_lineWidth:{parseAs:"param", affects:["edges"]},
         edge_lineColor:{parseAs:"param", affects:["edges"]},
         edge_router:{parseAs:"param", affects:["edges"]},
@@ -162,12 +164,17 @@ package {
 		//TO DO: Make the way DataViews are created consistent
 		if (dataJSON!=''){
 			this.graphTable = new GraphDataView(dataJSON, "");
+			if(options.center)
+			{
+				this.network.addNodeIfNotExist(options.center);
+			}
 			this.network.bind_data(this.graphTable);
 			this.options.updateObj.layout = true;
 			this.options.updateObj.nodes = true;
 			this.options.updateObj.edges = true;
 			this.options.updateObj.stage = true;
 		}
+		options.fmt = this._labelTextFormat;
 
 		if (options['layout_data']){
 			this.network.bind_data(options['layout_data']);
