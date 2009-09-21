@@ -109,7 +109,7 @@ package
                 // multiple setSelection_____ calls between _clearSelection calls
 				
 				//clears the selection in the AS context
-				protected override function _clearSelection() : void {
+				protected override function _clearSelectionDisplay() : void {
 
 					
 					
