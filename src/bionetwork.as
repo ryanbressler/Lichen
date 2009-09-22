@@ -20,6 +20,7 @@ package {
 	import com.adobe.serialization.json.JSON;
 	
 	import flare.display.TextSprite;
+	import flare.util.Shapes;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
 	import flare.vis.data.DataSprite;
@@ -106,6 +107,7 @@ package {
         sproutable:{parseAs:"param", affects: ["nodes"]},
         //should become bundle
         legend:{parseAs:"param", affects:[]},
+        legend_values: {parseAs:"param", affects:["layout"]},
         layout_type: {parseAs:"param", affects:["layout"]},
         layout: {parseAs:"param", affects:["layout"]},
         layout_radialTree_startRadiusFraction: {parseAs:"param", affects:["layout"]},
@@ -214,10 +216,19 @@ package {
 
 		addChild(this.network);
 		this.network.update();
+		
 	}	
 	
 	private function createLegend():void {
-		var legend_fmt:TextFormat = new TextFormat("Verdana",14);
+		if(options.legend_values)
+		{
+			for (var i:Number = 0; i<options.legend_values.length;i++) {
+				if(options.legend_values[i].shape)
+				{
+					options.legend_values[i].shape=Shapes[options.legend_values[i].shape];
+				}
+			}
+		}
 		legend = Legend.fromValues(null, options.legend_values || [
 				{color: 0x3366CC, size: 0.75, label: "HPRD"},
 				{color: 0x339900, size: 0.75, label: "MINT"},
@@ -225,10 +236,11 @@ package {
 				{color: 0xFF6600, size: 0.75, label: "MIPS"},
 				{color: 0xFF0000, size: 0.75, label: "BioGRID"}
 			]);
-			legend.labelTextFormat = legend_fmt;
+			legend.labelTextFormat = this._labelTextFormat;
 			//legend.labelTextMode = TextSprite.EMBED;
 			legend.update();
 			addChild(legend);
+			
 	}
 
 	//DATA IMPORT FUNCTIONS
@@ -271,7 +283,7 @@ package {
 			var node:NodeSprite = this.network.data.nodes[i];
 
 			node.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
-
+			node.addEventListener(MouseEvent.DOUBLE_CLICK,this._nodeDoubleClickHandeler);
 			if(!node.props.islabel)
 				_appendSelectionInfo(node,{node:node.data.name});
 					
@@ -282,6 +294,14 @@ package {
 			var edge:EdgeSprite = this.network.data.edges[i];
 			edge.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
 			_appendSelectionInfo(edge,{row:i});
+		}
+	}
+	
+	private function _nodeDoubleClickHandeler(eventObject: MouseEvent): void {
+		if(eventObject.currentTarget is NodeSprite)
+		{
+			var ns : NodeSprite = eventObject.currentTarget as NodeSprite;
+			this._bubbleEvent("nodedoubleclick",{node:{name:ns.data.name}});
 		}
 	}
 	
