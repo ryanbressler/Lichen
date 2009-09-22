@@ -284,6 +284,7 @@ package {
 
 			node.addEventListener(MouseEvent.CLICK,this._selectionHandeler);
 			node.addEventListener(MouseEvent.DOUBLE_CLICK,this._nodeDoubleClickHandeler);
+			node.doubleClickEnabled=true;
 			if(!node.props.islabel)
 				_appendSelectionInfo(node,{node:node.data.name});
 					
