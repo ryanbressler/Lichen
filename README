@@ -116,7 +116,7 @@ Table of Contents
 				-(Alpha) lets node expanded to add neigbhoring nodes
 				
 		Layout Options:
-			layout_type:
+			layout:
 				Circular
 				Random
 				ForceDirected

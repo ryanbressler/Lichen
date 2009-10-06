@@ -95,6 +95,8 @@ package {
        //obj holding configuration options
        //maybe this object should store defaults too?
         private var optionsListObject : Object = {
+        	
+        //datatables 
 
 		nodeClusters:{parseAs:"dataTable", affects: ["layout"]},
         nodeClusterPositions:{parseAs:"param", affects: ["layout"]},
@@ -103,22 +105,15 @@ package {
         graph_data:{parseAs:"dataTable", affects:["layout","edges"],classname:"GraphDataView"},
         layout_url:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
         attributes:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
-        clickdrag:{parseAs:"param", affects: ["nodes"]},
-        sproutable:{parseAs:"param", affects: ["nodes"]},
-        //should become bundle
-        legend:{parseAs:"param", affects:[]},
-        legend_values: {parseAs:"param", affects:["layout"]},
-        layout_type: {parseAs:"param", affects:["layout"]},
-        layout: {parseAs:"param", affects:["layout"]},
-        layout_radialTree_startRadiusFraction: {parseAs:"param", affects:["layout"]},
-        CircularHeatmap:{parseAs:"bundle", affects:["nodes"]},
-        nodeRenderer:{parseAs:"param", affects:["nodes"]},
-        edgeRenderer:{parseAs:"param", affects:["edges"]},
-        center:{parseAs:"param", affects:["layout"]},
-        MultiEdge:{parseAs:"bundle", affects:["edges"]}, //needs to be bundle so you can assign colors to sourcenames?
-        padding:{parseAs:"param", affects:["stage"]},
+        
+        //singular options
+        //basic apearance
+            
         width:{parseAs:"param", affects:["stage"]},
         height:{parseAs:"param", affects:["stage"]},
+        padding:{parseAs:"param", affects:["stage"]},
+        layout: {parseAs:"param", affects:["layout"]},
+        center:{parseAs:"param", affects:["layout"]},
         node_fillColor:{parseAs:"color", affects:["nodes"]},
         node_lineWidth:{parseAs:"param", affects:["nodes"]},
         node_tooltips:{parseAs:"param", affects:["nodes"]},
@@ -130,10 +125,24 @@ package {
         selection_persistDisplay:{parseAs:"param", affects:[]},
         selection_lineColor:{parseAs:"param", affects: []},
         selection_lineWdith:{parseAs:"param", affects:[]},
-        selection_lineAlpha:{parseAs:"param", affects:[]},
-        events: {parseAs:"bundle", affects:[]},
+        selection_lineAlpha:{parseAs:"param", affects:[]}, 
+        clickdrag:{parseAs:"param", affects: ["nodes"]},
+        
+        //advanced options
+
+        legend:{parseAs:"param", affects:[]},
+        legend_values: {parseAs:"param", affects:["layout"]},
+        CircularHeatmap:{parseAs:"bundle", affects:["nodes"]},
+        nodeRenderer:{parseAs:"param", affects:["nodes"]},
+        edgeRenderer:{parseAs:"param", affects:["edges"]}, 
+        MultiEdge:{parseAs:"bundle", affects:["edges"]}, //needs to be bundle so you can assign colors to sourcenames? 
         maxval: {parseAs:"param", affects:["nodes"]},
-        minval: {parseAs:"param", affects:["nodes"]}
+        minval: {parseAs:"param", affects:["nodes"]},
+        
+        //undocumented opions that may be removed
+        events: {parseAs:"bundle", affects:[]},
+        layout_radialTree_startRadiusFraction: {parseAs:"param", affects:["layout"]},
+        sproutable:{parseAs:"param", affects: ["nodes"]}
         };
 
 	//for basic network	
