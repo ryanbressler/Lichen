@@ -99,6 +99,7 @@ package org.systemsbiology.visualization.bionetwork
 			radLabeler.angleOffset = 20;
 			network.operators.add(radLabeler);
 			network.operators.last.textMode = TextSprite.EMBED;
+			
 			}
 			else
 			{

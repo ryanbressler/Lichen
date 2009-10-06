@@ -131,9 +131,9 @@ package {
         selection_lineColor:{parseAs:"param", affects: []},
         selection_lineWdith:{parseAs:"param", affects:[]},
         selection_lineAlpha:{parseAs:"param", affects:[]},
-       events: {parseAs:"bundle", affects:[]},
-       maxval: {parseAs:"param", affects:["nodes"]},
-       minval: {parseAs:"param", affects:["nodes"]}
+        events: {parseAs:"bundle", affects:[]},
+        maxval: {parseAs:"param", affects:["nodes"]},
+        minval: {parseAs:"param", affects:["nodes"]}
         };
 
 	//for basic network	
@@ -208,6 +208,7 @@ package {
 		}
 		if (options['clickdrag']!=false){
 			var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);
+
 			this.network.controls.add(cdc);
 		}
 		if (this.options['legend'] && this.options['legend']!='false' ){
@@ -216,7 +217,6 @@ package {
 
 		addChild(this.network);
 		this.network.update();
-		
 	}	
 	
 	private function createLegend():void {

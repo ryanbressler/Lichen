@@ -89,12 +89,14 @@ Table of Contents
 			-[2]->(v->interactor_value2, f->interactor_name2)
 			-sources->comma separated list
 			-directed->boolean
+			-color ->"0xAARRGGBB"
+			-type->"TRIANGLE"||"LINES"||"NONE
 	Options:
 
-		Additional Data Options:
+		Additional DataTable Options:
 			center:
-				name of root/center node used by some layouts
-			layout_data
+				name of root/center node used by some layouts (radial tree)
+			layout_data (data_table)
 				-shape->Circle, Square, Diamond, TriangleDown, TriangleUp, TriangleRight, TriangleLeft, Cross
 				-color->hex string
 				-size (integer)
@@ -104,6 +106,7 @@ Table of Contents
 		
 			node_data 
 				-anything with "t_(*)" gets interpreted as a timepoint. example: t_0, t_1, etc
+			nodeClusters
 	
 		Control Options:
 		
@@ -117,16 +120,10 @@ Table of Contents
 				Circular
 				Random
 				ForceDirected
-					defaultParticleMass
-					defaultSpringLength
-					defaultSpringTension
-					defaultSpringDamping
-					3DForceDirectedLayout
-					RadialTreeLayout
-					GoogleDataTableDriven 
-					BundledEdges  
-					CircularWCenter
-						-center 
+				3DForceDirectedLayout
+				RadialTreeLayout
+				GoogleDataTableDriven 
+				radialTree
 					SVDLayout
 		
 		Node renderering options:
@@ -149,7 +146,7 @@ Table of Contents
 				{color: 0xFF6600, size: 0.75, label: "MIPS"},
 				{color: 0xFF0000, size: 0.75, label: "BioGRID"}
 			] 
-				this option won't work till we upgrade to acept nested values
+				
 	
 		
 		Apearance Options:

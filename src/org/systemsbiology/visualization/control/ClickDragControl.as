@@ -20,9 +20,10 @@ package org.systemsbiology.visualization.control{
 import flare.vis.controls.Control;
 import flare.vis.data.DataSprite;
 import flare.vis.events.SelectionEvent;
-import flash.display.Sprite;
+
 import flash.display.DisplayObject;
 import flash.display.InteractiveObject;
+import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
@@ -111,6 +112,7 @@ public class ClickDragControl extends Control
 	{
 		if (_object != null) {
 			_object.removeEventListener(MouseEvent.CLICK, onClick);
+			_object.removeEventListener(MouseEvent.DOUBLE_CLICK, onClick);
 			_object.removeEventListener(MouseEvent.MOUSE_DOWN, onDown);
 			_object.removeEventListener(MouseEvent.MOUSE_UP, onUp);
 			_object.removeEventListener(MouseEvent.MOUSE_MOVE, onDrag);
@@ -136,7 +138,10 @@ public class ClickDragControl extends Control
 			if (!_cur.stage.hasEventListener(MouseEvent.MOUSE_MOVE)) {
 				_cur.stage.addEventListener(MouseEvent.MOUSE_MOVE, onDrag);
 			}
+			
 			_object.addEventListener(MouseEvent.CLICK, onClick);
+			_object.addEventListener(MouseEvent.DOUBLE_CLICK, onClick);	
+
 			
 			event.stopPropagation();
 		}
@@ -157,11 +162,13 @@ public class ClickDragControl extends Control
 		}
 		
 		_object.removeEventListener(MouseEvent.CLICK, onClick);     //dragging -> no click event
+		_object.removeEventListener(MouseEvent.DOUBLE_CLICK, onClick);
 		_object.stage.addEventListener(MouseEvent.MOUSE_UP, onUp);  
 	}
 	
 	private function onClick(event:MouseEvent):void
 	{
+
 		var n:DisplayObject = event.target as DisplayObject;
 		if (n==null || (_filter!=null && !_filter(n))) {
 			_clicks++;
