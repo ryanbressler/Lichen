@@ -54,6 +54,9 @@
 <div class="g-unit g-first" id="gc-toc">
     <ul class="treelist tlw-nested-only tlw-processed tlw-instance-0">
         <li><h2 class="tlw-ignore">Systemsbiology.org Visualizations</h2>
+          <li id="home_link1">
+             <a href="http://groups.google.com/group/systemsbiology-visualizations/web/visualizations-summary" title="">Project Home</a>
+          </li>
 
             <ul>
 
@@ -63,14 +66,12 @@
                             src="docs/cleardot.gif" alt=""
                             class="tlw-control tlw-minus"></a>
 
-                        <h2 class="tlw-expanded">BioHeatMap</h2></div>
+                        <h2 class="tlw-expanded">BioHeatMap (js)</h2></div>
                     <ul style="display: block;" id="0-sub-0">
-                        <li id="home_link1">
-                            <a href="http://groups.google.com/group/systemsbiology-visualizations/web/visualizations-summary" title="">Project Home</a>
-                        </li>
+
 
                         <li id="docs_link1">
-                            <a href="http://systemsbiology-visualizations.googlegroups.com/web/bioheatmap.html" title="" class="selected">Docs</a>
+                            <a href="http://systemsbiology-visualizations.googlegroups.com/web/bioheatmap.html" title="">Docs</a>
                         </li>
 
                         <li id="faq_link1">
@@ -83,6 +84,55 @@
 
                     </ul>
                 </li>
+                
+                <li style="padding-top: 0pt; padding-bottom: 0pt;">
+                    <div class="tlw-title tlw-branch"><a href="javascript:void(0)" class="tlw-control"
+                                                         title=""><img
+                            src="docs/cleardot.gif" alt=""
+                            class="tlw-control tlw-minus"></a>
+
+                        <h2 class="tlw-expanded">Lichen BioHeatMap (flash)</h2></div>
+                    <ul style="display: block;" id="0-sub-0">
+
+                        <li id="docs_link1">
+                            <a href="bioheatmap.html" title="">Docs</a>
+                        </li>
+
+                        <li id="faq_link1">
+                            <a href="bioheatmap_examples.html" title="">Examples</a>
+                        </li>
+
+                        <li>
+                            <a href="bioheatmap.zip" title="">Download</a>
+                        </li>
+
+                    </ul>
+                </li>
+                
+                <li style="padding-top: 0pt; padding-bottom: 0pt;">
+                    <div class="tlw-title tlw-branch"><a href="javascript:void(0)" class="tlw-control"
+                                                         title=""><img
+                            src="docs/cleardot.gif" alt=""
+                            class="tlw-control tlw-minus"></a>
+
+                        <h2 class="tlw-expanded">Lichen Network Viewer (flash)</h2></div>
+                    <ul style="display: block;" id="0-sub-0">
+
+                        <li id="docs_link1">
+                            <a href="bionetwork.html" title="" class="selected">Docs</a>
+                        </li>
+
+                        <li id="faq_link1">
+                            <a href="bionetwork_examples.html" title="">Examples</a>
+                        </li>
+
+                        <li>
+                            <a href="bionetwork.zip" title="">Download</a>
+                        </li>
+
+                    </ul>
+                </li>
+                
             </ul>
         </li>
     </ul>
@@ -93,7 +143,7 @@
 <a name="gc-pagecontent-anchor"></a>
 
 <div style="position: relative;" class="g-unit" id="gc-pagecontent">
-<h1 class="page_title">Visualization: BioHeatMap</h1>
+<h1 class="page_title">Visualization: Lichen Network Viewer</h1>
 
 
 <div class="toc">
@@ -522,7 +572,7 @@ The entire Lichen code base is implemented in actionscript/flash and platform-in
     </tbody>
     </table>
     
-    And the following optional columns specified by title:
+   <p>And the following optional columns specified by title:</p>
     
     <table>
     <tbody>
@@ -566,14 +616,14 @@ Basic Options:
         </tr>
         <tr><td>width</td>
             <td>Number</td>
-            <td>
+            <td>630
         	</td>
             <td>The width of the visualization in pixels.
             </td>
         </tr>
         <tr><td>height</td>
             <td>Number</td>
-            <td>
+            <td>630
         	</td>
             <td>The height of the visualization in pixels.
             </td>
@@ -581,7 +631,7 @@ Basic Options:
         <tr>
             <td>padding</td>
             <td>Number</td>
-            <td>0
+            <td>5
             </td>
             <td>The amount of padding between the edge of the visualization and the edge of the swf object.
             </td>    
@@ -603,7 +653,7 @@ Basic Options:
         </tr>
         <tr><td>node_fillColor</td>
             <td>Color String</td>
-            <td>
+            <td>"0x880055cc"
         	</td>
             <td>The default node color specified in hex as "0xAARRGGBB."
             </td>
@@ -622,76 +672,71 @@ Basic Options:
             <td>
             </td>
         </tr>
-        <tr><td>radial_labels</td>
+        <tr><td>node_labels_radial</td>
             <td>Bool</td>
             <td>FALSE
         	</td>
             <td>
             </td>
         </tr>
-        <tr><td>edge_lineWidth</td>
-            <td>Number</td>
-            <td>
-        	</td>
-            <td>
-            </td>
-        </tr>
-        <tr><td>edge_lineColor</td>
-            <td></td>
-            <td>
-        	</td>
-            <td>
-            </td>
-        </tr>
-        <tr><td>edge_router</td>
-            <td></td>
-            <td>
-        	</td>
-            <td>
-            </td>
-        </tr>
-        <tr><td>selection_display</td>
-            <td></td>
-            <td>
-        	</td>
-            <td>
-            </td>
-        </tr>
-        <tr><td>selection_persistDisplay</td>
-            <td></td>
-            <td>
-        	</td>
-            <td>
-            </td>
-        </tr>
-        <tr><td>selection_lineColor</td>
-            <td></td>
-            <td>
-        	</td>
-            <td>
-            </td>
-        </tr>
-        <tr><td>selection_lineWdith</td>
-            <td></td>
-            <td>
-        	</td>
-            <td>
-            </td>
-        </tr>
-        <tr><td>selection_lineAlpha</td>
-            <td></td>
-            <td>
-        	</td>
-            <td>
-            </td>
-        </tr>
-        <tr><td>clickdrag</td>
+        <tr><td>node_clickdrag</td>
             <td>Bool</td>
             <td>TRUE
         	</td>
             <td>Can nodes be dragged around.
             </td>
         </tr>
+        <tr><td>edge_lineWidth</td>
+            <td>Number</td>
+            <td>2
+        	</td>
+            <td>The default width of each edge.
+            </td>
+        </tr>
+        <tr><td>edge_lineColor</td>
+            <td>Color String</td>
+            <td>"0x66000000"
+        	</td>
+            <td>The defaulte edge color.
+            </td>
+        </tr>
+        
+        <tr><td>selection_display</td>
+            <td>String</td>
+            <td>
+        	</td>
+            <td>Default is to display nodes and edge selection "nodes","edges" or "none". To view edge selection you may need to midofy the other selection display options.
+            </td>
+        </tr>
+        <tr><td>selection_persistDisplay</td>
+            <td>bool</td>
+            <td>true
+        	</td>	
+            <td>Should seletion dislapy be perminant or flash.
+            </td>
+        </tr>
+        <tr><td>selection_lineColor</td>
+            <td>Color String</td>
+            <td>
+        	</td>
+            <td>If present selection display will use this color.
+            </td>
+        </tr>
+        <tr><td>selection_lineWdith</td>
+            <td>Number</td>
+            <td>3
+        	</td>
+            <td>Used to resize lines/boarders to display selection.
+            </td>
+        </tr>
+        <tr><td>selection_lineAlpha</td>
+            <td>Number</td>
+            <td>1
+        	</td>
+            <td>Used to change the alpha of lines/boarders to display selection.
+            </td>
+        </tr>
+        
         
         
         
@@ -710,59 +755,56 @@ Advanced Options:
             <th>Description</th>
         </tr>
         <tr><td>legend</td>
-            <td></td>
+            <td>Array of Objects</td>
             <td>
         	</td>
-            <td>
+            <td>An array of objects used to create a legend. Example : 
+            <code>[
+				{color: 0x3366CC, size: 0.75, label: "HPRD"},
+				{color: 0x339900, size: 0.75, label: "MINT"," shape:"TRIANGLE_RIGHT"}
+			]</code>
             </td>
         </tr>
-        <tr><td>legend_values</td>
-            <td></td>
+        <tr><td>node_renderer</td>
+            <td>String</td>
             <td>
         	</td>
-            <td>
+            <td>Used to specify custom node renders, can be set too "CircularHeatmap."
             </td>
         </tr>
-        <tr><td>CircularHeatmap</td>
-            <td></td>
+        <tr><td>edge_renderer</td>
+            <td>String</td>
             <td>
         	</td>
-            <td>
+            <td>Used to specify custom edge renders, can be set to "multiedge."
             </td>
         </tr>
-        <tr><td>nodeRenderer</td>
-            <td></td>
+        <tr><td>edge_router</td>
+            <td>String</td>
             <td>
         	</td>
-            <td>
+            <td>Used to specify custom edge routers. Can be set to 'bundled'.
             </td>
         </tr>
-        <tr><td>edgeRenderer</td>
-            <td></td>
+        <tr><td>CircularHeatmap_maxval</td>
+            <td>Number</td>
             <td>
         	</td>
-            <td>
+            <td>The maximum value for use in the circular heatmap.
             </td>
         </tr>
-        <tr><td>MultiEdge</td>
-            <td></td>
+        <tr><td>CircularHeatmap_minval</td>
+            <td>Number</td>
             <td>
         	</td>
-            <td>
+            <td>The minumum value for use in the circular heatmap.
             </td>
         </tr>
-        <tr><td>maxval</td>
-            <td></td>
-            <td>
+        <tr><td>nodeClusterPositions</td>
+            <td>Array</td>
+            <td>NULL
         	</td>
-            <td>
-            </td>
-        </tr>
-        <tr><td>minval</td>
-            <td></td>
-            <td>
-        	</td>
-            <td>
+            <td>An optionsl array specifying positions at which to fix node clusters. Only used by the extended force directed layout. Should be of the format <code>[{x:postion1x,y:position1y},{x:postion1x,y:position1y},...]</code>.
             </td>
         </tr>
         
@@ -776,18 +818,92 @@ Optional DataTables:
     <tbody>
         <tr>
             <th>Name</th>
-            <th>Type</th>
-            <th>Default</th>
             <th>Description</th>
         </tr>
         <tr>
-            <td>startColor</td>
-            <td>Object</td>
-            <td>Defaults to <span style="color:#00ff00">green</span>. This is a simple object with red, green, blue and alpha attributes set.
-                <br>Valid r/g/b values range from 0 to 255.
-                Valid a values range from 0 to 1.
+            <td>layout_data</td>
+            <td>
+             Required Columns:
+             <table>  
+			    <tbody>
+			        <tr>
+			            <th>Position</th>
+			            <th>Description</th>
+			        </tr>
+			        <tr>
+			        	<td>0</td>
+			        	<td>Node Id</td>
+			        </tr>
+			        <tr>
+			        	<td>1-n</td>
+			        	<td>Columns 1-n are used to specify arbitrary data. Columns with titles begining with "t_" will be views as time points to be used by the circular heatmap if it is enabled.</td>
+			        </tr>
+			    </tbody>
+			 </table>
+             Optional Columns Specified by Title:
+             <table>
+			    
+			    <tbody>
+			        <tr>
+			            <th>Title</th>
+			            <th>Description</th>
+			        </tr>
+			        <tr>
+			        	<td>shape</td>
+			        	<td>A string specifying one of the flare shape constants: "CIRCLE", "SQUARE", "DIAMOND", "TRIANGLEDOWN", "TRIANGLEUP", "TRIANGLERIGHT", "TRIANGLELEFT", "CROSS" or "X."</td>
+			        </tr>
+			        <tr>
+			        	<td>color</td>
+			        	<td>A string of the form "0xAARRGGBB" specifying a color.</td>
+			        </tr>
+			        <tr>
+			        	<td>size</td>
+			        	<td>A number specifying a size multiplyer to apply to the node.</td>
+			        </tr>
+			        <tr>
+			        	<td>x</td>
+			        	<td>An int specifying the x position of the node in pixels.</td>
+			        </tr>
+			        <tr>
+			        	<td>y</td>
+			        	<td>An int specifying the y position of the node in pixels.</td>
+			        </tr>
+			    </tbody>
+			 </table>
             </td>
         </tr>
+        <tr>
+            <td>node_data</td>
+            <td>
+             	Used for specifying a list of data to be used with the circularheatmap, needs to be cleaned up and may be merged with layout data.
+            	Columns:
+             <table>  
+			    <tbody>
+			        <tr>
+			            <th>Position</th>
+			            <th>Description</th>
+			        </tr>
+			        <tr>
+			        	<td>0</td>
+			        	<td>Node Id</td>
+			        </tr>
+			        <tr>
+			        	<td>1-n</td>
+			        	<td>Columns 1-n are used to specify arbitrary data. Columns with titles begining with "t_" will be views as time points to be used by the circular heatmap if it is enabled.</td>
+			        </tr>
+			    </tbody>
+			 </table>
+            </td>
+        </tr>
+        <tr>
+            <td>nodeClusters</td>
+            <td>
+            Used by cluster aware layouts to determine which clusters nodes belong to. 
+            Column 0 should contain node ids and column 1-n should be boolean columns representing cluster membership. 
+            Cluster names are determined from column labels.
+            </td>
+        </tr>
+   
         
     </tbody>
 </table>
@@ -825,10 +941,26 @@ Optional DataTables:
         <tr>
             <td><code>setSelection(selection)</code></td>
             <td>none</td>
-            <td>selection is an array of selected items. Items can be either nodes specifies as {node;"node_id"} or edges specified  by row number in <i>data</i>: {row:row_num}.
+            <td>selection is an array of selected items. Items can be either nodes specified as <code>{node;"node_id"}</code> or edges specified  by row number in the data parmater: <code>{row:row_num}</code>.
             
             </td>
         </tr>
+        <tr>
+        	<td><code>add_edge_from_to</code></td>
+        	<td>none</td>
+        	<td>beta</td>
+        </tr>
+        <tr>
+        	<td><code>remove_node_by_name</code></td>
+        	<td>none</td>
+        	<td>beta</td>
+        </tr>
+        <tr>
+        	<td><code>remove_edge_from_to</code></td>
+        	<td>none</td>
+        	<td>beta</td>
+        </tr>
+        
     </tbody>
 </table>
 
@@ -851,17 +983,17 @@ Optional DataTables:
         </tr>
         <tr>
             <td>nodeclick</td>
-            <td>target.node.name</td>
-            <td></td>
+            <td>Fired on a node click, handeler should accept a single paramater, <code>target</code>.</td>
+            <td><code>target.node.name</code></td>
         </tr>
         <tr>
             <td>nodedoubleclick</td>
-            <td>target.node.name</td>
-            <td></td>
+            <td>Fired on a node double click, handeler should accept a single paramater, <code>target</code>.</td>
+            <td><code>target.node.name</code></td>
         </tr>
         <tr>
             <td>edgeclick</td>
-            <td></td>
+            <td>Fired on edge click, handeler should accept a single paramater but the edge id is not currently available from this event.</td>
             <td></td>
         </tr>
         

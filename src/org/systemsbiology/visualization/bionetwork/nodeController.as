@@ -69,17 +69,15 @@ package org.systemsbiology.visualization.bionetwork
 //				lineWidth: options.node_lineWidth || 0.5,
 //				buttonMode: true });
 
-			if (options['nodeRenderer']=="CircularHeatmap"){
+			if (options['node_renderer']=="CircularHeatmap"){
 				circularHeatmap(network,options);
 			}
 			setLabels(network, options);
 		}
 		
 		private static function circularHeatmap(network : Network,options:Object):void {
-			var maxvalue:Number = int(options['maxval']);
-			var minvalue:Number = int(options['minval']);
-			trace(options['maxvalue']);
-			trace(options['minvalue']);
+			var maxvalue:Number = int(options['CircularHeatmap_maxval']);
+			var minvalue:Number = int(options['CircularHeatmap_minval']);
 			var dataRange : Object = { min: minvalue, max: maxvalue };
 			var discreteColorRange : discretecolorrange = new discretecolorrange(64, dataRange, {});
 			//network.data.nodes.setProperties({renderer: CircularHeatmapRenderer.instance});
@@ -90,7 +88,7 @@ package org.systemsbiology.visualization.bionetwork
 		}
 		
 		private static function setLabels(network : Network, options: Object):void {
-			if(options.radial_labels)
+			if(options.node_labels_radial)
 			{
 			var radLabeler:RadialLabeler = new RadialLabeler(function(d:DataSprite):String {
 			return String(d.data.name);

@@ -19,9 +19,7 @@
 package {
 	import com.adobe.serialization.json.JSON;
 	
-	import flare.display.TextSprite;
 	import flare.util.Shapes;
-	import flare.vis.Visualization;
 	import flare.vis.data.Data;
 	import flare.vis.data.DataSprite;
 	import flare.vis.data.EdgeSprite;
@@ -42,45 +40,20 @@ package {
 	import org.systemsbiology.visualization.control.ClickDragControl;
 	import org.systemsbiology.visualization.data.DataView;
 	import org.systemsbiology.visualization.data.GraphDataView;
-	import org.systemsbiology.visualization.data.LayoutDataView;
-	import org.systemsbiology.visualization.data.NodeDataView;
 	//This class is primarily responsible for configuring the network from the data in Google data tables and options passed in from the view.
 	//for now, updates cause the sprite to be redrawn completely. The data update is sort of smart (appends to data table rather than rewriting).
 	//the network object persists the data
 	public class bionetwork extends GoogleVisAPISprite
 	{	
-		private var data:Data = new Data();
-		private var network:Network = new Network(data);		
+		
+		private var network:Network = new Network(new Data());	
+		
 		//config variables
 		private var options:Object; 
-		private var centerNode:int;
-		private var layoutTable:LayoutDataView;
-		private var nodeDataTable:NodeDataView;
-		private var tempTable:DataView;
-		private var layoutType:String;
 		private var dataTable:DataView;
 		private var graphTable:GraphDataView;
-		private var attributesTable:DataView;
-		private var visWidth:int = stage.stageWidth;
-		private var visHeight:int = stage.stageHeight;
-		private var vis:Visualization;
-		private var _fmt:TextFormat = new TextFormat("Verdana", 14);
-		private var _detail:TextSprite;
-		private var maxLabelWidth:Number;
-		private var maxLabelHeight:Number;
-		private var _trans:Object = {};
-		private var _nodes:Array;
-		private var regularColor:uint = 0xff0000ff;
-		private var rootColor:uint = 0xffff0000;
-		private var frameSize:int=40;
-		private var lastRoot:NodeSprite = null;
-		private var info1:TextSprite;
-		private var info2:TextSprite;
-		private var legend:Legend;
-		private var update:Boolean;
 
-		
-		
+
 		//font
         // We must embed a font so that we can rotate text and do other special effects
            [Embed(systemFont='Helvetica', 
@@ -92,57 +65,50 @@ package {
         private var _font1:Class;
         private var _fontHeight:int = 14;                
         private var  _labelTextFormat : TextFormat = new TextFormat('myHelveticaFont',10);      
+       
        //obj holding configuration options
        //maybe this object should store defaults too?
-        private var optionsListObject : Object = {
-        	
-        //datatables 
-
-		nodeClusters:{parseAs:"dataTable", affects: ["layout"]},
-        nodeClusterPositions:{parseAs:"param", affects: ["layout"]},
-        layout_data:{parseAs:"dataTable", affects:["layout","nodes"], classname:"LayoutDataView"},
-        node_data:{parseAs:"dataTable", affects: ["nodes"], classname:"NodeDataView"},
-        graph_data:{parseAs:"dataTable", affects:["layout","edges"],classname:"GraphDataView"},
-        layout_url:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
-        attributes:{parseAs:"dataTable", affects: ["nodes", "edges", "layout"]},
-        
-        //singular options
-        //basic apearance
-            
-        width:{parseAs:"param", affects:["stage"]},
-        height:{parseAs:"param", affects:["stage"]},
-        padding:{parseAs:"param", affects:["stage"]},
-        layout: {parseAs:"param", affects:["layout"]},
-        center:{parseAs:"param", affects:["layout"]},
-        node_fillColor:{parseAs:"color", affects:["nodes"]},
-        node_lineWidth:{parseAs:"param", affects:["nodes"]},
-        node_tooltips:{parseAs:"param", affects:["nodes"]},
-        radial_labels:{parseAs:"param", affects:["nodes"]},
-        edge_lineWidth:{parseAs:"param", affects:["edges"]},
-        edge_lineColor:{parseAs:"param", affects:["edges"]},
-        edge_router:{parseAs:"param", affects:["edges"]},
-        selection_display:{parseAs:"param", affects:[]}, //this is tricky b/c the value determines what if affects
-        selection_persistDisplay:{parseAs:"param", affects:[]},
-        selection_lineColor:{parseAs:"param", affects: []},
-        selection_lineWdith:{parseAs:"param", affects:[]},
-        selection_lineAlpha:{parseAs:"param", affects:[]}, 
-        clickdrag:{parseAs:"param", affects: ["nodes"]},
-        
-        //advanced options
-
-        legend:{parseAs:"param", affects:[]},
-        legend_values: {parseAs:"param", affects:["layout"]},
-        CircularHeatmap:{parseAs:"bundle", affects:["nodes"]},
-        nodeRenderer:{parseAs:"param", affects:["nodes"]},
-        edgeRenderer:{parseAs:"param", affects:["edges"]}, 
-        MultiEdge:{parseAs:"bundle", affects:["edges"]}, //needs to be bundle so you can assign colors to sourcenames? 
-        maxval: {parseAs:"param", affects:["nodes"]},
-        minval: {parseAs:"param", affects:["nodes"]},
-        
-        //undocumented opions that may be removed
-        events: {parseAs:"bundle", affects:[]},
-        layout_radialTree_startRadiusFraction: {parseAs:"param", affects:["layout"]},
-        sproutable:{parseAs:"param", affects: ["nodes"]}
+        private var optionsListObject : Object = {	
+	        //datatables 	
+	        layout_data:{parseAs:"dataTable", affects:["layout","nodes"], classname:"LayoutDataView"},
+	        node_data:{parseAs:"dataTable", affects: ["nodes"], classname:"NodeDataView"},
+	        nodeClusters:{parseAs:"dataTable", affects: ["layout"]},
+	        
+	        
+	        //singular options
+	        //basic apearance	            
+	        width:{parseAs:"param", affects:["stage"]},
+	        height:{parseAs:"param", affects:["stage"]},
+	        padding:{parseAs:"param", affects:["stage"]},
+	        layout: {parseAs:"param", affects:["layout"]},
+	        center:{parseAs:"param", affects:["layout"]},
+	        node_fillColor:{parseAs:"color", affects:["nodes"]},
+	        node_lineWidth:{parseAs:"param", affects:["nodes"]},
+	        node_tooltips:{parseAs:"param", affects:["nodes"]},
+	        node_clickdrag:{parseAs:"param", affects: ["nodes"]},
+	        node_labels_radial:{parseAs:"param", affects:["nodes"]},
+	        edge_lineWidth:{parseAs:"param", affects:["edges"]},
+	        edge_lineColor:{parseAs:"param", affects:["edges"]},
+	        edge_router:{parseAs:"param", affects:["edges"]},
+	        selection_display:{parseAs:"param", affects:[]}, //this is tricky b/c the value determines what if affects
+	        selection_persistDisplay:{parseAs:"param", affects:[]},
+	        selection_lineColor:{parseAs:"param", affects: []},
+	        selection_lineWdith:{parseAs:"param", affects:[]},
+	        selection_lineAlpha:{parseAs:"param", affects:[]}, 
+	        
+	        
+	        //advanced options	
+	        legend:{parseAs:"param", affects:[]},
+	        node_renderer:{parseAs:"param", affects:["nodes"]},
+	        edge_renderer:{parseAs:"param", affects:["edges"]}, 
+	        maxval: {parseAs:"param", affects:["nodes"]},
+	        minval: {parseAs:"param", affects:["nodes"]},
+	        nodeClusterPositions:{parseAs:"param", affects: ["layout"]},
+	        
+	        //undocumented opions that may be removed
+	        events: {parseAs:"bundle", affects:[]},
+	        layout_radialTree_startRadiusFraction: {parseAs:"param", affects:["layout"]},
+	        sproutable:{parseAs:"param", affects: ["nodes"]}
         };
 
 	//for basic network	
@@ -215,7 +181,7 @@ package {
 		if (options.node_tooltips){
 			tooltip.addNodeTooltips(network);
 		}
-		if (options['clickdrag']!=false){
+		if (options['node_clickdrag']!=false){
 			var cdc:ClickDragControl = new ClickDragControl(NodeSprite,1,true);
 
 			this.network.controls.add(cdc);
@@ -229,22 +195,16 @@ package {
 	}	
 	
 	private function createLegend():void {
-		if(options.legend_values)
+		if(options.legend)
 		{
-			for (var i:Number = 0; i<options.legend_values.length;i++) {
-				if(options.legend_values[i].shape)
+			for (var i:Number = 0; i<options.legend.length;i++) {
+				if(options.legend[i].shape)
 				{
-					options.legend_values[i].shape=Shapes[options.legend_values[i].shape];
+					options.legend[i].shape=Shapes[options.legend[i].shape];
 				}
 			}
 		}
-		legend = Legend.fromValues(null, options.legend_values || [
-				{color: 0x3366CC, size: 0.75, label: "HPRD"},
-				{color: 0x339900, size: 0.75, label: "MINT"},
-				{color: 0xA2627A, size: 0.75, label: "IntAct"},
-				{color: 0xFF6600, size: 0.75, label: "MIPS"},
-				{color: 0xFF0000, size: 0.75, label: "BioGRID"}
-			]);
+		var legend : Legend = Legend.fromValues(null, options.legend);
 			legend.labelTextFormat = this._labelTextFormat;
 			//legend.labelTextMode = TextSprite.EMBED;
 			legend.update();

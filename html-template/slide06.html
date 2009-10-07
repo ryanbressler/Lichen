@@ -252,7 +252,7 @@ function drawChart() {
 		data.setValue(45, 2, 'HPRD');
 		data.insertColumn(0,"string");
 		networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-    	networkvis.draw(data, {layout:'ForceDirected', edgeRenderer:'multiedge', legend: 'true', padding: 30, height: 600, width: 600});
+    	networkvis.draw(data, {layout:'ForceDirected', edge_renderer:'multiedge', legend: 'true', padding: 30, height: 600, width: 600});
       }
 
 	

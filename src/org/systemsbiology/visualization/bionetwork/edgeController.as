@@ -55,7 +55,7 @@ package org.systemsbiology.visualization.bionetwork
 //				}, null, function(e:EdgeSprite):Boolean{return e.directed==true;});
 			
 			//delegate to edgeRenderers
-			if (options['edgeRenderer']=='multiedge'){
+			if (options['edge_renderer']=='multiedge'){
 				multiEdge(network,options);
 			}
 			

@@ -39,7 +39,7 @@ Learn more about Flex at http://flex.org
 	
 function drawChart() {
 	center='23645';
-	fetch_urls({dataurl:'http://sdee.hdbase.org/networkviz/fromSIF/?NET_DATA_URI=http://sdee.hdbase.org/sampleSIF.sif', nodedataurl: 'http://sdee.hdbase.org/networkviz/NodeData/?NET_DATA_URI=http://sdee.hdbase.org/sampleSIF.sif&format=sif&tqx=reqId:0', nodeRenderer: 'CircularHeatmap', layout:'Circular', clickdrag: 'true', legend:'false', maxval:'1', minval:'0'});
+	fetch_urls({dataurl:'http://sdee.hdbase.org/networkviz/fromSIF/?NET_DATA_URI=http://sdee.hdbase.org/sampleSIF.sif', nodedataurl: 'http://sdee.hdbase.org/networkviz/NodeData/?NET_DATA_URI=http://sdee.hdbase.org/sampleSIF.sif&format=sif&tqx=reqId:0', node_renderer: 'CircularHeatmap', layout:'Circular', node_clickdrag: 'true', legend:'false', CircularHeatmap_maxval:'1', CircularHeatmap_minval:'0'});
 }
 	
 </script>

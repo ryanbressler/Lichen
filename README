@@ -90,7 +90,7 @@ Table of Contents
 			-sources->comma separated list
 			-directed->boolean
 			-color ->"0xAARRGGBB"
-			-type->"TRIANGLE"||"LINES"||"NONE
+			-type->"TRIANGLE"||"LINES"||"NONE"
 	Options:
 
 		Additional DataTable Options:
@@ -101,8 +101,7 @@ Table of Contents
 				-color->hex string
 				-size (integer)
 		 
-			attributes 
-				-Currently specific to GO
+
 		
 			node_data 
 				-anything with "t_(*)" gets interpreted as a timepoint. example: t_0, t_1, etc
@@ -110,7 +109,7 @@ Table of Contents
 	
 		Control Options:
 		
-			clickdrag [true|false (default)] 
+			node_clickdrag [true|false (default)] 
 				-Allows nodes to be dragged around and relocated
 			sproutable
 				-(Alpha) lets node expanded to add neigbhoring nodes
