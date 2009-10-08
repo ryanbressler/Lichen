@@ -252,7 +252,13 @@ function drawChart() {
 		data.setValue(45, 2, 'HPRD');
 		data.insertColumn(0,"string");
 		networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
-    	networkvis.draw(data, {layout:'ForceDirected', edgeRenderer:'multiedge', legend: 'true', padding: 30, height: 600, width: 600});
+    	networkvis.draw(data, {layout:'ForceDirected', edge_renderer:'multiedge', legend: [
+				{color: 0x3366CC, size: 0.75, label: "HPRD"},
+				{color: 0x339900, size: 0.75, label: "MINT"},
+				{color: 0xA2627A, size: 0.75, label: "IntAct"},
+				{color: 0xFF6600, size: 0.75, label: "MIPS"},
+				{color: 0xFF0000, size: 0.75, label: "BioGRID"}
+			], padding: 30, height: 600, width: 600});
       }
 
 	
