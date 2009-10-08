@@ -1,0 +1,1016 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Visualization: BioNetwork - A general purpose network viewer</title>
+
+    <!--<script src="http://code.google.com/js/codesite.pack.01312008.js" type="text/javascript"></script>-->
+    <link href="http://code.google.com/css/codesite.pack.01312008.css" type="text/css" rel="stylesheet"/>
+
+
+    <!--[if IE]><link rel="stylesheet" type="text/css" href="/css/iehacks.css" /><![endif]-->
+    <!--<link type="text/css" rel="stylesheet" href="docs/table.css">-->
+</head>
+<body class="gc-documentation">
+
+<div id="gc-container">
+<a name="top"></a>
+
+<div id="codesiteContent">
+
+<a name="gc-topnav-anchor"></a>
+
+<div id="gc-topnav">
+    <h1>Network Viewer</h1>
+    <ul id="docs" class="gc-topnav-tabs">
+        <li id="home_link">
+            <a href="http://systemsbiology.org/" title="Institute for Systems Biology">Home</a>
+        </li>
+
+        <li id="docs_link">
+            <a href="http://groups.google.com/group/systemsbiology-visualizations/web/visualizations-summary" class="selected"
+               title="Systems Biology Visualizations Documentation">Docs</a>
+        </li>
+
+        <li id="faq_link">
+            <a href="http://systemsbiology-visualizations.googlegroups.com/web/bioheatmap_examples.html" title="">Examples</a>
+        </li>
+
+        <li id="code_link">
+            <a href="http://code.google.com/p/systemsbiology-visualizations/" title="Code Repository In Google Code">Code</a>
+        </li>
+
+        <li>
+            <a href="http://groups.google.com/group/systemsbiology-visualizations" title="Systems Biology Visualization Group">Group</a>
+        </li>
+    </ul>
+</div>
+<!-- end gc-topnav -->
+
+
+<div class="g-section g-tpl-170">
+
+<a name="gc-toc-anchor"></a>
+
+<div class="g-unit g-first" id="gc-toc">
+    <ul class="treelist tlw-nested-only tlw-processed tlw-instance-0">
+        <li><h2 class="tlw-ignore">Systemsbiology.org Visualizations</h2>
+          <li id="home_link1">
+             <a href="http://groups.google.com/group/systemsbiology-visualizations/web/visualizations-summary" title="">Project Home</a>
+          </li>
+
+            <ul>
+
+                <li style="padding-top: 0pt; padding-bottom: 0pt;">
+                    <div class="tlw-title tlw-branch"><a href="javascript:void(0)" class="tlw-control"
+                                                         title=""><img
+                            src="docs/cleardot.gif" alt=""
+                            class="tlw-control tlw-minus"></a>
+
+                        <h2 class="tlw-expanded">BioHeatMap (js)</h2></div>
+                    <ul style="display: block;" id="0-sub-0">
+
+
+                        <li id="docs_link1">
+                            <a href="http://systemsbiology-visualizations.googlegroups.com/web/bioheatmap.html" title="">Docs</a>
+                        </li>
+
+                        <li id="faq_link1">
+                            <a href="http://systemsbiology-visualizations.googlegroups.com/web/bioheatmap_examples.html" title="">Examples</a>
+                        </li>
+
+                        <li>
+                            <a href="http://code.google.com/p/systemsbiology-visualizations/downloads/detail?name=bioheatmap.js" title="">Download</a>
+                        </li>
+
+                    </ul>
+                </li>
+                
+                <li style="padding-top: 0pt; padding-bottom: 0pt;">
+                    <div class="tlw-title tlw-branch"><a href="javascript:void(0)" class="tlw-control"
+                                                         title=""><img
+                            src="docs/cleardot.gif" alt=""
+                            class="tlw-control tlw-minus"></a>
+
+                        <h2 class="tlw-expanded">Lichen BioHeatMap (flash)</h2></div>
+                    <ul style="display: block;" id="0-sub-0">
+
+                        <li id="docs_link1">
+                            <a href="bioheatmap.html" title="">Docs</a>
+                        </li>
+
+                        <li id="faq_link1">
+                            <a href="bioheatmap_examples.html" title="">Examples</a>
+                        </li>
+
+                        <li>
+                            <a href="bioheatmap.zip" title="">Download</a>
+                        </li>
+
+                    </ul>
+                </li>
+                
+                <li style="padding-top: 0pt; padding-bottom: 0pt;">
+                    <div class="tlw-title tlw-branch"><a href="javascript:void(0)" class="tlw-control"
+                                                         title=""><img
+                            src="docs/cleardot.gif" alt=""
+                            class="tlw-control tlw-minus"></a>
+
+                        <h2 class="tlw-expanded">Lichen Network Viewer (flash)</h2></div>
+                    <ul style="display: block;" id="0-sub-0">
+
+                        <li id="docs_link1">
+                            <a href="bionetwork.html" title="" class="selected">Docs</a>
+                        </li>
+
+                        <li id="faq_link1">
+                            <a href="bionetwork_examples.html" title="">Examples</a>
+                        </li>
+
+                        <li>
+                            <a href="bionetwork.zip" title="">Download</a>
+                        </li>
+
+                    </ul>
+                </li>
+                
+            </ul>
+        </li>
+    </ul>
+    <div class="line"></div>
+
+</div>
+
+<a name="gc-pagecontent-anchor"></a>
+
+<div style="position: relative;" class="g-unit" id="gc-pagecontent">
+<h1 class="page_title">Visualization: Lichen Network Viewer</h1>
+
+
+<div class="toc">
+    <ol>
+        <li><a href="#Overview">Overview</a>
+        </li>
+        <li><a href="#Example">Example</a>
+        </li>
+        <li><a href="#Loading">Loading</a>
+        </li>
+        <li><a href="#Data_Format">Data Format</a>
+        </li>
+        <li><a href="#Configuration_Options">Configuration Options</a>
+        </li>
+        <li><a href="#Methods">Methods</a>
+        </li>
+        <li><a href="#Events">Events</a>
+        </li>
+        <li><a href="#Data_Policy">Data Policy</a>
+        </li>
+    </ol>
+</div>
+
+<h1><a name="Overview" id="Overview"></a>Overview</h1>
+
+<p>
+Lichen is a new project at ISB that aims to provide network and heat map visualization in web browsers. It provides components that can be used as interactive figures in any website. It is also being adapted for use from R and the Gaggle.
+</p>
+<p>
+Lichen's network visualizer includes several novel features. The CircularHeatmap node render uses concentric circles to display time series data on nodes. New layouts algorithms have been designed to better reveal clusters and patterns in networks.
+</p>
+<p>
+The entire Lichen code base is implemented in actionscript/flash and platform-independent javascript to ensure that visualizations can be viewed in almost any web browser and operating system. It complies with the Google Visualization API which provides a standardized way for web developers to load data and listen for events. It is purely open source and and can be modified and redistributed freely.
+</p>
+
+<p>
+    By: rbressler, sdee<br/>
+    Institute for Systems Biology
+</p>
+
+<h1><a name="Example" id="Example"></a>Example</h1>
+
+<p></p>
+
+<div id="exampleVisContainer">
+
+</div>
+
+<p>&gt;&gt; <a href="">See more examples</a></p>
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", {});
+    google.load("prototype", "1.6");
+</script>
+<script type="text/javascript" src="bionetwork.js"></script>
+
+
+<script type="text/javascript">
+    google.setOnLoadCallback(drawTable);
+    function drawTable() {
+        var data = new google.visualization.DataTable();
+		data.addColumn('string', 'interactor1');
+		data.addColumn('string', 'interactor2');
+		data.addColumn('string', 'sources');
+		data.addRows(26);
+		data.setValue(0, 0, '6772');
+		data.setValue(0, 1, '6772');
+		data.setFormattedValue(0, 0, 'STAT1');
+		data.setFormattedValue(0, 1, 'STAT1');
+		data.setValue(0, 2, 'HPRD, BioGRID');
+		data.setValue(1, 0, '6772');
+		data.setValue(1, 1, '6773');
+		data.setFormattedValue(1, 0, 'STAT1');
+		data.setFormattedValue(1, 1, 'STAT2');
+		data.setValue(1, 2, 'HPRD, IntAct, BioGRID');
+		data.setValue(2, 0, '6772');
+		data.setValue(2, 1, '6777');
+		data.setFormattedValue(2, 0, 'STAT1');
+		data.setFormattedValue(2, 1, 'STAT5B');
+		data.setValue(2, 2, 'HPRD');
+		data.setValue(3, 0, '6774');
+		data.setValue(3, 1, '6772');
+		data.setFormattedValue(3, 0, 'STAT3');
+		data.setFormattedValue(3, 1, 'STAT1');
+		data.setValue(3, 2, 'HPRD, BioGRID');
+		data.setValue(4, 0, '6774');
+		data.setValue(4, 1, '6773');
+		data.setFormattedValue(4, 0, 'STAT3');
+		data.setFormattedValue(4, 1, 'STAT2');
+		data.setValue(4, 2, 'IntAct');
+		data.setValue(5, 0, '6774');
+		data.setValue(5, 1, '6774');
+		data.setFormattedValue(5, 0, 'STAT3');
+		data.setFormattedValue(5, 1, 'STAT3');
+		data.setValue(5, 2, 'HPRD');
+		data.setValue(6, 0, '6774');
+		data.setValue(6, 1, '6776');
+		data.setFormattedValue(6, 0, 'STAT3');
+		data.setFormattedValue(6, 1, 'STAT5A');
+		data.setValue(6, 2, 'HPRD');
+		data.setValue(7, 0, '6774');
+		data.setValue(7, 1, '6777');
+		data.setFormattedValue(7, 0, 'STAT3');
+		data.setFormattedValue(7, 1, 'STAT5B');
+		data.setValue(7, 2, 'HPRD');
+		data.setValue(8, 0, '6775');
+		data.setValue(8, 1, '6775');
+		data.setFormattedValue(8, 0, 'STAT4');
+		data.setFormattedValue(8, 1, 'STAT4');
+		data.setValue(8, 2, 'HPRD');
+		data.setValue(9, 0, '6776');
+		data.setValue(9, 1, '6772');
+		data.setFormattedValue(9, 0, 'STAT5A');
+		data.setFormattedValue(9, 1, 'STAT1');
+		data.setValue(9, 2, 'HPRD');
+		data.setValue(10, 0, '6776');
+		data.setValue(10, 1, '6776');
+		data.setFormattedValue(10, 0, 'STAT5A');
+		data.setFormattedValue(10, 1, 'STAT5A');
+		data.setValue(10, 2, 'HPRD');
+		data.setValue(11, 0, '6776');
+		data.setValue(11, 1, '6777');
+		data.setFormattedValue(11, 0, 'STAT5A');
+		data.setFormattedValue(11, 1, 'STAT5B');
+		data.setValue(11, 2, 'HPRD, BioGRID');
+		data.setValue(12, 0, '6777');
+		data.setValue(12, 1, '6777');
+		data.setFormattedValue(12, 0, 'STAT5B');
+		data.setFormattedValue(12, 1, 'STAT5B');
+		data.setValue(12, 2, 'HPRD, Sanger Interaction Map');
+		data.setValue(13, 0, '6778');
+		data.setValue(13, 1, '6773');
+		data.setFormattedValue(13, 0, 'STAT6');
+		data.setFormattedValue(13, 1, 'STAT2');
+		data.setValue(13, 2, 'HPRD');
+		data.setValue(14, 0, '6778');
+		data.setValue(14, 1, '6778');
+		data.setFormattedValue(14, 0, 'STAT6');
+		data.setFormattedValue(14, 1, 'STAT6');
+		data.setValue(14, 2, 'HPRD');
+		data.setValue(15, 0, '6891');
+		data.setValue(15, 1, '6890');
+		data.setFormattedValue(15, 0, 'TAP2');
+		data.setFormattedValue(15, 1, 'TAP1');
+		data.setValue(15, 2, 'HPRD, MINT, IntAct, BioGRID');
+		data.setValue(16, 0, '7096');
+		data.setValue(16, 1, '7097');
+		data.setFormattedValue(16, 0, 'TLR1');
+		data.setFormattedValue(16, 1, 'TLR2');
+		data.setValue(16, 2, 'HPRD, BioGRID, Reactome');
+		data.setValue(17, 0, '7096');
+		data.setValue(17, 1, '7099');
+		data.setFormattedValue(17, 0, 'TLR1');
+		data.setFormattedValue(17, 1, 'TLR4');
+		data.setValue(17, 2, 'HPRD, BioGRID');
+		data.setValue(18, 0, '7096');
+		data.setValue(18, 1, '7100');
+		data.setFormattedValue(18, 0, 'TLR1');
+		data.setFormattedValue(18, 1, 'TLR5');
+		data.setValue(18, 2, 'HPRD');
+		data.setValue(19, 0, '7096');
+		data.setValue(19, 1, '54106');
+		data.setFormattedValue(19, 0, 'TLR1');
+		data.setFormattedValue(19, 1, 'TLR9');
+		data.setValue(19, 2, 'HPRD');
+		data.setValue(20, 0, '7096');
+		data.setValue(20, 1, '81793');
+		data.setFormattedValue(20, 0, 'TLR1');
+		data.setFormattedValue(20, 1, 'TLR10');
+		data.setValue(20, 2, 'HPRD');
+		data.setValue(21, 0, '7097');
+		data.setValue(21, 1, '7097');
+		data.setFormattedValue(21, 0, 'TLR2');
+		data.setFormattedValue(21, 1, 'TLR2');
+		data.setValue(21, 2, 'BioGRID');
+		data.setValue(22, 0, '7097');
+		data.setValue(22, 1, '10333');
+		data.setFormattedValue(22, 0, 'TLR2');
+		data.setFormattedValue(22, 1, 'TLR6');
+		data.setValue(22, 2, 'HPRD, Reactome');
+		data.setValue(23, 0, '7097');
+		data.setValue(23, 1, '81793');
+		data.setFormattedValue(23, 0, 'TLR2');
+		data.setFormattedValue(23, 1, 'TLR10');
+		data.setValue(23, 2, 'HPRD');
+		data.setValue(24, 0, '7098');
+		data.setValue(24, 1, '7098');
+		data.setFormattedValue(24, 0, 'TLR3');
+		data.setFormattedValue(24, 1, 'TLR3');
+		data.setValue(24, 2, 'HPRD');
+		data.setValue(25, 0, '7100');
+		data.setValue(25, 1, '7099');
+		data.setFormattedValue(25, 0, 'TLR5');
+		data.setFormattedValue(25, 1, 'TLR4');
+		data.setValue(25, 2, 'HPRD');
+		data.insertColumn(0,"number");
+			 
+		networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
+		networkvis.draw(data, {layout: "ForceDirected",width:500, height:400,padding:20});
+    }
+</script>
+
+<pre class="prettyprint">
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;http://www.google.com/jsapi&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+      google.load(&quot;visualization&quot;, &quot;1&quot;, {});
+      google.load(&quot;prototype&quot;, &quot;1.6&quot;);
+    &lt;/script&gt;
+    
+    &lt;script type=&quot;text/javascript&quot; src=&quot;bionetwork.js&quot;&gt;&lt;/script&gt;
+
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+    google.setOnLoadCallback(drawTable);
+    function drawTable() {
+        var data = new google.visualization.DataTable();
+		data.addColumn('string', 'interactor1');
+		data.addColumn('string', 'interactor2');
+		data.addColumn('string', 'sources');
+		data.addRows(26);
+		data.setValue(0, 0, '6772');
+		data.setValue(0, 1, '6772');
+		data.setFormattedValue(0, 0, 'STAT1');
+		data.setFormattedValue(0, 1, 'STAT1');
+		data.setValue(0, 2, 'HPRD, BioGRID');
+		data.setValue(1, 0, '6772');
+		data.setValue(1, 1, '6773');
+		data.setFormattedValue(1, 0, 'STAT1');
+		data.setFormattedValue(1, 1, 'STAT2');
+		data.setValue(1, 2, 'HPRD, IntAct, BioGRID');
+		data.setValue(2, 0, '6772');
+		data.setValue(2, 1, '6777');
+		data.setFormattedValue(2, 0, 'STAT1');
+		data.setFormattedValue(2, 1, 'STAT5B');
+		data.setValue(2, 2, 'HPRD');
+		data.setValue(3, 0, '6774');
+		data.setValue(3, 1, '6772');
+		data.setFormattedValue(3, 0, 'STAT3');
+		data.setFormattedValue(3, 1, 'STAT1');
+		data.setValue(3, 2, 'HPRD, BioGRID');
+		data.setValue(4, 0, '6774');
+		data.setValue(4, 1, '6773');
+		data.setFormattedValue(4, 0, 'STAT3');
+		data.setFormattedValue(4, 1, 'STAT2');
+		data.setValue(4, 2, 'IntAct');
+		data.setValue(5, 0, '6774');
+		data.setValue(5, 1, '6774');
+		data.setFormattedValue(5, 0, 'STAT3');
+		data.setFormattedValue(5, 1, 'STAT3');
+		data.setValue(5, 2, 'HPRD');
+		data.setValue(6, 0, '6774');
+		data.setValue(6, 1, '6776');
+		data.setFormattedValue(6, 0, 'STAT3');
+		data.setFormattedValue(6, 1, 'STAT5A');
+		data.setValue(6, 2, 'HPRD');
+		data.setValue(7, 0, '6774');
+		data.setValue(7, 1, '6777');
+		data.setFormattedValue(7, 0, 'STAT3');
+		data.setFormattedValue(7, 1, 'STAT5B');
+		data.setValue(7, 2, 'HPRD');
+		data.setValue(8, 0, '6775');
+		data.setValue(8, 1, '6775');
+		data.setFormattedValue(8, 0, 'STAT4');
+		data.setFormattedValue(8, 1, 'STAT4');
+		data.setValue(8, 2, 'HPRD');
+		data.setValue(9, 0, '6776');
+		data.setValue(9, 1, '6772');
+		data.setFormattedValue(9, 0, 'STAT5A');
+		data.setFormattedValue(9, 1, 'STAT1');
+		data.setValue(9, 2, 'HPRD');
+		data.setValue(10, 0, '6776');
+		data.setValue(10, 1, '6776');
+		data.setFormattedValue(10, 0, 'STAT5A');
+		data.setFormattedValue(10, 1, 'STAT5A');
+		data.setValue(10, 2, 'HPRD');
+		data.setValue(11, 0, '6776');
+		data.setValue(11, 1, '6777');
+		data.setFormattedValue(11, 0, 'STAT5A');
+		data.setFormattedValue(11, 1, 'STAT5B');
+		data.setValue(11, 2, 'HPRD, BioGRID');
+		data.setValue(12, 0, '6777');
+		data.setValue(12, 1, '6777');
+		data.setFormattedValue(12, 0, 'STAT5B');
+		data.setFormattedValue(12, 1, 'STAT5B');
+		data.setValue(12, 2, 'HPRD, Sanger Interaction Map');
+		data.setValue(13, 0, '6778');
+		data.setValue(13, 1, '6773');
+		data.setFormattedValue(13, 0, 'STAT6');
+		data.setFormattedValue(13, 1, 'STAT2');
+		data.setValue(13, 2, 'HPRD');
+		data.setValue(14, 0, '6778');
+		data.setValue(14, 1, '6778');
+		data.setFormattedValue(14, 0, 'STAT6');
+		data.setFormattedValue(14, 1, 'STAT6');
+		data.setValue(14, 2, 'HPRD');
+		data.setValue(15, 0, '6891');
+		data.setValue(15, 1, '6890');
+		data.setFormattedValue(15, 0, 'TAP2');
+		data.setFormattedValue(15, 1, 'TAP1');
+		data.setValue(15, 2, 'HPRD, MINT, IntAct, BioGRID');
+		data.setValue(16, 0, '7096');
+		data.setValue(16, 1, '7097');
+		data.setFormattedValue(16, 0, 'TLR1');
+		data.setFormattedValue(16, 1, 'TLR2');
+		data.setValue(16, 2, 'HPRD, BioGRID, Reactome');
+		data.setValue(17, 0, '7096');
+		data.setValue(17, 1, '7099');
+		data.setFormattedValue(17, 0, 'TLR1');
+		data.setFormattedValue(17, 1, 'TLR4');
+		data.setValue(17, 2, 'HPRD, BioGRID');
+		data.setValue(18, 0, '7096');
+		data.setValue(18, 1, '7100');
+		data.setFormattedValue(18, 0, 'TLR1');
+		data.setFormattedValue(18, 1, 'TLR5');
+		data.setValue(18, 2, 'HPRD');
+		data.setValue(19, 0, '7096');
+		data.setValue(19, 1, '54106');
+		data.setFormattedValue(19, 0, 'TLR1');
+		data.setFormattedValue(19, 1, 'TLR9');
+		data.setValue(19, 2, 'HPRD');
+		data.setValue(20, 0, '7096');
+		data.setValue(20, 1, '81793');
+		data.setFormattedValue(20, 0, 'TLR1');
+		data.setFormattedValue(20, 1, 'TLR10');
+		data.setValue(20, 2, 'HPRD');
+		data.setValue(21, 0, '7097');
+		data.setValue(21, 1, '7097');
+		data.setFormattedValue(21, 0, 'TLR2');
+		data.setFormattedValue(21, 1, 'TLR2');
+		data.setValue(21, 2, 'BioGRID');
+		data.setValue(22, 0, '7097');
+		data.setValue(22, 1, '10333');
+		data.setFormattedValue(22, 0, 'TLR2');
+		data.setFormattedValue(22, 1, 'TLR6');
+		data.setValue(22, 2, 'HPRD, Reactome');
+		data.setValue(23, 0, '7097');
+		data.setValue(23, 1, '81793');
+		data.setFormattedValue(23, 0, 'TLR2');
+		data.setFormattedValue(23, 1, 'TLR10');
+		data.setValue(23, 2, 'HPRD');
+		data.setValue(24, 0, '7098');
+		data.setValue(24, 1, '7098');
+		data.setFormattedValue(24, 0, 'TLR3');
+		data.setFormattedValue(24, 1, 'TLR3');
+		data.setValue(24, 2, 'HPRD');
+		data.setValue(25, 0, '7100');
+		data.setValue(25, 1, '7099');
+		data.setFormattedValue(25, 0, 'TLR5');
+		data.setFormattedValue(25, 1, 'TLR4');
+		data.setValue(25, 2, 'HPRD');
+		data.insertColumn(0,&quot;number&quot;);
+			 
+		networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('exampleVisContainer'));
+		networkvis.draw(data, {layout: 'ForceDirected',width:500, height:400,padding:20});
+    }
+&lt;/script&gt;
+    
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;div id=&quot;heatmapContainer&quot;&gt;&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<h1><a name="Loading" id="Loading"></a>Loading</h1>
+
+<p>
+    The script requires the google jsapi and the Prototype Javascript library (1.6 and above). To load the script place bionetwork.js and bionetwork.swf in the same directory as your page and use this code:
+</p>
+
+<pre class="prettyprint">
+    &lt;script type=&quot;text/javascript&quot; src=&quot;http://www.google.com/jsapi&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+      google.load(&quot;visualization&quot;, &quot;1&quot;, {});
+      google.load(&quot;prototype&quot;, &quot;1.6&quot;);
+    &lt;/script&gt;    
+    
+    &lt;script type=&quot;text/javascript&quot; src=&quot;bionetwork.js&quot;&gt;&lt;/script&gt;
+</pre>
+
+<p>
+	If you wish to load bionetwork.js and bionetwork.swf from another location (/js/bionetwork.js) 
+	you will need to open the bionetwork.js in a text editor and find-and-replace bionetwork.swf to the
+	appropriate path.
+</p>
+
+<p>
+    The visualization's javascript class name is <code>org.systemsbiology.visualization.BioNetwork</code>
+</p>
+
+<pre class="prettyprint">
+    var network = new org.systemsbiology.visualization.BioNetwork(document.getElementById('networkContainer')); 
+</pre>
+
+<h1><a name="Data_Format" id="Data_Format"></a>Data Format</h1>
+
+<p>
+    This data parameter should be a data table adjacency list with the following columns in positions 0-2:
+</p>
+    <table>
+    <tbody>
+        <tr>
+            <th>Position</th>
+            <th>Title</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+        	<td>0</td>
+        	<td>edge_id</td>
+        	<td>A string specifying an id to be associated with the edge. Can be null or "". </td>
+        </tr>
+        <tr>
+        	<td>1</td>
+        	<td>interactor_value1</td>
+        	<td>A string specifying the first interactor. Used as the from interactor if the edge is directed. </td>
+        </tr>
+         <tr>
+        	<td>2</td>
+        	<td>interactor_value2</td>
+        	<td>A string specifying the second interactor. Used as the to interactor if the edge is directed.</td>
+        </tr>
+    </tbody>
+    </table>
+    
+   <p>And the following optional columns specified by title:</p>
+    
+    <table>
+    <tbody>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+        	<td>color</td>
+        	<td>A string specifying the color of the edge in the form "0xAARRGGBB" representing alpha, red, green and blue hex values.</td>
+        </tr>
+        <tr>
+        	<td>directed</td>
+        	<td>A boolean specifying weather the edge is directed or not. Edges are assumed to be undirected unless true is provided in this column.</td>
+        </tr>
+        <tr>
+        	<td>type</td>
+        	<td>A string specifying what type of arrow to use for a directed edge. Can be "TRIANGLE", "LINES" or "NONE"; the default is "TRIANGLE."</td>
+        </tr>
+        <tr>
+        	<td>sources</td>
+        	<td>A string containing a comma separated list of for use of edge types for use in the multi edge renderer.</td>
+        </tr>
+    </tbody>
+    </table>
+    
+
+
+<h1><a name="Configuration_Options" id="Configuration_Options"></a>Configuration Options</h1>
+
+<p>
+Basic Options:
+</p>
+<table>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+        <tr><td>width</td>
+            <td>Number</td>
+            <td>630
+        	</td>
+            <td>The width of the visualization in pixels.
+            </td>
+        </tr>
+        <tr><td>height</td>
+            <td>Number</td>
+            <td>630
+        	</td>
+            <td>The height of the visualization in pixels.
+            </td>
+        </tr>
+        <tr>
+            <td>padding</td>
+            <td>Number</td>
+            <td>5
+            </td>
+            <td>The amount of padding between the edge of the visualization and the edge of the swf object.
+            </td>    
+        </tr>
+        <tr><td>layout</td>
+            <td>String</td>
+            <td>"Circular"
+        	</td>
+            <td>
+            The type of layout to use. Can be "Circular", "ForceDirected", "extendedForceDirected", "3dSVD", "GoogleDataTableDriven" or "radialTree."
+            </td>
+        </tr>
+        <tr><td>center</td>
+            <td>String</td>
+            <td>The node first node listed in <i>data</i>.
+        	</td>
+            <td>A string specifying which node is the center or root node used by some layouts.
+            </td>
+        </tr>
+        <tr><td>node_fillColor</td>
+            <td>Color String</td>
+            <td>"0x880055cc"
+        	</td>
+            <td>The default node color specified in hex as "0xAARRGGBB."
+            </td>
+        </tr>
+        <tr><td>node_lineWidth</td>
+            <td>Number</td>
+            <td>
+        	</td>
+            <td>
+            </td>
+        </tr>
+        <tr><td>node_tooltips</td>
+            <td>Bool</td>
+            <td>false
+        	</td>
+            <td>
+            </td>
+        </tr>
+        <tr><td>node_labels_radial</td>
+            <td>Bool</td>
+            <td>false
+        	</td>
+            <td>
+            </td>
+        </tr>
+        <tr><td>node_clickdrag</td>
+            <td>Bool</td>
+            <td>true
+        	</td>
+            <td>Can nodes be dragged around.
+            </td>
+        </tr>
+        <tr><td>edge_lineWidth</td>
+            <td>Number</td>
+            <td>2
+        	</td>
+            <td>The default width of each edge.
+            </td>
+        </tr>
+        <tr><td>edge_lineColor</td>
+            <td>Color String</td>
+            <td>"0x66000000"
+        	</td>
+            <td>The defaulte edge color.
+            </td>
+        </tr>
+        
+        <tr><td>selection_display</td>
+            <td>String</td>
+            <td>
+        	</td>
+            <td>Default is to display nodes and edge selection "nodes","edges" or "none". To view edge selection you may need to modify the other selection display options.
+            </td>
+        </tr>
+        <tr><td>selection_persistDisplay</td>
+            <td>bool</td>
+            <td>true
+        	</td>	
+            <td>Should seletion dislapy be perminant or flash.
+            </td>
+        </tr>
+        <tr><td>selection_lineColor</td>
+            <td>Color String</td>
+            <td>
+        	</td>
+            <td>If present selection display will use this color.
+            </td>
+        </tr>
+        <tr><td>selection_lineWdith</td>
+            <td>Number</td>
+            <td>3
+        	</td>
+            <td>Used to resize lines/boarders to display selection.
+            </td>
+        </tr>
+        <tr><td>selection_lineAlpha</td>
+            <td>Number</td>
+            <td>1
+        	</td>
+            <td>Used to change the alpha of lines/boarders to display selection.
+            </td>
+        </tr>
+        
+        
+        
+        
+    </tbody>
+</table>
+
+<p>
+Advanced Options:
+</p>
+<table>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+        <tr><td>legend</td>
+            <td>Array of Objects</td>
+            <td>
+        	</td>
+            <td>An array of objects used to create a legend. Example : 
+            <code>[
+				{color: 0x3366CC, size: 0.75, label: "HPRD"},
+				{color: 0x339900, size: 0.75, label: "MINT"," shape:"TRIANGLE_RIGHT"}
+			]</code>
+            </td>
+        </tr>
+        <tr><td>node_renderer</td>
+            <td>String</td>
+            <td>
+        	</td>
+            <td>Used to specify custom node renders, can be set too "CircularHeatmap."
+            </td>
+        </tr>
+        <tr><td>edge_renderer</td>
+            <td>String</td>
+            <td>
+        	</td>
+            <td>Used to specify custom edge renders, can be set to "multiedge."
+            </td>
+        </tr>
+        <tr><td>edge_router</td>
+            <td>String</td>
+            <td>
+        	</td>
+            <td>Used to specify custom edge routers. Can be set to 'bundled'.
+            </td>
+        </tr>
+        <tr><td>CircularHeatmap_maxval</td>
+            <td>Number</td>
+            <td>
+        	</td>
+            <td>The maximum value for use in the circular heatmap.
+            </td>
+        </tr>
+        <tr><td>CircularHeatmap_minval</td>
+            <td>Number</td>
+            <td>
+        	</td>
+            <td>The minumum value for use in the circular heatmap.
+            </td>
+        </tr>
+        <tr><td>nodeClusterPositions</td>
+            <td>Array</td>
+            <td>null
+        	</td>
+            <td>An optional array specifying positions at which to fix node clusters. Only used by the extended force directed layout. Should be of the format <code>[{x:postion1x,y:position1y},{x:postion1x,y:position1y},...]</code>.
+            </td>
+        </tr>
+        
+    </tbody>
+</table>
+
+<p>
+Optional DataTables:
+</p>
+<table>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>layout_data</td>
+            <td>
+             Required Columns:
+             <table>  
+			    <tbody>
+			        <tr>
+			            <th>Position</th>
+			            <th>Description</th>
+			        </tr>
+			        <tr>
+			        	<td>0</td>
+			        	<td>Node Id</td>
+			        </tr>
+			        <tr>
+			        	<td>1-n</td>
+			        	<td>Columns 1-n are used to specify arbitrary data. Columns with titles begining with "t_" will be views as time points to be used by the circular heatmap if it is enabled.</td>
+			        </tr>
+			    </tbody>
+			 </table>
+             Optional Columns Specified by Title:
+             <table>
+			    
+			    <tbody>
+			        <tr>
+			            <th>Title</th>
+			            <th>Description</th>
+			        </tr>
+			        <tr>
+			        	<td>shape</td>
+			        	<td>A string specifying one of the flare shape constants: "CIRCLE", "SQUARE", "DIAMOND", "TRIANGLEDOWN", "TRIANGLEUP", "TRIANGLERIGHT", "TRIANGLELEFT", "CROSS" or "X."</td>
+			        </tr>
+			        <tr>
+			        	<td>color</td>
+			        	<td>A string of the form "0xAARRGGBB" specifying a color.</td>
+			        </tr>
+			        <tr>
+			        	<td>size</td>
+			        	<td>A number specifying a size multiplier to apply to the node.</td>
+			        </tr>
+			        <tr>
+			        	<td>x</td>
+			        	<td>An int specifying the x position of the node in pixels.</td>
+			        </tr>
+			        <tr>
+			        	<td>y</td>
+			        	<td>An int specifying the y position of the node in pixels.</td>
+			        </tr>
+			    </tbody>
+			 </table>
+            </td>
+        </tr>
+        <tr>
+            <td>node_data</td>
+            <td>
+             	Used for specifying a list of data to be used with the circularheatmap, needs to be cleaned up and may be merged with layout data.
+            	Columns:
+             <table>  
+			    <tbody>
+			        <tr>
+			            <th>Position</th>
+			            <th>Description</th>
+			        </tr>
+			        <tr>
+			        	<td>0</td>
+			        	<td>Node Id</td>
+			        </tr>
+			        <tr>
+			        	<td>1-n</td>
+			        	<td>Columns 1-n are used to specify arbitrary data. Columns with titles beginning with "t_" will be views as time points to be used by the circular heatmap if it is enabled.</td>
+			        </tr>
+			    </tbody>
+			 </table>
+            </td>
+        </tr>
+        <tr>
+            <td>nodeClusters</td>
+            <td>
+            Used by cluster aware layouts to determine which clusters nodes belong to. 
+            Column 0 should contain node ids and column 1-n should be boolean columns representing cluster membership. 
+            Cluster names are determined from column labels.
+            </td>
+        </tr>
+   
+        
+    </tbody>
+</table>
+
+
+<h1><a name="Methods" id="Methods"></a>Methods</h1>
+
+<p>
+</p>
+<table>
+    <tbody>
+        <tr>
+            <th>Method</th>
+            <th>Return Type</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>draw(data, options)</code></td>
+            <td>none</td>
+            <td>Draws the heatmap.</td>
+        </tr>
+        <tr>
+            <td><code>getSelection()</code></td>
+            <td>Array of selected edges/rows</td>
+            <td>Standard getSelection implementation.
+            </td>
+        </tr>
+        <tr>
+            <td><code>getSelectionNodes()</code></td>
+            <td>Array of selected nodes</td>
+            <td>Standard getSelection implementation. Selection elements are cells when a heatmap cell is clicked, rows
+                when a row label is clicked and columns when a column label is clicked.
+            </td>
+        </tr>
+        <tr>
+            <td><code>setSelection(selection)</code></td>
+            <td>none</td>
+            <td>selection is an array of selected items. Items can be either nodes specified as <code>{node;"node_id"}</code> or edges specified  by row number in the data parameter: <code>{row:row_num}</code>.
+            
+            </td>
+        </tr>
+        <tr>
+        	<td><code>add_edge_from_to</code></td>
+        	<td>none</td>
+        	<td>beta</td>
+        </tr>
+        <tr>
+        	<td><code>remove_node_by_name</code></td>
+        	<td>none</td>
+        	<td>beta</td>
+        </tr>
+        <tr>
+        	<td><code>remove_edge_from_to</code></td>
+        	<td>none</td>
+        	<td>beta</td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+<h1><a name="Events" id="Events"></a>Events</h1>
+
+<p>
+</p>
+<table>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Properties</th>
+        </tr>
+        <tr>
+            <td>select</td>
+            <td>Standard select event</td>
+            <td>None</td>
+        </tr>
+        <tr>
+            <td>nodeclick</td>
+            <td>Fired on a node click, handler should accept a single parameter, <code>target</code>.</td>
+            <td><code>target.node.name</code></td>
+        </tr>
+        <tr>
+            <td>nodedoubleclick</td>
+            <td>Fired on a node double click, handler should accept a single parameter, <code>target</code>.</td>
+            <td><code>target.node.name</code></td>
+        </tr>
+        <tr>
+            <td>edgeclick</td>
+            <td>Fired on edge click, handler should accept a single parameter but the edge id is not currently available from this event.</td>
+            <td></td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+<h1><a name="Data_Policy" id="Data_Policy"></a>Data Policy</h1>
+
+<p>
+    All code and data are processed and rendered in the browser. No data is sent to any server.
+</p>
+
+
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
