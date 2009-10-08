@@ -61,6 +61,10 @@ package org.systemsbiology.visualization.bionetwork.data
 			var sources:Array;
 			for (var i:Number = 0; i<graphDataTable.getNumberOfRows();i++) {
 				edge = add_edge_by_names(graphDataTable.getInteractor1Name(i),graphDataTable.getInteractor2Name(i));
+				if(edge==null)
+				{
+					continue;
+				}
 				sources=graphDataTable.getSources(i);
 				if (sources && edge != null){
 					for (var k:Number=0; k<sources.length; k++){
@@ -92,7 +96,7 @@ package org.systemsbiology.visualization.bionetwork.data
 					
 			}
 			//filter out self interactions till we can display them
-			return interactors.length==2 ? addEdgeIfNotExist(interactors[0], interactors[1]) : null;
+			return interactor1_name!=interactor2_name ? addEdgeIfNotExist(interactors[0], interactors[1]) : null;
 		}
 		
 		public function remove_node (node_name : String) : void

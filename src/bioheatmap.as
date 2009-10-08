@@ -76,9 +76,7 @@ package
 		        private var _cellWidth:int = 15;	
 		        private var _cellHeight:int = 15;	
 		        private var _SpriteWidth:int;
-		        private var _SpriteHeight:int;	
-		        private var _cellBorder:Boolean = false;		
-		        private var _drawHeatmapBorder:Boolean = true;	
+		        private var _SpriteHeight:int;				
 		        private var _fixedSpriteSize:Boolean = false;
 				private var _verticalPadding:int = 10;		
 		        private var _horizontalPadding:int = 10;		
@@ -433,7 +431,7 @@ package
 						this._useRowNames = false;
 					else if (options.useRowLabels == true)
 						this._useRowNames = true;
-					if (options.useCellLabels != null && options.useCellLabels == false)
+					if (options.showCellLabels != null && options.showCellLabels == false)
 						this._useCellLabels = false;
 					else if (options.useCellLabels == true)
 						this._useCellLabels = true;
@@ -481,15 +479,7 @@ package
 						this._horizontalPadding = options.horizontalPadding;
 					if (options.verticalPadding)
 						this._verticalPadding = options.verticalPadding;
-					if (options.cellBorder)
-						this._cellBorder = options.cellBorder;
-			
-			
-			
-					if (options.drawBorder != null && options.drawBorder == false)
-						this._drawHeatmapBorder = false;
-					else if (options.drawBorder == true)
-						this._drawHeatmapBorder = true;
+
 						
 					if (options.selectionDisplay)
 					{

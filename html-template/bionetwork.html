@@ -180,7 +180,7 @@ The entire Lichen code base is implemented in actionscript/flash and platform-in
 </p>
 
 <p>
-    By: rbressler<br/>
+    By: rbressler, sdee<br/>
     Institute for Systems Biology
 </p>
 
@@ -531,7 +531,7 @@ The entire Lichen code base is implemented in actionscript/flash and platform-in
 <p>
 	If you wish to load bionetwork.js and bionetwork.swf from another location (/js/bionetwork.js) 
 	you will need to open the bionetwork.js in a text editor and find-and-replace bionetwork.swf to the
-	apropriate path.
+	appropriate path.
 </p>
 
 <p>
@@ -545,7 +545,7 @@ The entire Lichen code base is implemented in actionscript/flash and platform-in
 <h1><a name="Data_Format" id="Data_Format"></a>Data Format</h1>
 
 <p>
-    This data paramater should be a data table adjacency list with the following columns in positions 0-2:
+    This data parameter should be a data table adjacency list with the following columns in positions 0-2:
 </p>
     <table>
     <tbody>
@@ -594,7 +594,7 @@ The entire Lichen code base is implemented in actionscript/flash and platform-in
         </tr>
         <tr>
         	<td>sources</td>
-        	<td>A string containing a comma seperated list of for use of edge types for use in the multi edge renderer.</td>
+        	<td>A string containing a comma separated list of for use of edge types for use in the multi edge renderer.</td>
         </tr>
     </tbody>
     </table>
@@ -705,7 +705,7 @@ Basic Options:
             <td>String</td>
             <td>
         	</td>
-            <td>Default is to display nodes and edge selection "nodes","edges" or "none". To view edge selection you may need to midofy the other selection display options.
+            <td>Default is to display nodes and edge selection "nodes","edges" or "none". To view edge selection you may need to modify the other selection display options.
             </td>
         </tr>
         <tr><td>selection_persistDisplay</td>
@@ -804,7 +804,7 @@ Advanced Options:
             <td>Array</td>
             <td>NULL
         	</td>
-            <td>An optionsl array specifying positions at which to fix node clusters. Only used by the extended force directed layout. Should be of the format <code>[{x:postion1x,y:position1y},{x:postion1x,y:position1y},...]</code>.
+            <td>An optional array specifying positions at which to fix node clusters. Only used by the extended force directed layout. Should be of the format <code>[{x:postion1x,y:position1y},{x:postion1x,y:position1y},...]</code>.
             </td>
         </tr>
         
@@ -858,7 +858,7 @@ Optional DataTables:
 			        </tr>
 			        <tr>
 			        	<td>size</td>
-			        	<td>A number specifying a size multiplyer to apply to the node.</td>
+			        	<td>A number specifying a size multiplier to apply to the node.</td>
 			        </tr>
 			        <tr>
 			        	<td>x</td>
@@ -889,7 +889,7 @@ Optional DataTables:
 			        </tr>
 			        <tr>
 			        	<td>1-n</td>
-			        	<td>Columns 1-n are used to specify arbitrary data. Columns with titles begining with "t_" will be views as time points to be used by the circular heatmap if it is enabled.</td>
+			        	<td>Columns 1-n are used to specify arbitrary data. Columns with titles beginning with "t_" will be views as time points to be used by the circular heatmap if it is enabled.</td>
 			        </tr>
 			    </tbody>
 			 </table>
@@ -941,7 +941,7 @@ Optional DataTables:
         <tr>
             <td><code>setSelection(selection)</code></td>
             <td>none</td>
-            <td>selection is an array of selected items. Items can be either nodes specified as <code>{node;"node_id"}</code> or edges specified  by row number in the data parmater: <code>{row:row_num}</code>.
+            <td>selection is an array of selected items. Items can be either nodes specified as <code>{node;"node_id"}</code> or edges specified  by row number in the data parameter: <code>{row:row_num}</code>.
             
             </td>
         </tr>
@@ -983,17 +983,17 @@ Optional DataTables:
         </tr>
         <tr>
             <td>nodeclick</td>
-            <td>Fired on a node click, handeler should accept a single paramater, <code>target</code>.</td>
+            <td>Fired on a node click, handler should accept a single parameter, <code>target</code>.</td>
             <td><code>target.node.name</code></td>
         </tr>
         <tr>
             <td>nodedoubleclick</td>
-            <td>Fired on a node double click, handeler should accept a single paramater, <code>target</code>.</td>
+            <td>Fired on a node double click, handler should accept a single parameter, <code>target</code>.</td>
             <td><code>target.node.name</code></td>
         </tr>
         <tr>
             <td>edgeclick</td>
-            <td>Fired on edge click, handeler should accept a single paramater but the edge id is not currently available from this event.</td>
+            <td>Fired on edge click, handler should accept a single parameter but the edge id is not currently available from this event.</td>
             <td></td>
         </tr>
         

@@ -1,0 +1,353 @@
+<html>
+<head>
+
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Visualization: BioHeatMap - A Heatmap for Gene Expression and Other Data</title>
+
+
+    <!--<script src="http://code.google.com/js/codesite.pack.01312008.js" type="text/javascript"></script>-->
+    <link href="http://code.google.com/css/codesite.pack.01312008.css" type="text/css" rel="stylesheet"/>
+  
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["table"]});
+        google.load("prototype", "1.6");
+    </script>
+    <script type="text/javascript" src="bionetwork.js"></script>
+
+    
+</head>
+<body class="gc-documentation">
+
+<div id="gc-container">
+<a name="top"></a>
+
+
+<div id="codesiteContent">
+
+<a name="gc-topnav-anchor"></a>
+
+<div id="gc-topnav">
+    <h1>Lichen Network Viewer</h1>
+    <ul id="docs" class="gc-topnav-tabs">
+        <li id="home_link">
+            <a href="http://systemsbiology.org/" title="Institute for Systems Biology">Home</a>
+        </li>
+
+        <li id="docs_link">
+            <a href="http://groups.google.com/group/systemsbiology-visualizations/web/visualizations-summary" class="selected"
+               title="Systems Biology Visualizations Documentation">Docs</a>
+        </li>
+
+        <li id="faq_link">
+            <a href="http://systemsbiology-visualizations.googlegroups.com/web/bioLichen Network Viewer_examples.html" title="">Examples</a>
+        </li>
+
+        <li id="code_link">
+            <a href="http://code.google.com/p/systemsbiology-visualizations/" title="Code Repository In Google Code">Code</a>
+        </li>
+
+        <li>
+            <a href="http://groups.google.com/group/systemsbiology-visualizations" title="Systems Biology Visualization Group">Group</a>
+        </li>
+    </ul>
+</div>
+<!-- end gc-topnav -->
+
+
+<div class="g-section g-tpl-170">
+
+<a name="gc-toc-anchor"></a>
+
+<div class="g-unit g-first" id="gc-toc">
+    <ul class="treelist tlw-nested-only tlw-processed tlw-instance-0">
+        <li><h2 class="tlw-ignore">Systemsbiology.org Visualizations</h2>
+          <li id="home_link1">
+             <a href="http://groups.google.com/group/systemsbiology-visualizations/web/visualizations-summary" title="">Project Home</a>
+          </li>
+
+            <ul>
+
+                <li style="padding-top: 0pt; padding-bottom: 0pt;">
+                    <div class="tlw-title tlw-branch"><a href="javascript:void(0)" class="tlw-control"
+                                                         title=""><img
+                            src="docs/cleardot.gif" alt=""
+                            class="tlw-control tlw-minus"></a>
+
+                        <h2 class="tlw-expanded">BioHeatMap (js)</h2></div>
+                    <ul style="display: block;" id="0-sub-0">
+
+
+                        <li id="docs_link1">
+                            <a href="http://systemsbiology-visualizations.googlegroups.com/web/bioheatmap.html" title="">Docs</a>
+                        </li>
+
+                        <li id="faq_link1">
+                            <a href="http://systemsbiology-visualizations.googlegroups.com/web/bioheatmap_examples.html" title="">Examples</a>
+                        </li>
+
+                        <li>
+                            <a href="http://code.google.com/p/systemsbiology-visualizations/downloads/detail?name=bioheatmap.js" title="">Download</a>
+                        </li>
+
+                    </ul>
+                </li>
+                
+                <li style="padding-top: 0pt; padding-bottom: 0pt;">
+                    <div class="tlw-title tlw-branch"><a href="javascript:void(0)" class="tlw-control"
+                                                         title=""><img
+                            src="docs/cleardot.gif" alt=""
+                            class="tlw-control tlw-minus"></a>
+
+                        <h2 class="tlw-expanded">Lichen BioHeatMap (flash)</h2></div>
+                    <ul style="display: block;" id="0-sub-0">
+
+                        <li id="docs_link1">
+                            <a href="bioheatmap.html" title="">Docs</a>
+                        </li>
+
+                        <li id="faq_link1">
+                            <a href="bioheatmap_examples.html" title="">Examples</a>
+                        </li>
+
+                        <li>
+                            <a href="bioheatmap.zip" title="">Download</a>
+                        </li>
+
+                    </ul>
+                </li>
+                
+                <li style="padding-top: 0pt; padding-bottom: 0pt;">
+                    <div class="tlw-title tlw-branch"><a href="javascript:void(0)" class="tlw-control"
+                                                         title=""><img
+                            src="docs/cleardot.gif" alt=""
+                            class="tlw-control tlw-minus"></a>
+
+                        <h2 class="tlw-expanded">Lichen Network Viewer (flash)</h2></div>
+                    <ul style="display: block;" id="0-sub-0">
+
+                        <li id="docs_link1">
+                            <a href="bionetwork.html" title="" class="selected">Docs</a>
+                        </li>
+
+                        <li id="faq_link1">
+                            <a href="bionetwork_examples.html" title="">Examples</a>
+                        </li>
+
+                        <li>
+                            <a href="bionetwork.zip" title="">Download</a>
+                        </li>
+
+                    </ul>
+                </li>
+                
+            </ul>
+        </li>
+    </ul>
+    <div class="line"></div>
+
+</div>
+
+<a name="gc-pagecontent-anchor"></a>
+
+<div style="position: relative;" class="g-unit" id="gc-pagecontent">
+<h1 class="page_title">Visualization: Lichen Network Viewer Examples</h1>
+
+
+    <h1>Example 1</h1>
+    <div style="text-align: center ;"><strong>Signaling Pathways in Glioblastoma</strong><br/><br/>
+This network is based on signaling pathways which were described in:
+<i>Comprehensive genomic characterization defines human glioblastoma genes and core pathways</i>, The Cancer Genome Atlas Research Network, Nature 10/23/2008. PubMed ID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/18772890">18772890</a> <br/><br />
+</div>
+	<div style="position: relative; margin-left: auto ; margin-right: auto ; height: 800px; Width : 840px;text-align: center ;" id="visContainer">
+	<br/><br/><br/><br/>Loading ...
+	</div>
+<script language="JavaScript" type="text/javascript">	
+
+	google.setOnLoadCallback(drawChart); // Set callback to run when API is loaded
+	
+	function drawChart() {
+		data = new
+google.visualization.DataTable({"cols":[{"id":0,"label":"edge_id","type":"string"},{"id":1,"label":"interactor1","type":"
+string"},{"id":2,"label":"interactor2","type":"string"},{"id":3,"label":"directed","type":"string"},{"id":4,"label":"color",
+"type":"string"},{"id":5,"label":"type","type":"string"}],"rows":[{"c":[{"v":"1"},{"v":"BASC"},{"v":"BRCA1"},{"v":"TRUE"},{"
+v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"2"},{"v":"BASC"},{"v":"DNA
+Repair"},{"v":"TRUE"},{"v":"0x660000ff"},{"v":"TRIANGLE"}]},{"c":[{"v":"3"},{"v":"BASC"},{"v":"MSH6"},{"v":"TRUE"},{"v":"
+0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"4"},{"v":"ERRFI1"},{"v":"EGFR-family"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"
+TRIANGLE"}]},{"c":[{"v":"5"},{"v":"EGFR-family"},{"v":"EGFR"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":
+"6"},{"v":"EGFR-family"},{"v":"ERBB2"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"7"},{"v":"EGFR-family"
+},{"v":"ERBB3"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"8"},{"v":"CCND2"},{"v":"CCND-CDK4-complex"},{
+"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"9"},{"v":"CCND2"},{"v":"CCND-CDK6-complex"},{"v":"TRUE"},{"v":
+"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"10"},{"v":"CCND-CDK4-complex"},{"v":"CCND1"},{"v":"TRUE"},{"v":"0x66000000"},{"
+v":"TRIANGLE"}]},{"c":[{"v":"11"},{"v":"CCND-CDK4-complex"},{"v":"CDK4"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},
+{"c":[{"v":"12"},{"v":"CCND-CDK4-complex"},{"v":"RB1"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"13"},{
+"v":"PI3K-class1a"},{"v":"PIK3R2"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"14"},{"v":"PI3K-class1a"},
+{"v":"PIK3R1"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"15"},{"v":"PI3K-class1a"},{"v":"PIK3CB"},{"v":
+"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"16"},{"v":"PI3K-class1a"},{"v":"PIK3CD"},{"v":"TRUE"},{"v":"
+0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"17"},{"v":"PI3K-class1a"},{"v":"PIK3CA"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"
+TRIANGLE"}]},{"c":[{"v":"18"},{"v":"PI3K-class1a"},{"v":"PIP3"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v
+":"19"},{"v":"AKT"},{"v":"AKT2"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"20"},{"v":"AKT"},{"v":"MDM2"
+},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"21"},{"v":"AKT"},{"v":"CELL
+SURVIVAL"},{"v":"TRUE"},{"v":"0x660000ff"},{"v":"TRIANGLE"}]},{"c":[{"v":"22"},{"v":"AKT"},{"v":"CDKN1B"},{"v":"TRUE"},{"v":
+"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"23"},{"v":"AKT"},{"v":"AKT1"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]
+},{"c":[{"v":"24"},{"v":"AKT"},{"v":"TSC-complex"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"25"},{"v":
+"AKT"},{"v":"AKT3"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"26"},{"v":"AKT"},{"v":"FOXO"},{"v":"TRUE"
+},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"27"},{"v":"RAF"},{"v":"RAF1"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"
+TRIANGLE"}]},{"c":[{"v":"28"},{"v":"RAF"},{"v":"ARAF"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"29"},{
+"v":"RAF"},{"v":"BRAF"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"30"},{"v":"RAF"},{"v":"MEK"},{"v":"
+TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"31"},{"v":"ATM"},{"v":"BRCA1"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v"
+:"TRIANGLE"}]},{"c":[{"v":"32"},{"v":"ATM"},{"v":"TP53"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"33"}
+,{"v":"LPA"},{"v":"PIK3C2B"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"34"},{"v":"PIK3C2B"},{"v":"PI-3-
+P"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"35"},{"v":"ERK"},{"v":"CCND-CDK4-complex"},{"v":"TRUE"},{
+"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"36"},{"v":"ERK"},{"v":"CELL CYCLE
+PROGRESSION"},{"v":"TRUE"},{"v":"0x660000ff"},{"v":"TRIANGLE"}]},{"c":[{"v":"37"},{"v":"ERK"},{"v":"CCND-CDK6-complex"},{"v"
+:"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"38"},{"v":"PI3K-class2"},{"v":"PIK3C2A"},{"v":"TRUE"},{"v":"
+0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"39"},{"v":"PI3K-class2"},{"v":"PIK3C2B"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"
+TRIANGLE"}]},{"c":[{"v":"40"},{"v":"PI3K-class2"},{"v":"PIK3C2G"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{
+"v":"41"},{"v":"RTK"},{"v":"GRB2"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"42"},{"v":"RTK"},{"v":"
+FGFR"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"43"},{"v":"RTK"},{"v":"MET"},{"v":"TRUE"},{"v":"
+0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"44"},{"v":"RTK"},{"v":"IGF1R"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]
+},{"c":[{"v":"45"},{"v":"RTK"},{"v":"EGFR-family"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"46"},{"v":
+"RTK"},{"v":"PLCG"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"47"},{"v":"RTK"},{"v":"PI3K-class2"},{"v"
+:"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"48"},{"v":"RTK"},{"v":"SRC"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v"
+:"TRIANGLE"}]},{"c":[{"v":"49"},{"v":"RTK"},{"v":"PDGFR"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"50"
+},{"v":"GRB2"},{"v":"GAB1"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"51"},{"v":"GRB2"},{"v":"RAS"},{"v
+":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"52"},{"v":"MDM2"},{"v":"TP53"},{"v":"TRUE"},{"v":"0x66ff0000"},{
+"v":"TRIANGLE"}]},{"c":[{"v":"53"},{"v":"EP300"},{"v":"TP53"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":
+"54"},{"v":"TP53"},{"v":"G2\/M
+ARREST"},{"v":"TRUE"},{"v":"0x660000ff"},{"v":"TRIANGLE"}]},{"c":[{"v":"55"},{"v":"TP53"},{"v":"APOPTOSIS"},{"v":"TRUE"},{"v
+":"0x660000ff"},{"v":"TRIANGLE"}]},{"c":[{"v":"56"},{"v":"TP53"},{"v":"CDKN1A"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"
+TRIANGLE"}]},{"c":[{"v":"57"},{"v":"FOXO"},{"v":"FOXO4"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"58"}
+,{"v":"FOXO"},{"v":"FOXO1"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"59"},{"v":"FOXO"},{"v":"CDKN1A"},
+{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"60"},{"v":"FOXO"},{"v":"CDKN1B"},{"v":"TRUE"},{"v":"
+0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"61"},{"v":"FOXO"},{"v":"SPRY2"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}
+]},{"c":[{"v":"62"},{"v":"FOXO"},{"v":"FOXO3"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"63"},{"v":"PI-
+3-P"},{"v":"CELL
+MIGRATION"},{"v":"TRUE"},{"v":"0x660000ff"},{"v":"TRIANGLE"}]},{"c":[{"v":"64"},{"v":"MEK"},{"v":"ERK"},{"v":"TRUE"},{"v":"
+0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"65"},{"v":"PKC"},{"v":"PRKCA"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]
+},{"c":[{"v":"66"},{"v":"PKC"},{"v":"PRKCI"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"67"},{"v":"PKC"}
+,{"v":"RAF"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"68"},{"v":"PKC"},{"v":"PRKCB1"},{"v":"TRUE"},{"v
+":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"69"},{"v":"PKC"},{"v":"MEK"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}
+]},{"c":[{"v":"70"},{"v":"PKC"},{"v":"PRKCH"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"71"},{"v":"PKC"
+},{"v":"PRKCD"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"72"},{"v":"PKC"},{"v":"PRKCQ"},{"v":"TRUE"},{
+"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"73"},{"v":"PKC"},{"v":"PRKCZ"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"
+TRIANGLE"}]},{"c":[{"v":"74"},{"v":"PKC"},{"v":"PRKCG"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"75"},
+{"v":"INK4"},{"v":"CDKN2B"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"76"},{"v":"INK4"},{"v":"CDKN2A:
+p16"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"77"},{"v":"INK4"},{"v":"CCND-CDK4-complex"},{"v":"TRUE"
+},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"78"},{"v":"INK4"},{"v":"CDKN2C"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"
+TRIANGLE"}]},{"c":[{"v":"79"},{"v":"INK4"},{"v":"CCND-CDK6-complex"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c"
+:[{"v":"80"},{"v":"FGFR"},{"v":"FGFR2"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"81"},{"v":"FGFR"},{"v
+":"FGFR1"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"82"},{"v":"CCND-CDK6-complex"},{"v":"RB1"},{"v":"
+TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"83"},{"v":"CCND-CDK6-complex"},{"v":"CDK6"},{"v":"TRUE"},{"v":"
+0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"84"},{"v":"CCND-CDK6-complex"},{"v":"CCND1"},{"v":"TRUE"},{"v":"0x66000000"},{"v
+":"TRIANGLE"}]},{"c":[{"v":"85"},{"v":"RB1"},{"v":"E2F1"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"86"
+},{"v":"CCNE-CDK2-complex"},{"v":"RB1"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"87"},{"v":"CCNE-CDK2-
+complex"},{"v":"CCNE1"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"88"},{"v":"CCNE-CDK2-complex"},{"v":"
+CDK2"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"89"},{"v":"IGF1R"},{"v":"IRS1"},{"v":"TRUE"},{"v":"
+0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"90"},{"v":"IRS1"},{"v":"PI3K-class1a"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"
+TRIANGLE"}]},{"c":[{"v":"91"},{"v":"GAB1"},{"v":"PI3K-class1a"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v
+":"92"},{"v":"MDM4"},{"v":"TP53"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"93"},{"v":"CDKN2A:ARF"},{"v
+":"MDM2"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"94"},{"v":"CDKN1A"},{"v":"CCND-CDK6-complex"},{"v":
+"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"95"},{"v":"CDKN1A"},{"v":"CCND-CDK4-complex"},{"v":"TRUE"},{"v":"
+0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"96"},{"v":"TSC-complex"},{"v":"TSC1"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"
+TRIANGLE"}]},{"c":[{"v":"97"},{"v":"TSC-complex"},{"v":"TSC2"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v"
+:"98"},{"v":"BRCC"},{"v":"BRCA1"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"99"},{"v":"BRCC"},{"v":"
+BRCA2"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"100"},{"v":"BRCC"},{"v":"DNA
+Repair"},{"v":"TRUE"},{"v":"0x660000ff"},{"v":"TRIANGLE"}]},{"c":[{"v":"101"},{"v":"CDKN1B"},{"v":"CCNE-CDK2-complex"},{"v":
+"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"102"},{"v":"CENTG1"},{"v":"PI3K-class1a"},{"v":"TRUE"},{"v":"
+0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"103"},{"v":"PDGFR"},{"v":"PDGFRB"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"
+TRIANGLE"}]},{"c":[{"v":"104"},{"v":"PDGFR"},{"v":"PDGFRA"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"
+105"},{"v":"SPRY2"},{"v":"CBL"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"106"},{"v":"SPRY2"},{"v":"RAF
+"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"107"},{"v":"RAS"},{"v":"NRAS"},{"v":"TRUE"},{"v":"
+0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"108"},{"v":"RAS"},{"v":"HRAS"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]
+},{"c":[{"v":"109"},{"v":"RAS"},{"v":"PI3K-class1b"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"110"},{"
+v":"RAS"},{"v":"RAF"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"111"},{"v":"RAS"},{"v":"KRAS"},{"v":"
+TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"112"},{"v":"CBL"},{"v":"RTK"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":
+"TRIANGLE"}]},{"c":[{"v":"113"},{"v":"PI3K-class1b"},{"v":"PIP3"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{
+"v":"114"},{"v":"PI3K-class1b"},{"v":"PIK3CG"},{"v":"TRUE"},{"v":"0x66000000"},{"v":"TRIANGLE"}]},{"c":[{"v":"115"},{"v":"
+PIP3"},{"v":"PDPK1"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"116"},{"v":"PLCG"},{"v":"PKC"},{"v":"
+TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"117"},{"v":"SRC"},{"v":"PTEN"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v"
+:"TRIANGLE"}]},{"c":[{"v":"118"},{"v":"SRC"},{"v":"PI3K-class1a"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{
+"v":"119"},{"v":"PTEN"},{"v":"PIP3"},{"v":"TRUE"},{"v":"0x66ff0000"},{"v":"TRIANGLE"}]},{"c":[{"v":"120"},{"v":"PDPK1"},{"v"
+:"AKT"},{"v":"TRUE"},{"v":"0x6600ff00"},{"v":"TRIANGLE"}]},{"c":[{"v":"121"},{"v":"E2F1"},{"v":"G1\/S
+PROGRESSION"},{"v":"TRUE"},{"v":"0x660000ff"},{"v":"TRIANGLE"}]},{"c":[{"v":"122"},{"v":"NF1"},{"v":"RAS"},{"v":"TRUE"},{"v"
+:"0x66ff0000"},{"v":"TRIANGLE"}]}]},.6);
+
+       	networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('visContainer'));
+       	networkvis.draw(data,
+       	{"center":"SPRY2","node_labels_radial":true,"node_tooltips":true,"legend":[{"color":"0x6600ff00",
+       	"shape":"TRIANGLE_RIGHT","size":0.5,"label":"Activates"},{"color":"0x66ff0000","shape":"TRIANGLE_RIGHT","size":0.
+       	5,"label":"Inhibits"},{"color":"0x660000ff","shape":"TRIANGLE_RIGHT","size":0.5,"label":"Leads
+       	to"},{"color":"0x66000000","shape":"TRIANGLE_RIGHT","size":0.5,"label":"Contains"},{"color":"0xff0055cc","shape":
+       	"CIRCLE","size":0.75,"label":"Protein"},{"color":"0xff0055cc","shape":"SQUARE","size":0.75,"label":"Protein
+       	Family"},{"color":"0xff0055cc","shape":"TRIANGLE_UP","size":0.75,"label":"Protein
+       	Complex"},{"color":"0xff0055cc","shape":"DIAMOND","size":0.75,"label":"Small
+       	Molecule"}],"layout_radialTree_startRadiusFraction":".05","layout":"radialTree","height":800,"width":840,"padding
+       	":0,"layout_data":{"cols":[{"id":0,"label":"nodeId","type":"string"},{"id":1,"label":"shape","type":"string"},{"
+       	id":2,"label":"size","type":"string"}],"rows":[{"c":[{"v":"BASC"},{"v":"TRIANGLE_UP"},{"v":".8"}]},{"c":[{"v":"
+       	BRCA1"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"ERRFI1"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"EGFR-family"},{"
+       	v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"CCND2"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"CCND-CDK4-complex"},{"v":"
+       	TRIANGLE_UP"},{"v":".8"}]},{"c":[{"v":"PI3K-class1a"},{"v":"TRIANGLE_UP"},{"v":".8"}]},{"c":[{"v":"PIK3R2"},{"v":
+       	"CIRCLE"},{"v":".8"}]},{"c":[{"v":"AKT"},{"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"AKT2"},{"v":"CIRCLE"},{"v":".8"}
+       	]},{"c":[{"v":"RAF"},{"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"RAF1"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"ATM"}
+       	,{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"LPA"},{"v":"DIAMOND"},{"v":".8"}]},{"c":[{"v":"PIK3C2B"},{"v":"CIRCLE"},
+       	{"v":".8"}]},{"c":[{"v":"ERK"},{"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"PI3K-class2"},{"v":"SQUARE"},{"v":".8"}]},
+       	{"c":[{"v":"PIK3C2A"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"RTK"},{"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"GRB2"
+       	},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"MDM2"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"PIK3R1"},{"v":"CIRCLE"},
+       	{"v":".8"}]},{"c":[{"v":"PIK3CB"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"EP300"},{"v":"CIRCLE"},{"v":".8"}]},{"c
+       	":[{"v":"TP53"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"FOXO"},{"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"FOXO4"},{"
+       	v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"FOXO1"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"PI-3-P"},{"v":"DIAMOND"},{"
+       	v":".8"}]},{"c":[{"v":"CELL
+       	MIGRATION"},{"v":""},{"v":"0.01"}]},{"c":[{"v":"ARAF"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"MEK"},{"v":"SQUARE
+       	"},{"v":".8"}]},{"c":[{"v":"PKC"},{"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"PRKCA"},{"v":"CIRCLE"},{"v":".8"}]},{"c
+       	":[{"v":"INK4"},{"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"CDKN2B"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"FGFR"},{
+       	"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"EGFR"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"CCND-CDK6-complex"},{"v":"
+       	TRIANGLE_UP"},{"v":".8"}]},{"c":[{"v":"RB1"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"CCND1"},{"v":"CIRCLE"},{"v":
+       	".8"}]},{"c":[{"v":"CCNE-CDK2-complex"},{"v":"TRIANGLE_UP"},{"v":".8"}]},{"c":[{"v":"FGFR2"},{"v":"CIRCLE"},{"v":
+       	".8"}]},{"c":[{"v":"MET"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"G2\/M
+       	ARREST"},{"v":""},{"v":"0.01"}]},{"c":[{"v":"IGF1R"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"IRS1"},{"v":"CIRCLE"
+       	},{"v":".8"}]},{"c":[{"v":"GAB1"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"CDKN2A:p16"},{"v":"CIRCLE"},{"v":".8"}]
+       	},{"c":[{"v":"CDK4"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"DNA
+       	Repair"},{"v":""},{"v":"0.01"}]},{"c":[{"v":"MDM4"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"PRKCI"},{"v":"CIRCLE"
+       	},{"v":".8"}]},{"c":[{"v":"CDKN2A:ARF"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"CDKN1A"},{"v":"CIRCLE"},{"v":".8"
+       	}]},{"c":[{"v":"TSC-complex"},{"v":"TRIANGLE_UP"},{"v":".8"}]},{"c":[{"v":"TSC1"},{"v":"CIRCLE"},{"v":".8"}]},{"c
+       	":[{"v":"BRAF"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"TSC2"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"PRKCB1"},{
+       	"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"BRCC"},{"v":"TRIANGLE_UP"},{"v":".8"}]},{"c":[{"v":"CELL
+       	SURVIVAL"},{"v":""},{"v":"0.01"}]},{"c":[{"v":"CDKN1B"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"CENTG1"},{"v":"
+       	CIRCLE"},{"v":".8"}]},{"c":[{"v":"PIK3CD"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"BRCA2"},{"v":"CIRCLE"},{"v":".
+       	8"}]},{"c":[{"v":"PDGFR"},{"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"PDGFRB"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v"
+       	:"MSH6"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"CDK6"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"SPRY2"},{"v":"
+       	CIRCLE"},{"v":".8"}]},{"c":[{"v":"PRKCH"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"PDGFRA"},{"v":"CIRCLE"},{"v":".
+       	8"}]},{"c":[{"v":"AKT1"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"RAS"},{"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"
+       	NRAS"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"ERBB2"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"PRKCD"},{"v":"
+       	CIRCLE"},{"v":".8"}]},{"c":[{"v":"CCNE1"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"ERBB3"},{"v":"CIRCLE"},{"v":".8
+       	"}]},{"c":[{"v":"PIK3CA"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"CBL"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"
+       	PI3K-class1b"},{"v":"TRIANGLE_UP"},{"v":".8"}]},{"c":[{"v":"PIP3"},{"v":"DIAMOND"},{"v":".8"}]},{"c":[{"v":"PLCG"
+       	},{"v":"SQUARE"},{"v":".8"}]},{"c":[{"v":"FGFR1"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"HRAS"},{"v":"CIRCLE"},{
+       	"v":".8"}]},{"c":[{"v":"APOPTOSIS"},{"v":""},{"v":"0.01"}]},{"c":[{"v":"PIK3CG"},{"v":"CIRCLE"},{"v":".8"}]},{"c"
+       	:[{"v":"SRC"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"PTEN"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"PDPK1"},{"v"
+       	:"CIRCLE"},{"v":".8"}]},{"c":[{"v":"CDK2"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"FOXO3"},{"v":"CIRCLE"},{"v":".
+       	8"}]},{"c":[{"v":"CELL CYCLE
+       	PROGRESSION"},{"v":""},{"v":"0.01"}]},{"c":[{"v":"E2F1"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"NF1"},{"v":"
+       	CIRCLE"},{"v":".8"}]},{"c":[{"v":"CDKN2C"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"AKT3"},{"v":"CIRCLE"},{"v":".8
+       	"}]},{"c":[{"v":"PIK3C2G"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"PRKCQ"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v"
+       	:"PRKCZ"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"G1\/S
+       	PROGRESSION"},{"v":""},{"v":"0.01"}]},{"c":[{"v":"KRAS"},{"v":"CIRCLE"},{"v":".8"}]},{"c":[{"v":"PRKCG"},{"v":"
+       	CIRCLE"},{"v":".8"}]}]}});
+}
+</script>
+    
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

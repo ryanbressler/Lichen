@@ -176,7 +176,15 @@
 </p>
 
 <p>
-    By: dburdick<br/>
+Lichen is a new project at ISB that aims to provide network and heat map visualization in web browsers. It provides components that can be used as interactive figures in any website.
+</p>
+<p>
+	Lichen BioHeatMap is a actionscript port of the javascript BioHeatMap. It can be used to replace the javascript version and offers
+	several novel features including embedded links, selection display, angled column headers and better performance in Internet Explorer.
+</p>
+
+<p>
+    By: rbressler, dburdick<br/>
     Institute for Systems Biology
 </p>
 
@@ -240,7 +248,7 @@
         data.setCell(3, 6, -5.5);
 
         heatmap = new org.systemsbiology.visualization.BioHeatMap(document.getElementById('heatmapContainer'));
-        heatmap.draw(data, {});
+        heatmap.draw(data, {showCellLabels: false});
     }
 </script>
 
@@ -300,7 +308,7 @@
           data.setCell(3, 6, -5.5);
 
           heatmap = new org.systemsbiology.visualization.BioHeatMap(document.getElementById('heatmapContainer'));
-          heatmap.draw(data, {});
+          heatmap.draw(data, {showCellLabels: false});
       }
     &lt;/script&gt;
   &lt;/head&gt;
@@ -357,8 +365,8 @@
 <h1><a name="Data_Format" id="Data_Format"></a>Data Format</h1>
 
 <p>
-    This visualization supports numerical data for all columns. When the <code>useRowLabels</code> option is true (default),
-    the first column may be of string type.
+    This visualization supports numerical or string data for all columns. String columns will be parsed as numbers but will also allow the special values "NA" and "Y" which will be rendered as grey and blue cells. When the <code>useRowLabels</code> option is true (default),
+    the first column will be used as row labels.
 </p>
 
 <h1><a name="Configuration_Options" id="Configuration_Options"></a>Configuration Options</h1>
@@ -432,7 +440,13 @@
             <td>useRowLabels</td>
             <td>boolean</td>
             <td>true</td>
-            <td>If set to true, the first column will be treated as a row label and it's value printed as text.</td>
+            <td>If set to true, the first column of the data will be treated as a row label and it's value printed as text.</td>
+        </tr>
+        <tr>
+            <td>noRowNames</td>
+            <td>boolean</td>
+            <td>false</td>
+            <td>Converse of useRowLabels. If set to false, the first column of the data will be treated as a row label and it's value printed as text.</td>
         </tr>
         <tr>
             <td>cellWidth</td>
@@ -465,7 +479,7 @@
             </td>
         </tr>
         <tr>
-            <td>fontSize</td>
+            <td>fontHeight</td>
             <td>integer</td>
             <td>10</td>
             <td>The font height in pixels.</td>
@@ -484,12 +498,66 @@
             <td>The number of pixels to pad the left and right sides of the visualization.
             </td>
         </tr>
+
         <tr>
-            <td>drawBorder</td>
-            <td>boolean</td>
-            <td>true</td>
-            <td>If true, a single pixel border is drawn around the edges of the visualization.</td>
+            <td>selectionDisplay</td>
+            <td>Object</td>
+            <td><code>{mode :  "flash",<br/> 
+		        			fill:{color:{ r: 0, g: 0, b: 0, a: .5 }},<br/>  
+		        			border:{width:2,color:{ r: 0, g: 0, b: 0, a: 1 }}<br/> 
+		        			}</code>
+		        			</td>
+            <td>Controlls how the selection rectabgles are displayed. Mode can be "flash", "highlight" or "none".</td>
         </tr>
+        <tr>
+            <td>showCellLabels</td>
+            <td>bool</td>
+            <td>true</td>
+            <td>Should cell's be lebeled with their values.</td>
+        </tr>
+        <tr>
+            <td>cellToolTips</td>
+            <td>string</td>
+            <td>"none"</td>
+            <td> Controlls what tool tips are displayed for cells. Can be "value", "none" or "headers".</td>
+        </tr>
+        <tr>
+            <td>rowBaseUrl</td>
+            <td>string</td>
+            <td>""</td>
+            <td>If present, used with the unformatted value of the row label column to create embedded links from row headers. Formated values, if present, are used for the header text so arbitrary links can be constructed.</td>
+        </tr>
+        <tr>
+            <td>columnBaseUrl</td>
+            <td>string</td>
+            <td>""</td>
+            <td>If present, used with the column id to create embedded links from col headers.</td>
+        </tr>
+        <tr>
+            <td>cellBaseUrl</td>
+            <td>string</td>
+            <td>""</td>
+            <td>If present, used with the unformatted value of the cell to create embedded links from cell labels. Formated values, if present, are used for the label text and heatmap value so arbitrary links can be constructed.</td>
+        </tr>
+        <tr>
+            <td>hideHeaders</td>
+            <td>bool</td>
+            <td>false</td>
+            <td>Hide row and column headers. Intended for use with tooltips to save space on the page.</td>
+        </tr>
+        <tr>
+            <td>hideColHeaders</td>
+            <td>bool</td>
+            <td>false</td>
+            <td>Hide column headers. Intended for use with tooltips to save space on the page.</td>
+        </tr>
+        <tr>
+            <td>hideRowHeaders</td>
+            <td>bool</td>
+            <td>false</td>
+            <td>Hide row headers. Intended for use with tooltips to save space on the page.</td>
+        </tr>
+        
     </tbody>
 </table>
 

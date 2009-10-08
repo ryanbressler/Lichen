@@ -197,10 +197,8 @@ Example: layout:{layout_type: 'ForceDirected', defaultParticleMass: '1', default
 			No longer used
 		useRowLabels=true
 			Indicates col 0 in the data is row lables and not data. Redundent with use noRowNames.
-		useCellLabels
-		rowBaseUrl
-		columnBaseUrl
-		_cellBaseUrl
+		
+		
 		cellWidth
 		cellHeight
 		mapWidth
@@ -209,9 +207,6 @@ Example: layout:{layout_type: 'ForceDirected', defaultParticleMass: '1', default
 		fontHeight
 		horizontalPadding=10
 		verticalPadding=10
-		verticle
-		cellBorder
-		drawBorder
 		selectionDisplay: {mode :  "flash" || "highlight" || "none", 
 		        			fill:{color:{ r: 0, g: 0, b: 0, a: .5 }}, 
 		        			border:{width:2,color:{ r: 0, g: 0, b: 0, a: 1 }}
@@ -220,6 +215,11 @@ Example: layout:{layout_type: 'ForceDirected', defaultParticleMass: '1', default
 		        			
 		cellToolTips:  "value" || "none" || "headers"
 			The type of tool tips to use on the heatmap cells
+		showCellLabels
+		
+		rowBaseUrl
+		columnBaseUrl
+		cellBaseUrl
 		
 		hideHeaders
 			hide row and columne headers
