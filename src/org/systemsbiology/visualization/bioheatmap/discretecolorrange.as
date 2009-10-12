@@ -146,6 +146,7 @@ package org.systemsbiology.visualization.bioheatmap
     // returns the Hex color for the given dataValue
     public function getCellColorHex(dataValue:String):String {
         var rgba:Object = this.getCellColorRGBA(dataValue);
+        trace(dataValue);
         return this._RGBtoHex(rgba.r, rgba.g, rgba.b);
     }
 

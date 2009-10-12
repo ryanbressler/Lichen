@@ -101,8 +101,8 @@ package {
 	        legend:{parseAs:"param", affects:[]},
 	        node_renderer:{parseAs:"param", affects:["nodes"]},
 	        edge_renderer:{parseAs:"param", affects:["edges"]}, 
-	        maxval: {parseAs:"param", affects:["nodes"]},
-	        minval: {parseAs:"param", affects:["nodes"]},
+	        CircularHeatmap_maxval: {parseAs:"param", affects:["nodes"]},
+	        CircularHeatmap_minval: {parseAs:"param", affects:["nodes"]},
 	        nodeClusterPositions:{parseAs:"param", affects: ["layout"]},
 	        
 	        //undocumented opions that may be removed
