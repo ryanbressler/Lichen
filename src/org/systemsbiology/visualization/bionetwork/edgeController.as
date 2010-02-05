@@ -9,6 +9,7 @@ package org.systemsbiology.visualization.bionetwork
 	
 	import org.systemsbiology.visualization.bionetwork.data.Network;
 	import org.systemsbiology.visualization.bionetwork.display.MultiEdgeRenderer;
+	import org.systemsbiology.visualization.data.DataView;
 
 	
 	public class edgeController
@@ -31,7 +32,37 @@ package org.systemsbiology.visualization.bionetwork
 				});
 			
 			
+			var edge_data : org.systemsbiology.visualization.data.DataView = options.edge_data;
+			var edgedatahash : Object = {};
+						
+			if(options.edge_data)
+			{
+				var colorcol : int;
+				var widthcol : int;
 			
+				for (var i : int =0; i<edge_data.getNumberOfColumns();i++)
+				{
+					if(edge_data.getColumnLabel(i)=="color")
+					{
+						colorcol=i;
+					}
+					if(edge_data.getColumnLabel(i)=="shape")
+					{
+						widthcol=i;
+					}
+				
+				}
+				 
+				for (var i : int =0; i<edge_data.getNumberOfRows();i++)
+				{
+					var data : Object = {width:widthcol?edge_data.getValue(i,2):null, color:colorcol?edge_data.getValue(i,colorcol):null};
+					if(!edgedatahash[edge_data.getValue(i,0)])
+					{
+						edgedatahash[edge_data.getValue(i,0)] = {}
+					}
+					edgedatahash[edge_data.getValue(i,0)][edge_data.getValue(i,1)]=data;
+				}
+			}
 			
 			var e : EdgeSprite;
 			for (var i : int =0; i<network.data.edges.length;i++) {
@@ -46,6 +77,12 @@ package org.systemsbiology.visualization.bionetwork
 				{
 					e.lineColor = e.props.color;
 				}
+				if(edgedatahash && edgedatahash[e.source.data.name] && edgedatahash[e.source.data.name][e.target.data.name])
+				{
+
+						e.lineColor = edgedatahash[e.source.data.name][e.target.data.name].color || e.lineColor;
+						e.lineWidth = edgedatahash[e.source.data.name][e.target.data.name].width || e.lineWidth;
+				} 
 				
 			}
 //			network.data.edges.setProperties({

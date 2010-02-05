@@ -73,6 +73,7 @@ package {
 	        layout_data:{parseAs:"dataTable", affects:["layout","nodes"], classname:"LayoutDataView"},
 	        node_data:{parseAs:"dataTable", affects: ["nodes"], classname:"NodeDataView"},
 	        nodeClusters:{parseAs:"dataTable", affects: ["layout"]},
+	        edge_data:{parseAs:"dataTable", affects:["edges"]},
 	        
 	        
 	        //singular options
@@ -87,6 +88,7 @@ package {
 	        node_tooltips:{parseAs:"param", affects:["nodes"]},
 	        node_clickdrag:{parseAs:"param", affects: ["nodes"]},
 	        node_labels_radial:{parseAs:"param", affects:["nodes"]},
+	        
 	        edge_lineWidth:{parseAs:"param", affects:["edges"]},
 	        edge_lineColor:{parseAs:"param", affects:["edges"]},
 	        edge_router:{parseAs:"param", affects:["edges"]},
@@ -345,8 +347,8 @@ package {
 		}
 	    
 	protected override function _setSelectionRow(row : *) : void {
-			var name1 : String = dataTable.getFormattedValue(row as int,1) || dataTable.getValue(row as int,1);
-			var name2 : String = dataTable.getFormattedValue(row as int,2) || dataTable.getValue(row as int,2);
+			var name1 : String = graphTable.getFormattedValue(row as int,1) || graphTable.getValue(row as int,1);
+			var name2 : String = graphTable.getFormattedValue(row as int,2) || graphTable.getValue(row as int,2);
 			var es : EdgeSprite = network.findEdgeByNodes(name1,name2);
 		    
 			if(!options.selection_display || (options.selection_display != "none" || options.selection_display != "nodes"))

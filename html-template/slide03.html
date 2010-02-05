@@ -19,7 +19,7 @@ function drawChart() {
             var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Gene Name');
 
-               var nCols = 41;
+               var nCols = 40;
                var nRows = 40;
                for (col = 1; col < nCols; col++) {
                    data.addColumn('number', 'Col' + col);
@@ -37,8 +37,8 @@ function drawChart() {
                }
             heatmap3.draw(data, {startColor: {r:0, g:0, b:0, a:1},
                                   endColor: {r:255, g:0, b:0, a:1},
-                                  cellHeight: 10, 
-                                  cellWidth: 10,
+                                  cellHeight: 8, 
+                                  cellWidth: 8,
                                   passThroughBlack:false, 
                                   hideHeaders: true, 
                                   drawBorder: false, 
