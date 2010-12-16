@@ -1,0 +1,126 @@
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+        "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:[]});
+  google.load("prototype", "1.6");
+</script>
+<script type="text/javascript" src="bionetwork.js"></script>
+<script language="JavaScript" type="text/javascript">	
+
+	google.setOnLoadCallback(drawChart); // Set callback to run when API is loaded
+	
+function drawChart() {
+		data = new google.visualization.DataTable({"cols":[{"id":0,"label":"edge_id","type":"string"},{"id":1,"label":"interactor1","type":"string"},{"id":2,"label":"interactor2","type":"string"}],"rows":[{"c":[{"v":1},{"v":7},{"v":6}]},{"c":[{"v":2},{"v":7},{"v":5}]},{"c":[{"v":3},{"v":3},{"v":3}]},{"c":[{"v":4},{"v":6},{"v":3}]},{"c":[{"v":5},{"v":1},{"v":7}]},{"c":[{"v":6},{"v":2},{"v":6}]},{"c":[{"v":7},{"v":5},{"v":8}]},{"c":[{"v":8},{"v":8},{"v":7}]}]},.6);
+	 
+
+       	networkvis = new org.systemsbiology.visualization.BioNetwork(document.getElementById('visContainer'));
+      	networkvis.draw(data, {"layout":"ForceDirected","node_renderer":"CircularHeatmap","CircularHeatmap_maxval":1,"CircularHeatmap_minval":0,"continuousUpdates":true,"height":400,"width":600,"padding":80,"node_data":{"cols":[{"id":0,"label":"nodeId","type":"string"},{"id":1,"label":"t_0h","type":"string"},{"id":2,"label":"t_1h","type":"string"},{"id":3,"label":"t_2h","type":"string"},{"id":4,"label":"t_3h","type":"string"},{"id":5,"label":"t_4h","type":"string"},{"id":6,"label":"t_5h","type":"string"}],"rows":[{"c":[{"v":1},{"v":0.7},{"v":0.97},{"v":0.06},{"v":0.25},{"v":0.38},{"v":0.2}]},{"c":[{"v":2},{"v":0.08},{"v":0.57},{"v":0.94},{"v":0.62},{"v":0.76},{"v":0.43}]},{"c":[{"v":3},{"v":0.71},{"v":0.88},{"v":0.29},{"v":0.63},{"v":0.39},{"v":0.4}]},{"c":[{"v":4},{"v":0.55},{"v":0.47},{"v":0.15},{"v":0.56},{"v":0.04},{"v":0.32}]},{"c":[{"v":5},{"v":0.71},{"v":0.58},{"v":0.28},{"v":0.76},{"v":0.08},{"v":0.27}]},{"c":[{"v":6},{"v":0.8},{"v":0.37},{"v":0.18},{"v":0.58},{"v":0.28},{"v":0.63}]},{"c":[{"v":7},{"v":0.94},{"v":0.99},{"v":0.23},{"v":0.33},{"v":0.59},{"v":0.97}]},{"c":[{"v":8},{"v":0},{"v":0.84},{"v":0.32},{"v":0.8},{"v":0.71},{"v":0.02}]}]}});	
+
+
+     }
+     
+     function addedge()
+{
+	networkvis.add_edge_from_to($('int1').value,$('int2').value);
+	cleartext();
+}
+
+function cleartext()
+{
+	$('int1').value="";
+	$('int2').value="";
+}
+
+function changeLayout()
+{
+	networkvis.draw("",{layout:$("layout").value});
+}
+
+function clickHandeler(target)
+{
+	var name = target.node.name;
+	
+	if($('int1').value=="")
+	{
+		$('int1').value=name;
+		$('int2').focus();
+	}
+	else
+	{
+		$('int2').value=name;
+		$('add').focus();
+	}
+	
+}
+
+function removeselected()
+{
+	var nodes = networkvis.getSelectionNodes();
+	for(i=0; i<nodes.length; i++)
+	{
+  		networkvis.remove_node_by_name(nodes[i].node);
+  	}
+}
+
+function set_R_var(name,value)
+{
+	new Ajax.Request('/variables.rsp', {
+  method: 'post',
+  parameters: {name: name, value: value}
+  });
+}
+
+function send_nodelist_to_R()
+{
+	var nodes = networkvis.getSelectionNodes();
+	var nodelist = [];
+	for(i=0; i<nodes.length; i++)
+	{
+  		nodelist.push(nodes[i].node);
+  	}
+
+	set_R_var($('rvar').value,Object.toJSON(nodelist));
+}
+      
+	  	
+	
+	
+</script>
+
+
+<style>
+body { margin: 0px; text-align: center;}
+</style>
+
+</head>
+
+<body scroll="no">
+	<div id="visContainer" style="margin-left: auto;
+    margin-right: auto;"></div><br/><br/>
+    
+    From: <input type="text" id="int1"/>
+To: <input type="text" id="int2"/>
+<input type="button" id="add" onclick="addedge()" value="add edge"/>
+<input type="button" id="clear" onclick="cleartext()" value="clear"/>
+<br/>	
+layout: <select id="layout" onchange="changeLayout()">
+<option value ="circular">circular</option>
+<option value ="ForceDirected">ForceDirected</option>
+<option value ="extendedForceDirected">extendedForceDirected</option>
+<option value ="3dSVD">3dSVD</option>
+<option value ="radialTree">radialTree</option>
+</select><br/>
+<!--input type="button" id="remove" onclick="removeselected()" value="remove selected"/><br/-->
+<input type="button" id="send" onclick="send_nodelist_to_R()" value="Send selected nodes to R"/> using variablt name <input type="text" id="rvar" value = "LichenSelection"/>.
+    
+</body>
+</html>
+    
+
+
